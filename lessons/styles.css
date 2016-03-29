@@ -1,5 +1,6 @@
 
 @import url(https://fonts.googleapis.com/css?family=Rambla);
+@import url(https://fonts.googleapis.com/css?family=Oxygen+Mono);
 
 html {
 	background-color: #E1E0E3;
@@ -17,5 +18,55 @@ body {
 }
 
 h1 {
-	
+	margin-bottom: 0.5em;
+	text-align: center;
+	text-decoration: underline;
+	font-weight: normal;
+	font-size: 4em;
+}
+h2 {
+	font-size: 1.5em;
+	font-weight: normal;
+}
+
+article {
+	width: 47%;
+}
+
+div.subsections {
+	text-align: center;
+	font-size: 1.2em;
+	padding-bottom: 1em;
+	border-bottom: 2px solid black;
+}
+div.subsections > a {
+	text-decoration: none;
+	color: #48639E;
+}
+div.subsections > a:hover {
+	text-decoration: none;
+	color: #F26101;
+}
+
+aside.example_program {
+	float: right;
+	padding: 0em 1em 0em 1em;
+	display: inline-block;
+	background-color: #E5E5FF;
+	border: 1px solid black;
+}
+
+aside.example_program > h2 {
+	padding: 0px;
+	text-align: center;
+	font-size: 1.5em;
+	text-decoration: underline;
+}
+
+pre.inline_code, pre.example_code, pre.example_program {
+	font-family: "Oxygen-Mono",sans-serif;
+	border: 0;
+}
+pre.inline_code {
+	display: inline;
 }
