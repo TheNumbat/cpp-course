@@ -1,0 +1,21 @@
+
+@import url(https://fonts.googleapis.com/css?family=Rambla);
+
+html {
+	background-color: #E1E0E3;
+	font-size: 1em;
+	font-family: "Rambla",sans-serif;
+	font-weight: normal;
+}
+
+body {
+	width: 70%;
+	margin-right: auto;
+	margin-left: auto;
+	background-color: #FFF;
+	padding: 2.5% 2.5% 1%;
+}
+
+h1 {
+	
+}
