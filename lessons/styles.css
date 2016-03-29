@@ -30,7 +30,7 @@ h2 {
 }
 
 article {
-	width: 47%;
+	width: 48%;
 }
 
 div.subsections {
@@ -50,6 +50,7 @@ div.subsections > a:hover {
 
 aside.example_program {
 	float: right;
+	width: 48%;
 	padding: 0em 1em 0em 1em;
 	display: inline-block;
 	background-color: #E5E5FF;
