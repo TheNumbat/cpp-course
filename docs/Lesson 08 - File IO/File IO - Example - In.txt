@@ -1,0 +1,9 @@
+Here we already know how many strings there will be:
+one two three
+
+Here the first number specifies how many numbres there are:
+4 9 2 432 23
+
+Here the letters will be input until the end of the file:
+a b c d e f
+

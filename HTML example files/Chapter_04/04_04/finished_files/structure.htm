@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Introduction to HTML</title>
+<link href="_css/styles.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>HTML Essential Training</h1>
+<h2>Structuring Pages</h2>
+<nav>
+  <ul>
+    <li><a href="intro.htm" title="Introduction to HTML">Introduction to HTML</a></li>
+    <li><a href="syntax.htm" title="HTML syntax">HTML syntax</a></li>
+    <li><a href="structure.htm" title="Structuring pages">Structuring pages</a></li>
+    <li><a href="links.htm" title="Creating links">Creating links</a></li>
+    <li><a href="reference.htm" title="HTML Reference">HTML reference</a></li>
+    <li><a href="next.htm" title="Next steps">Next steps</a></li>
+  </ul>
+</nav>
+<article>
+  <h3> Conveying meaning through structure </h3>
+  <p>Creating properly structured pages is the foundation of any good website. A solid semantic structure allows you to convey meaning and properly represent content types through nothing more than the page's markup. This, in turn, makes your content more accessible, easier to index and search, and makes it easier to repurpose. Remember that there are a lot of different devices, robots, and other user agents that will be reading your code. <em>Without a consistent, semantic structure your site will be less effective.</em> </p>
+  <h3>Sectioning elements </h3>
+  <p>One way to add meaning to your content is to organize them into sections that convey meaning and structure. For example it's pretty standard to contain introductory information within a section, page navigation within its own area, the page's main content in its own region, and related information within a sidebar. HTML contains numerous elements that are designed to assist in the logical structuring and semantics of page content. </p>
+  <p>In previous versions of HTML creating new sections of content was done almost exclusively through the use of <a href="http://www.w3.org/TR/html51/sections.html#the-h1,-h2,-h3,-h4,-h5,-and-h6-elements" title="heading elements"><b>heading</b></a> tags, with <b>divs</b> being used to group areas of content together. <b>Class</b> or <b>ID</b> attributes would allow designers to attach more semantic meaning to the groups, although this meant little to most user agents. In HTML5 new sectioning and semantic elements were introduced to help represent commonly used sections and create more consistent page structures. Tags like the <b>aside</b>, <b>article</b>, <b>footer</b>, <b>header</b>, <b>main</b>, <b>nav</b>, and <b>section</b> allow authors to identify common page regions and convey more semantic meaning. </p>
+  <p>Although some of these elements are very specific, in many cases which element you'll use and how you'll structure them is very much a judgment call. Make sure, however, that your finished structure represents the desired document outline. </p>
+  <p>Learn more about the new sectioning and semantic elements:</p>
+  <ul>
+    <li><a href="http://www.w3.org/TR/html51/sections.html#the-aside-element" title="aside element"><b>aside</b></a></li>
+    <li><a href="http://www.w3.org/TR/html51/sections.html#the-article-element" title="article element"><b>article</b></a></li>
+    <li><a href="http://www.w3.org/TR/html51/sections.html#the-footer-element" title="footer element"><b>footer</b></a></li>
+    <li><a href="http://www.w3.org/TR/html51/sections.html#the-header-element" title="header element"><b>header</b></a></li>
+    <li><a href="http://www.w3.org/TR/html51/grouping-content.html#the-main-element" title="main element"><b>main</b></a></li>
+    <li><a href="http://www.w3.org/TR/html51/sections.html#the-nav-element" title="nav element"><b>nav</b></a></li>
+    <li><a href="http://www.w3.org/TR/html51/sections.html#the-section-element" title="section element"><b>section</b></a></li>
+  </ul>
+  <h3>Document outlines </h3>
+  <p>One of the fundamental concepts of HTML is that its documents can be represented by a document outline that summarizes the content of the page. Imagine a page being represented by a table of contents and you'll have a good idea of what one of these outlines might look like. These outlines assist in tasks such as quickly searching documents and making content easier to navigate for assistive devices. </p>
+  <p>Prior to HTML5, document outlines were generated entirely through the use of headings. An H1 at the top of the page would serve to identify the page content, and subsequent headings would create sections and subsections inside of it. This meant that having a strategy for when to use certain headings was critical for maintaining consistent document structure. In HTML5 a new outline algorithm was introduced that added the new sectioning elements to the heading elements and created a more sophisticated outlining model. Although not currently implemented by user agents it is still recommended that authors familiarize themselves with it so that they're using the new sectioning and semantic tags properly. </p>
+  <p>It is still considered to be a best practice to use heading tags to establish the document outline. Mozilla has a fantastic article on <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Sections_and_Outlines_of_an_HTML5_document" title="Mozilla Dev article on HTML sections">sections and outlines</a> in HTML documents that I strongly recommend reading.</p>
+  <h4>W3C Warning</h4>
+  <p>At the time of the authoring of this course, the W3C had posted this warning regarding the HTML5 outline algorithm:</p>
+  <blockquote>There are currently no known implementations of the outline algorithm in graphical browsers or assistive technology user agents, although the algorithm is implemented in other software such as conformance checkers. Therefore the outline algorithm cannot be relied upon to convey document structure to users. Authors are advised to use heading rank (h1-h6) to convey document structure.</blockquote>
+  <h3>WAI-ARIA Roles</h3>
+  <p>Carefully structuring an HTML page is the first step into ensuring that the content is accessible to all users. You should also use WAI-ARIA role attributes where appropriate to increase accessibility and improve semantics. WAI-ARIA is short for the Web Accessibility Initiative's Accessible Rich Internet Application specification. The roles attribute attempts to identify content and its capabilities by assigning it to a predefined role. This helps assistive devices understand what the content is, how it relates to other content, and how the content can be interacted with. The W3C has a <a href="http://www.w3.org/TR/2014/WD-aria-in-html-20140626/" title="Using WAI-ARIA in HTML">fantastic resource</a> on how WAI-ARIA works and how it should be used with HTML.</p>
+</article>
+<p>&copy; <a href="http://www.lynda.com" title="lynda.com" target="_blank">lynda.com</a> | follow me and lynda.com on Twitter! <a href="https://twitter.com/jameswillweb" title="Follow me on Twitter">@jameswillweb</a> <a href="https://twitter.com/lynda" title="Follow lynda.com on Twitter">@lyndadotcom</a></p>
+</body>
+</html>

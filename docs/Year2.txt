@@ -1,0 +1,6 @@
+
+More advanced topics 1
+	Design, STL, c++14, computation stuff like threading
+Algorithms textbook 3
+Multimedia libraries like SDL 3
+Individual/group Large Project
