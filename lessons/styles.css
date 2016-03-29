@@ -29,10 +29,6 @@ h2 {
 	font-weight: normal;
 }
 
-article {
-	width: 48%;
-}
-
 div.subsections {
 	text-align: center;
 	font-size: 1.2em;
@@ -49,10 +45,8 @@ div.subsections > a:hover {
 }
 
 aside.example_program {
-	float: right;
-	width: 48%;
 	padding: 0em 1em 0em 1em;
-	display: inline-block;
+	display: block;
 	background-color: #E5E5FF;
 	border: 1px solid black;
 }
@@ -65,8 +59,10 @@ aside.example_program > h2 {
 }
 
 pre.inline_code, pre.example_code, pre.example_program {
+	white-space: pre-wrap;
 	font-family: "Oxygen-Mono",sans-serif;
-	border: 0;
+	border: 0px;
+	padding: 0px;
 }
 pre.inline_code {
 	display: inline;
