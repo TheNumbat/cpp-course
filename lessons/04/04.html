@@ -4,8 +4,8 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="..\styles.css">
 		<link rel="stylesheet" media="screen and (max-width: 1399px)" href="..\thin.css">
-		<title>Lesson 04 - Functions</title>
 		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 04 - Functions</title>
 	</head>
 	<body>
 	<header>
@@ -22,13 +22,17 @@
 					<li><a title="declaration" href="#declaration">Declaring Functions</a> | </li>
 					<li><a title="implementation" href="#implementation">Implementing Functions</a> | </li>
 					<li><a title="usage" href="#useage">Using Functions</a> | </li>
-					<li><a title="exercises" href="#exercises">Programming Exercises</a></li>
+					<li><a title="exercises" href="#exercises">Exercises</a></li>
 				</ul>
 			</nav>
 		</header>
 		<main role="main">
 			<aside role="complementary" class="example_program top">
 			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.cpp" download>Download</a> | 
+				<a title="run example" href="http://ideone.com/SZVpa3" target="_blank">Run this Code</a>
+			</div>
 			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
 // previous example programs, notes, or email a question.
 
@@ -79,7 +83,6 @@ void displayDbls&#40;double disp1, double disp2&#41;
 	// Output the two parameters to the console
 	cout << "Double value 1: " << disp1 << endl
 		<< "Double value 2: " << disp2 << endl;
-	
 }</pre>
 		</aside>
 		<article role="article">
@@ -138,7 +141,15 @@ result = calcRoot&#40;value_a, value_b, 12&#41;;</pre>
 			<p>
 				Here, you can see the use of two variables as parameters, a literal as a parameter, and a captured return value.
 			</p>
-		</article></main>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Create a program, using functions for each of the main tasks. The program should prompt the user for information, processing the data, and display the result.</li>
+				<li>Create some of your own functions. Try out using different return types &#40;such as <pre class="inline_code prettyprint">void</pre>&#41;, as well as different combinations of parameters.</li>
+				<li>Try removing the prototypes from the example program and see what can do to fix the error, other than putting the prototypes back in.</li>
+			</ol>
+		</section>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
 			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
@@ -191,17 +202,9 @@ void displayDbls&#40;double disp1, double disp2&#41;
 	// Output the two parameters to the console
 	cout << "Double value 1: " << disp1 << endl
 		<< "Double value 2: " << disp2 << endl;
-	
 }</pre>
 		</aside>
-		<section class="exercises">
-			<h2 id="exercises">Programming Exercises</h2>
-			<ol>
-				<li>Create a program, using functions for each of the main tasks. The program should prompt the user for information, processing the data, and display the result.</li>
-				<li>Create some of your own functions. Try out using different return types &#40;such as <pre class="inline_code prettyprint">void</pre>&#41;, as well as different combinations of parameters.</li>
-				<li>Try removing the prototypes from the example program and see what can do to fix the error, other than putting the prototypes back in.</li>
-			</ol>
-		</section>
+		</main>
 		<footer role="contentinfo">
 			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a title="contact email" href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a title="GitHub" href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
 		</footer>
