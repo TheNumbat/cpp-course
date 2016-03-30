@@ -2,31 +2,92 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" type="text/css" href="../styles.css">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1399px)" href="..\thin.css">
 		<title>Lesson 04 - Functions</title>
 		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 	</head>
 	<body>
+	<header>
+		<a class="top_button" title="last lesson" href="..\03\03.html" id="last">Last</a>
+		<a class="top_button" title="next lesson" href="..\05\05.html" id="next">Next</a>
+	</header>
+	<div id="main">
 		<header role="banner">
 			<h1>Lesson 04 - Functions</h1>
 			<nav role="navigation">
-				<div class="subsections">
-					<a title="introduction" href="#intro">Introduction to Functions</a> | 
-					<a title="theory" href="#theory">Function Theory (in C/C++)</a> | 
-					<a title="declaration" href="#declaration">Declaring Functions</a> | 
-					<a title="implementation" href="#implementation">Implementing Functions</a> | 
-					<a title="usage" href="#useage">Using Functions</a> | 
-					<a title="exercises" href="#exercises">Programming Exercises</a>
+				<ul class="subsections">
+					<li><a title="introduction" href="#intro">Introduction to Functions</a> | </li>
+					<li><a title="theory" href="#theory">Function Theory &#40;in C/C++&#41;</a> | </li>
+					<li><a title="declaration" href="#declaration">Declaring Functions</a> | </li>
+					<li><a title="implementation" href="#implementation">Implementing Functions</a> | </li>
+					<li><a title="usage" href="#useage">Using Functions</a> | </li>
+					<li><a title="exercises" href="#exercises">Programming Exercises</a></li>
 				</ul>
 			</nav>
 		</header>
 		<main role="main">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or email a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+// A function that will return an integer, and takes an integer and a double as parameters
+int calc&#40;int one, double two&#41;;
+
+// A function that will not return anything, and takes two doubles as parameters
+void displayDbls&#40;double disp1, double disp2&#41;;
+
+int main&#40;&#41; 
+{	
+	int value_one = 60;
+	double value_two = 0.89;
+	
+	int result;
+	
+	// Call the function calc. Note that the actual parameters do not need
+	// to have the same names as the formal parameters.
+	result = calc&#40;value_one, value_two&#41;;
+	
+	// Display the result
+	cout << "calc result: " << result << endl << endl;
+	
+	// Call the function displayDbls using literal values. Note that no return value
+	// is captured, as displayDbls returns void.
+	displayDbls&#40;5.67, 10.436&#41;;
+	
+	return 0;
+}
+
+// Implementation of calc
+int calc&#40;int one, double two&#41; 
+{
+	// Do some sort of calculation
+	int result = -&#40;one / two&#41; * &#40;one - two&#41; / &#40;-5648 / &#40;one += two&#41;&#41;;
+	
+	// Return the result
+	return result;
+}
+
+// Implementation of displayDbls
+void displayDbls&#40;double disp1, double disp2&#41; 
+{
+	// Output the two parameters to the console
+	cout << "Double value 1: " << disp1 << endl
+		<< "Double value 2: " << disp2 << endl;
+	
+}</pre>
+		</aside>
 		<article role="article">
 			<h2 id="intro">Introduction to Functions</h2>
 			<p>
 				Functions are arguably the most essential part of programming in C and C++. You will be using them throughout your time with the language, and it is important to know how to write and use them well.
 			</p>
-			<h2 id="theory">Function Theory (in C/C++)</h2>
+			<h2 id="theory">Function Theory &#40;in C/C++&#41;</h2>
 			<p>
 				There are several basic characteristics that represent good function design in C and C++: first, a function should accomplish one and only one task.<br>
 				The function might do that thing many times, or in different situations, but a function should only be designed to solve one problem. The scope of that problem is up to you, as is where you want to break parts of a task into functions. However, if you have completely separate types of operations, say data processing and console output in the same function, you're probably doing it wrong.<br>
@@ -38,55 +99,47 @@
 			<p>
 				Now that you know what functions do, you're probably wondering how to actually use them. Well, there are several important aspects of functions that you need to be familiar with in order to use them effectively.<br>
 				You've already seen the basic structure of a function &mdash; "main" in your previous programs. At its fore, a function is simply a block of code that can be called from elsewhere, receiving and manipulating data.<br>
-				To declare a function in C or C++, there are two things you have to do. First, there is the function prototype, which goes at the top of your program, before your main function. The prototype is technically unnecessary, as you could simply write out (implement) your entire function there instead. However, what if you wanted to call another function you wrote, which is below? What if that function wants to call the upper function? Your program wouldn't compile. What the prototype does is describe to the compiler what functions you will be creating later, and allows the rest of your program to automatically use them. If you don't create prototypes, it can lead to a lot of headaches.<br>
+				To declare a function in C or C++, there are two things you have to do. First, there is the function prototype, which goes at the top of your program, before your main function. The prototype is technically unnecessary, as you could simply write out &#40;implement&#41; your entire function there instead. However, what if you wanted to call another function you wrote, which is below? What if that function wants to call the upper function? Your program wouldn't compile. What the prototype does is describe to the compiler what functions you will be creating later, and allows the rest of your program to automatically use them. If you don't create prototypes, it can lead to a lot of headaches.<br>
 				The basic structure of a prototype is:
 			</p>
-			<pre class="example_code prettyprint">&lt;data type&gt; functionName(&lt;data type&gt; parameter1, &lt;data type&gt; parameter2, ...);</pre>
+			<pre class="example_code prettyprint">&lt;data type&gt; functionName&#40;&lt;data type&gt; parameter1, &lt;data type&gt; parameter2, ...&#41;;</pre>
 			<p>
-				There are several components to this statement: first, the first data type describes what type of data the function will return. More on that under <a title="usage" href="#usage">Using functions</a>. If you don't want your function to return any data, you can use <pre class="inline_code prettyprint">void</pre> instead of a data type such as <pre class="inline_code prettyprint">int</pre> or <pre class="inline_code prettyprint">double</pre>. Second, there is your function identifier, which you will use to refer to your function in the future. Finally, you have your function's parameters enclosed in parenthesis. Parameters describe the data your function will receive when it is called by other inline_code. To specify a parameter, type the data type of the parameter, for example <pre class="inline_code prettyprint">int</pre> or <pre class="inline_code prettyprint">char</pre>, and then the identifier of the parameter. This will be how you refer to the parameter <em>within</em> the function. To add more parameters, simply add a comma and repeat the process.<br>
+				There are several components to this statement: first, the first data type describes what type of data the function will return. More on that under <a title="usage" href="#useage">Using functions</a>. If you don't want your function to return any data, you can use <pre class="inline_code prettyprint">void</pre> instead of a data type such as <pre class="inline_code prettyprint">int</pre> or <pre class="inline_code prettyprint">double</pre>. Second, there is your function identifier, which you will use to refer to your function in the future. Finally, you have your function's parameters enclosed in parenthesis. Parameters describe the data your function will receive when it is called by other inline_code. To specify a parameter, type the data type of the parameter, for example <pre class="inline_code prettyprint">int</pre> or <pre class="inline_code prettyprint">char</pre>, and then the identifier of the parameter. This will be how you refer to the parameter <em>within</em> the function. To add more parameters, simply add a comma and repeat the process.<br>
 				The parameters specified here are called formal parameters, as they define the structure of the function and how the data will be refereed to <em>within</em> the function. <br>
 				Of course, don't forget to end your prototype with a semicolon.<br>
 				Examples:
 			</p>
-			<pre class="example_code prettyprint">void printCharacters(int numCharacters, char character);
-double calcRoot(int a, int b, int c);</pre>
+			<pre class="example_code prettyprint">void printCharacters&#40;int numCharacters, char character&#41;;
+double calcRoot&#40;int a, int b, int c&#41;;</pre>
 			<h2 id="implementation">Implementing Functions</h2>
 			<p>
 				One you have written your function prototype, you can move on to implementing the actual function.<br>
 				To declare the implementation of a function, simply copy and paste your prototype &mdash; minus the semicolon &mdash; below your main function, and add a pair of curly brackets. Here, you will write the code of your function.<br>
 				While writing your function, your parameters are available for use like any other variables. They will hold the data passed into the function when it is called &mdash; again, more on that in <a href="#usage">using functions</a>.<br>
-				At some point in your function (preferably the end), you must put a <pre class="inline_code prettyprint">return</pre> statement. This describes what data you want to return from your function, and must have the same type as you described earlier in your prototype. The <pre class="inline_code prettyprint">return</pre> statement must always be run at some point in your function. However, if you specified your return type as <pre class="inline-code prettyprint">void</pre>, you must leave out the <pre class="inline_code prettyprint">return</pre> statement. After the keyword <pre class="inline_code prettyprint">return</pre>, you may specify either a literal value or much more commonly a variable (of the return type) that has been computed by your function.<br>
-				Example (a simplified quadratic formula function):
+				At some point in your function &#40;preferably the end&#41;, you must put a <pre class="inline_code prettyprint">return</pre> statement. This describes what data you want to return from your function, and must have the same type as you described earlier in your prototype. The <pre class="inline_code prettyprint">return</pre> statement must always be run at some point in your function. However, if you specified your return type as <pre class="inline_code prettyprint">void</pre>, you must leave out the <pre class="inline_code prettyprint">return</pre> statement. After the keyword <pre class="inline_code prettyprint">return</pre>, you may specify either a literal value or much more commonly a variable &#40;of the return type&#41; that has been computed by your function.<br>
+				Example &#40;a simplified quadratic formula function&#41;:
 			</p>
-			<pre class="example_code prettyprint">double calcRoot(int a, int b, int c) 
+			<pre class="example_code prettyprint">double calcRoot&#40;int a, int b, int c&#41; 
 {
 	double x;
-	x = (-b + sqrt(b*b – 4*a*c)) / 2*a;
+	x = &#40;-b + sqrt&#40;b*b – 4*a*c&#41;&#41; / 2*a;
 	return x;
 }</pre>
 			<h2 id="useage">Using Functions</h2>
 			<p>
 				Finally, you need to learn how to use your sparkly new function. This is called calling, or invoking, the function. To do so, simply type the name of your function. Simple enough. Then, add parenthesis and specify what are called the "actual" parameters. They represent the actual data that you pass to the function &mdash; the data you pass here will be contained in your parameters within your function. You can pass literal values or variables. Your data must match the types specified in your prototype, but note that your actual parameters do not need to be named the same as your formal parameters. This means that if you have a parameter named "value_one" of type <pre class="inline_code prettyprint">double</pre>, you can pass in a variable named "input," so long as it is also of type <pre class="inline_code prettyprint">double</pre>. They simply pass the data into the formal parameters.<br>
-				Whether or not your function returns a value, that's all you need to do (remember your semicolon). However, if your function returns a value that you care about, you can receive the value using the assignment operator (=), with the function on the right and a variable matching the return type on the left. This means if your function returns an <pre class="inline_code prettyprint">int</pre>, you must receive the with a variable of type <pre class="inline_code prettyprint">int</pre>.
+				Whether or not your function returns a value, that's all you need to do &#40;remember your semicolon&#41;. However, if your function returns a value that you care about, you can receive the value using the assignment operator &#40;=&#41;, with the function on the right and a variable matching the return type on the left. This means if your function returns an <pre class="inline_code prettyprint">int</pre>, you must receive the with a variable of type <pre class="inline_code prettyprint">int</pre>.
 				For example, to call our previous example:
 			</p>
-			<pre class="example_code prettyprint">double result;
+			<pre class="example_code prettyprint bottom">double result;
 int value_a = 5;
 int value_b = 3;
-result = calcRoot(value_a, value_b, 12);</pre>
+result = calcRoot&#40;value_a, value_b, 12&#41;;</pre>
 			<p>
 				Here, you can see the use of two variables as parameters, a literal as a parameter, and a captured return value.
 			</p>
 		</article></main>
-		<section class="exercises">
-			<h2 id="exercises">Programming Exercises</h2>
-			<ol>
-				<li>Create a program, using functions for each of the main tasks. The program should prompt the user for information, processing the data, and display the result.</li>
-				<li>Create some of your own functions. Try out using different return types (such as <pre class="inline_code prettyprint">void</pre>), as well as different combinations of parameters.</li>
-				<li>Try removing the prototypes from the example program and see what can do to fix the error, other than putting the prototypes back in.</li>
-			</ol>
-		</section>
-		<aside role="complementary" class="example_program">
+			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
 			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
 // previous example programs, notes, or email a question.
@@ -96,12 +149,12 @@ result = calcRoot(value_a, value_b, 12);</pre>
 using namespace std;
 
 // A function that will return an integer, and takes an integer and a double as parameters
-int calc(int one, double two);
+int calc&#40;int one, double two&#41;;
 
 // A function that will not return anything, and takes two doubles as parameters
-void displayDbls(double disp1, double disp2);
+void displayDbls&#40;double disp1, double disp2&#41;;
 
-int main() 
+int main&#40;&#41; 
 {	
 	int value_one = 60;
 	double value_two = 0.89;
@@ -110,30 +163,30 @@ int main()
 	
 	// Call the function calc. Note that the actual parameters do not need
 	// to have the same names as the formal parameters.
-	result = calc(value_one, value_two);
+	result = calc&#40;value_one, value_two&#41;;
 	
 	// Display the result
 	cout << "calc result: " << result << endl << endl;
 	
 	// Call the function displayDbls using literal values. Note that no return value
 	// is captured, as displayDbls returns void.
-	displayDbls(5.67, 10.436);
+	displayDbls&#40;5.67, 10.436&#41;;
 	
 	return 0;
 }
 
 // Implementation of calc
-int calc(int one, double two) 
+int calc&#40;int one, double two&#41; 
 {
 	// Do some sort of calculation
-	int result = -(one / two) * (one - two) / (-5648 / (one += two));
+	int result = -&#40;one / two&#41; * &#40;one - two&#41; / &#40;-5648 / &#40;one += two&#41;&#41;;
 	
 	// Return the result
 	return result;
 }
 
 // Implementation of displayDbls
-void displayDbls(double disp1, double disp2) 
+void displayDbls&#40;double disp1, double disp2&#41; 
 {
 	// Output the two parameters to the console
 	cout << "Double value 1: " << disp1 << endl
@@ -141,9 +194,17 @@ void displayDbls(double disp1, double disp2)
 	
 }</pre>
 		</aside>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Create a program, using functions for each of the main tasks. The program should prompt the user for information, processing the data, and display the result.</li>
+				<li>Create some of your own functions. Try out using different return types &#40;such as <pre class="inline_code prettyprint">void</pre>&#41;, as well as different combinations of parameters.</li>
+				<li>Try removing the prototypes from the example program and see what can do to fix the error, other than putting the prototypes back in.</li>
+			</ol>
+		</section>
 		<footer role="contentinfo">
-			<a title="previous lesson" href="">Previous</a> | <a title="main page" href="">Main Page</a> | <a title="next lesson" href="">Next</a>
-			<p>Made by Maxwell Slater | Contact me at <a title="contact email" href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a title="GitHub" href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a title="contact email" href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a title="GitHub" href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
 		</footer>
+	</div>
 	</body>
 </html>

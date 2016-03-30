@@ -9,12 +9,33 @@ html {
 	font-weight: normal;
 }
 
-body {
-	width: 70%;
+a#last {
+	float: left;
+}
+a#next {
+	float: right;
+}
+a.top_button {
+	text-decoration: none;
+	font-size: 3em;
+	background-color: #FFF;
+	border-radius: 20px;
+	color: #48639E;
+	padding: 10px;
+	margin: 0;
+	border: 1px solid black;
+}
+
+div#main {
+	width: 75%;
 	margin-right: auto;
 	margin-left: auto;
 	background-color: #FFF;
-	padding: 2.5% 2.5% 1%;
+	padding-right: 2.5%;
+	padding-left: 2.5%;
+	padding-top: 40px;
+	padding-bottom: 5px;
+	border: 1px solid black;
 }
 
 h1 {
@@ -23,36 +44,45 @@ h1 {
 	text-decoration: underline;
 	font-weight: normal;
 	font-size: 4em;
+	margin-top: 0;
 }
 h2 {
 	font-size: 1.5em;
 	font-weight: normal;
 }
 
-div.subsections {
+ul.subsections {
 	text-align: center;
 	font-size: 1.2em;
 	padding-bottom: 1em;
 	border-bottom: 2px solid black;
 }
-div.subsections > a {
+ul.subsections > li {
+	display: inline;
+}
+ul.subsections > li > a {
 	text-decoration: none;
 	color: #48639E;
 }
-div.subsections > a:hover {
+ul.subsections > li > a:hover {
 	text-decoration: none;
 	color: #F26101;
 }
 
+article {
+	margin-right: 1em;
+}
 aside.example_program {
+	margin-left: 1em;
+	margin-bottom: 1em;
 	padding: 0em 1em 0em 1em;
 	display: block;
 	background-color: #E5E5FF;
 	border: 1px solid black;
+	float: right;
 }
 
 aside.example_program > h2 {
-	padding: 0px;
 	text-align: center;
 	font-size: 1.5em;
 	text-decoration: underline;
@@ -62,8 +92,29 @@ pre.inline_code, pre.example_code, pre.example_program {
 	white-space: pre-wrap;
 	font-family: "Oxygen-Mono",sans-serif;
 	border: 0px;
-	padding: 0px;
 }
 pre.inline_code {
 	display: inline;
+}
+pre.example_code {
+	overflow: hidden;
+	padding: 0.5em;
+	border: 1px solid black;
+	background-color: #E5E5FF;
+}
+pre.example_program {
+	padding-bottom: 1em;
+}
+aside.top {
+	display: block;
+}
+aside.bot {
+	display: none;
+}
+
+footer {
+	border-top: 1px solid gray;
+	text-align: center;
+	line-height: 2em;
+	margin-top: 1em;
 }

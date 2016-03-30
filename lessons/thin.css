@@ -1,0 +1,8 @@
+
+aside.top {
+	display: none;
+}
+aside.bot {
+	display: block;
+	float: none;
+}
