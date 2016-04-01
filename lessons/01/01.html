@@ -1,0 +1,235 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 01 - Data Abstraction</title>
+	</head>
+	<body>
+	<header>
+		<!-- <a class="top_button" title="last lesson" href="..\03\03.html" id="last">Last</a> -->
+		<a class="top_button" title="next lesson" href="..\02\02.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 01 - Data Abstraction</h1>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a title="introduction" href="#intro">Introduction</a></li> | 
+					<li><a title="identifiers" href="#identifiers">Identifiers</a></li> | 
+					<li><a title="literals" href="#literals">Literals</a></li> | 
+					<li><a title="types" href="#types">Data Types</a></li> | 
+					<li><a title="variables" href="#variables">Variables</a></li> | 
+					<li><a title="scope" href="#scope">Scope</a></li> | 
+					<li><a title="keywords" href="#keywords">Reserved Words</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.cpp" download>Download</a> | 
+				<a title="run example" href="http://ideone.com/WH2QTe" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, or email a question.
+
+// This heatder file allows the use of the string data type.
+#include <string>
+
+using namespace std;
+
+int main() {
+   
+   // This declares an integer variable with the indentifier "userAge"
+   int userAge;
+   
+   // This line sets userAge to contain the integer value 34
+   userAge = 34;
+   
+   // This line sets userAge to contain the interger value 23, overwritting 
+   // the previous value, 34
+   userAge = 23;
+   
+   // This line declares a character value with the identifier letterInput
+   // and intializes it to hold the value 'c'
+   char letterInput = 'c';
+   
+   // Finally, this line decalres a string value with the identifier address.
+   // Note that "string" is not highlighted. Only the fundamental data types
+   // are highlighted in your editor. Additionally, the value is intialized
+   // with a string literal.
+   string address = "1234 Nowhere St. Reno, NV";
+   
+	return 0;
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="intro">Introduction</h2>
+			<p>
+				Data abstraction is essentially how data is held in a program, and how you, the programmer, can use it. The process itself is pretty simple, but there are some complicating factors. In computers, all data is held in a series of 0’s and 1’s, that is, binary, and humans are not too great at manipulating large quantities of numbers. For example, a computer might hold the data value 19 as 00000000 00010011. Thankfully, most high level programming languages, such as C++, will do this low-level data management for you, and all you have to deal with are variables (that’s not to say you can’t do low-level memory management – we’ll talk about that later). The "covering up" process is called abstraction—the process of using one thing that represents another. Your programming language abstracts the concept of low-level data, allowing you to not worry about the finer details of it, and use much simpler, human-understandable data.
+			</p>
+			<h2 id="identifiers">Identifiers</h2>
+			<p>
+				Now, to use this data, your programming language allows you to store data in variables, which are essentially containers that hold your values – see section 3 for more detail. Variables are a type of identifier, which is any uninterrupted (i.e., no spaces) combination of characters and digits. Identifiers are used to represent various parts of a program, including variables, functions, and more. It is standard for identifiers to follow the format camelCase, which means that the first word is not capitalized, and each following one is.<br>
+				Examples:
+			</p>
+			<pre class="example_code prettyprint">payRate
+userAge
+findMaxValue
+calcDiscriminant</pre>
+			<p>
+				They must start with either a normal character or an underscore, and can be as long as you want. You can use any identifier you want, as long as it is not reserved by the C++ language (for a list of these, look at the end of this document). In general, you want to use noun identifiers for “things,” which would be variables or other objects that contain actual information, and verb identifiers for other functions which do things, rather than hold values. 
+			</p>
+			<h2 id="literals">Literals</h2>
+			<p>
+				While a variable is an identifier that holds a value, a literal is the value itself. You won’t be using too many literals in your programming, but keep in mind that they are things like a number, a letter, or a sequence of words. For example, <pre class="inline_code prettyprint">"Hello!”</pre>, <pre class="inline_code prettyprint">5</pre>, <pre class="inline_code prettyprint">345.7</pre>, and <pre class="inline_code prettyprint">'A'</pre> are all literals.
+			</p>
+			<h2 id="types">Data Types</h2>
+			<p>
+				In C++, there are four fundamental data types. What is a fundamental data type, you may ask? Well, fundamental types represent physically different types of data which are stored in computer memory. Everything other than these four types are built out of them, and are called derived data types. The four fundamental types are:
+			</p>
+			<table id="table_types">
+				<tr>
+					<td>Name</td>
+					<td>C++ Type</td>
+					<td>Information</td>
+				</tr>
+				<tr>
+					<td>Integer</td>
+					<td><pre class="inline_code prettyprint">int</pre></td>
+					<td>Any positive or negative integer. Usually, an “int” holds 32 bits of data; a number between negative 2^31 and 2^31 - 1.</td>
+				</tr>
+					<td>Character</td>
+					<td><pre class="inline_code prettyprint">char</pre></td>
+					<td>Technically, a character is just an eight-bit integer that can only hold values between -128 and 127. The value corresponds to a character (a single letter or something like a bracket) using a standard convention. For example, the letter ‘G’ is represented by the value 71.</td>
+				</tr>
+				<tr>
+					<td>Floating Point Value</td>
+					<td><pre class="inline_code prettyprint">float, double</pre></td>
+					<td>Any positive or negative quantity (can be fractional). These values are held in memory in the form of scientific notation. <pre class="inline_code prettyprint">double</pre> is 64 bits, and contains a more precise value than <pre class="inline_code prettyprint">float</pre>.</td>
+				</tr>
+				<tr>
+					<td>Boolean</td>
+					<td><pre class="inline_code prettyprint">bool</pre></td>
+					<td>Only the values ‘true’ or ‘false,’ but how they are actually stored in memory is more complicated.</td>
+				</tr>
+			</table>
+			<h2 id="variables">Variables</h2>
+			<p>
+				Now, you must be wondering how to actually use these variables that I’ve talked of for so long. In C++, all variables must be explicitly declared, which is to say you must tell the computer your variables data type when you create it.
+				To declare a variable, the syntax is simple: simply type the name of the data type you are using, and then your variable identifier, and end the line with a semicolon. Get used to that—almost every line in C++ is ended with a semicolon. Finally, remember it is conventional to declare all variables at the start of a function. For example,
+			</p>
+			<pre class="example_code prettyprint">int myAge;</pre>
+			<p>Declares a variable named myAge with the type integer.</p>
+			<pre class="example_code prettyprint">double payRate;</pre>
+			<p>Declares a variable named payRate with the type double.</p>
+			<p>
+				To use your new variables, you use the assignment operator (‘=’) to assign a value to them. The assignment operator always takes what is on the right and assigns it to the identifier on the left. This can also be combined with the declaration. When assigning an integer or double value, you can simply type your number. However, when assigning a character value, wrap your character in single quotes, and when assigning a string, wrap your phrase in double quotes. Examples:
+			</p>
+			<pre class="example_code prettyprint">myAge = 24;</pre>
+			<p>The variable myAge now holds the value 24.</p>
+			<pre class="example_code prettyprint">double payRate = 23.50;</pre>
+			<p>This creates the variable payRate, and makes it hold the value 23.5.</p>
+			<pre class="example_code prettyprint">char letter = ‘U’;</pre>
+			<p>The variable letter now holds the letter ‘U’.</p>
+			<pre class="example_code prettyprint">string username = "pizza";</pre>
+			<p>The variable username now holds the phrase "pizza."</p>
+			<p>
+				Now, whenever you use your variable, your program will use the value held within your variable.
+			</p>
+			<h2 id="scope">Scope</h2>
+			<p>
+				Finally, there is the topic of scope. The scope of a variable is the area in which it can be used, or to put it simply, the area between the opening and closing curly braces in which your variable was first declared. Keep this in mind when declaring variables, as they will not be useable except in the scope you declared them in. This is because when a scope ends, all variables declared within it will be destroyed. For example:
+			</p>
+			<pre class="example_code prettyprint">{ – Begins the scope
+	int myVar;
+	Here, myVar can be used.
+} – Ends the scope
+Here, it can’t.</pre>
+			<p>
+				Now, you may wonder what happens if the variable is not declared in any scope. This is called a global variable, as it can be accessed from anywhere in the program. In general, don’t use these (except in specific situations), as global variables can lead to very hard-to-find bugs in your program.
+			</p>
+			<h2 id="keywords">Reserved Words in C++</h2>
+			<p>You can’t use these as identifiers.</p>
+			<table id="table_keywords">
+				<tr><td>Alignas</td><td>decltype</td><td>new</td><td>struct</td></tr>
+				<tr><td>alignof</td><td>default</td><td>noexcept</td><td>switch</td></tr>
+				<tr><td>and</td><td>delete</td><td>not</td><td>template</td></tr>
+				<tr><td>and_eq</td><td>do</td><td>not_eq</td><td>this</td></tr>
+				<tr><td>asm</td><td>double</td><td>nullptr</td><td>thread_local</td></tr>
+				<tr><td>auto</td><td>dynamic_cast</td><td>operator</td><td>throw</td></tr>
+				<tr><td>bitand</td><td>else</td><td>or</td><td>true</td></tr>
+				<tr><td>bitor</td><td>enum</td><td>or_eq</td><td>try</td></tr>
+				<tr><td>bool</td><td>explicit</td><td>private</td><td>typedef</td></tr>
+				<tr><td>break</td><td>export</td><td>protected</td><td>typeid</td></tr>
+				<tr><td>case</td><td>extern</td><td>public</td><td>typename</td></tr>
+				<tr><td>catch</td><td>false</td><td>register</td><td>union</td></tr>
+				<tr><td>char</td><td>float</td><td>reinterpret_cast</td><td>unsigned</td></tr>
+				<tr><td>char16_t</td><td>for</td><td>requires</td><td>using</td></tr>
+				<tr><td>char32_t</td><td>friend</td><td>return</td><td>virtual</td></tr>
+				<tr><td>class</td><td>goto</td><td>short</td><td>void</td></tr>
+				<tr><td>compl</td><td>if</td><td>signed</td><td>volatile</td></tr>
+				<tr><td>concept</td><td>inline</td><td>sizeof</td><td>wchar_t</td></tr>
+				<tr><td>const</td><td>int</td><td>static</td><td>while</td></tr>
+				<tr><td>const_cast</td><td>long</td><td>static_assert</td><td>xor</td></tr>
+				<tr><td>continue</td><td>mutable</td><td>static_cast</td><td>xor_eq</td></tr>
+			</table>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Create a program, using functions for each of the main tasks. The program should prompt the user for information, processing the data, and display the result.</li>
+				<li>Create some of your own functions. Try out using different return types &#40;such as <pre class="inline_code prettyprint">void</pre>&#41;, as well as different combinations of parameters.</li>
+				<li>Try removing the prototypes from the example program and see what can do to fix the error, other than putting the prototypes back in.</li>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.cpp" download>Download</a> | 
+				<a title="run example" href="http://ideone.com/WH2QTe" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, or email a question.
+
+// This heatder file allows the use of the string data type.
+#include <string>
+
+using namespace std;
+
+int main() {
+   
+   // This declares an integer variable with the indentifier "userAge"
+   int userAge;
+   
+   // This line sets userAge to contain the integer value 34
+   userAge = 34;
+   
+   // This line sets userAge to contain the interger value 23, overwritting 
+   // the previous value, 34
+   userAge = 23;
+   
+   // This line declares a character value with the identifier letterInput
+   // and intializes it to hold the value 'c'
+   char letterInput = 'c';
+   
+   // Finally, this line decalres a string value with the identifier address.
+   // Note that "string" is not highlighted. Only the fundamental data types
+   // are highlighted in your editor. Additionally, the value is intialized
+   // with a string literal.
+   string address = "1234 Nowhere St. Reno, NV";
+   
+	return 0;
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a title="contact email" href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a title="GitHub" href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
