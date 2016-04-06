@@ -1,0 +1,12 @@
+
+#table_keywords {
+	width: 100%;
+	border: 1px solid black;	
+	background-color: #E5E5FF;
+}
+#table_keywords > tbody > tr > td {
+	padding: 2px;
+	margin: 0;
+	line-height: 1em;
+	width: 10%;
+}
