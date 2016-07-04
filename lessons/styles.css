@@ -25,9 +25,13 @@ a#home {
 }
 a#last {
 	float: left;
+	position: fixed;
+	left: 10px;
 }
 a#next {
 	float: right;
+	right: 10px;
+	position: fixed;
 }
 a.top_button {
 	text-decoration: none;
