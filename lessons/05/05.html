@@ -1,0 +1,238 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 05 - Control Flow</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" title="last lesson" href="..\04\04.html" id="last">Last</a>
+		<a class="top_button" title="next lesson" href="..\06\06.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 05 - Control Flow</h1>
+			<a id="home" title="homepage" href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a title="branching" href="#branch">Branching</a></li> | 
+					<li><a title="if" href="#if">If Statements</a></li> | 
+					<li><a title="andornot" href="#andornot">And, Or, and Not</a></li> | 
+					<li><a title="ifelse" href="#ifelse">If and Else</a></li> | 
+					<li><a title="nesting" href="#nesting">Nesting Conditionals</a></li> | 
+					<li><a title="switch" href="#switch">Switch Statements</a></li> |
+					<li><a title="boolfunc" href="#boolfunc">Boolean Functions</a></li> |
+					<li><a title="exercises" href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.cpp" download>Download</a> | 
+				<a title="run example" href="https://ideone.com/2JcgAK" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+//Used for an if statement
+bool isNumGreat(int num);
+
+int main() {
+	
+	int number;
+	char character;
+	
+	cout &lt;&lt; "Enter your favorite number: ";
+	
+	cin &gt;&gt; number;
+	
+	//This chain of if/else staements discovers if your number causes the isNumGreat function to return true,
+	//or if your number is between 0 and 100, negative, or greather than 100
+	if(isNumGreat(number)) {
+		
+		cout &lt;&lt; "Your favorite number is the answer to life, the universe, and everything!" &lt;&lt; endl;
+		
+	} else if (number &gt;= 0 &amp;&amp; number &lt;= 100) {
+		
+		cout &lt;&lt; "Your favorite number is between 0 and 100!" &lt;&lt; endl;
+		
+	} else if (number &lt; 0) {
+		
+		cout &lt;&lt; "Your favorite number is negative!" &lt;&lt; endl;		
+		
+	} else {
+		
+		cout &lt;&lt; "Your favorite number is greater than 100!" &lt;&lt; endl;
+		
+	}
+	
+	cout &lt;&lt; endl &lt;&lt; "Enter a letter a, b, c, d, e, or f: " &lt;&lt; endl;
+	
+	cin &gt;&gt; character;
+	
+	//This switch statement detects if the letter is an a, or a b, c, or d, or an e - note that if you enter an
+	//e you will get the result from e and f, or an f. Finally, it can also default to a statement if you did
+	//not enter any of those letters.
+	switch(character) {
+		case 'a':
+			cout &lt;&lt; "The next letter is 'b'" &lt;&lt; endl;
+			break;
+			
+		case 'b':
+		case 'c':
+		case 'd':
+			cout &lt;&lt; "Your letter is boring." &lt;&lt; endl;
+			break;
+			
+		case 'e':
+			cout &lt;&lt; "eeeeeeeeee" &lt;&lt; endl;
+			
+		case 'f':
+			cout &lt;&lt; "ffffffffff" &lt;&lt; endl;
+			break;
+			
+		default:
+			cout &lt;&lt; "You didn't enter one of those letters! D:" &lt;&lt; endl;
+	}
+}
+
+bool isNumGreat(int num) {
+	//Num == 42 is a boolean statement, so the function can return the result of it.
+	return num == 42;
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="branch">Branching</h2>
+			<p>
+				The basic concept of control flow is branching, or making your code follow different paths -depending on what happens within the program. This is an essential part of programming, and you’ll be using it for more or less everything in the future. For example, in a simple if statement:
+			</p>
+			<img src="branch.png" style="width: 30%;">
+			<h2 id="if">If Statements</h2>
+			<p>
+				The basic form of branching is an “if” statement, which simply evaluates an expression, and if that expression turns out to be true, it allows a branch of code to run. They’re very simple to use: you type the keyword “if,” followed by a Boolean expression in parenthesis, and finally the brackets defining the branch (or scope) of code that will be run. However, if there will only be one line of code under the “if,” the brackets can be omitted. A Boolean expression, or statement, is anything that will evaluate to true or false. This can include simply “true” or “false,” Boolean variables, functions that return Boolean values, and most commonly comparisons between values. The most basic comparison is equals to, which is performed by the comparison operator, ==. As you may have guessed, there are several other operators for other types of comparison:
+			</p>
+			<table class="table">
+				<tbody>
+				<tr><td style="border-right: 1px solid black; border-bottom: 1px solid black;">Operator</td><td style="border-bottom: 1px solid black;">Use</td></tr>
+				<tr><td style="border-right: 1px solid black;">==</td><td>Equal to</td></tr>
+				<tr><td style="border-right: 1px solid black;">!=</td><td>Not equal to</td></tr>
+				<tr><td style="border-right: 1px solid black;">&gt;</td><td>Greater than</td></tr>
+				<tr><td style="border-right: 1px solid black;">&lt;</td><td>Less than</td></tr>
+				<tr><td style="border-right: 1px solid black;">&gt;=</td><td>Greather than or equal to</td></tr>
+				<tr><td style="border-right: 1px solid black;">=&lt;</td><td>Less than or equal to</td></tr>
+				</tbody>
+			</table>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Write a logic chain to detect if a number is even or odd.</li>
+				<li>Write a function to test if user-entered values are within several different ranges, for example calculate a movie ticket price based on age.</li>
+				<li>Make a simple menu system where the user can enter a number or character to select an item (use a switch for this). For example:
+<pre>Menu Program
+=========
+1: (O)utput some text
+2: (S)ay hello world
+3: (Q)uit</pre>
+				</li>
+				<li>Finally, write a Boolean function to detect if a given year is a leap year – this is a bit more complicated than you’d think, as you must obey the following rules:
+				<p>Every fourth year is a leap year, unless the year is a century, but it is still a leap year if it is a fourth century.For example, year 4 is a leap year, year 100 is not, and year 400 is.</p></li>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.cpp" download>Download</a> | 
+				<a title="run example" href="https://ideone.com/2JcgAK" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+//Used for an if statement
+bool isNumGreat(int num);
+
+int main() {
+	
+	int number;
+	char character;
+	
+	cout &lt;&lt; "Enter your favorite number: ";
+	
+	cin &gt;&gt; number;
+	
+	//This chain of if/else staements discovers if your number causes the isNumGreat function to return true,
+	//or if your number is between 0 and 100, negative, or greather than 100
+	if(isNumGreat(number)) {
+		
+		cout &lt;&lt; "Your favorite number is the answer to life, the universe, and everything!" &lt;&lt; endl;
+		
+	} else if (number &gt;= 0 &amp;&amp; number &lt;= 100) {
+		
+		cout &lt;&lt; "Your favorite number is between 0 and 100!" &lt;&lt; endl;
+		
+	} else if (number &lt; 0) {
+		
+		cout &lt;&lt; "Your favorite number is negative!" &lt;&lt; endl;		
+		
+	} else {
+		
+		cout &lt;&lt; "Your favorite number is greater than 100!" &lt;&lt; endl;
+		
+	}
+	
+	cout &lt;&lt; endl &lt;&lt; "Enter a letter a, b, c, d, e, or f: " &lt;&lt; endl;
+	
+	cin &gt;&gt; character;
+	
+	//This switch statement detects if the letter is an a, or a b, c, or d, or an e - note that if you enter an
+	//e you will get the result from e and f, or an f. Finally, it can also default to a statement if you did
+	//not enter any of those letters.
+	switch(character) {
+		case 'a':
+			cout &lt;&lt; "The next letter is 'b'" &lt;&lt; endl;
+			break;
+			
+		case 'b':
+		case 'c':
+		case 'd':
+			cout &lt;&lt; "Your letter is boring." &lt;&lt; endl;
+			break;
+			
+		case 'e':
+			cout &lt;&lt; "eeeeeeeeee" &lt;&lt; endl;
+			
+		case 'f':
+			cout &lt;&lt; "ffffffffff" &lt;&lt; endl;
+			break;
+			
+		default:
+			cout &lt;&lt; "You didn't enter one of those letters! D:" &lt;&lt; endl;
+	}
+}
+
+bool isNumGreat(int num) {
+	//Num == 42 is a boolean statement, so the function can return the result of it.
+	return num == 42;
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a title="contact email" href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a title="GitHub" href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
