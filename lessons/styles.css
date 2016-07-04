@@ -17,6 +17,12 @@ a:hover {
 	color: #F26101;
 }
 
+a#home {
+	text-align: center;
+	padding-left: 47%;
+	font-size: 1.5em;
+	text-decoration: underline;
+}
 a#last {
 	float: left;
 }
@@ -46,7 +52,7 @@ div#main {
 }
 
 h1 {
-	margin-bottom: 0.5em;
+	margin-bottom: 10px;
 	text-align: center;
 	text-decoration: underline;
 	font-weight: normal;
@@ -54,7 +60,7 @@ h1 {
 	margin-top: 0;
 }
 h2 {
-	font-size: 1.5em;
+	font-size: 2em;
 	font-weight: bold;
 }
 

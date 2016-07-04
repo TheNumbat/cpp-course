@@ -1,0 +1,11 @@
+
+.content_list {
+	list-style-type: none;
+	width: 50%;
+}
+.content_list > li {
+	font-size: 1.5em;
+}
+#right {
+	float: right;
+}
