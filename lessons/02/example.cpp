@@ -1,11 +1,6 @@
 //If you are not sure what some lines of code do, try looking back at
 //previous example programs, notes, or ask a question.
 
-/*
-This program simply prompts the user for input and displays it.
-*/
-
-
 //Remember to include iostream when using console IO
 #include <iostream>
 

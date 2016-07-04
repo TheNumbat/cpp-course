@@ -22,7 +22,7 @@
 					<li><a title="theory" href="#theory">Function Theory &#40;in C/C++&#41;</a></li> | 
 					<li><a title="declaration" href="#declaration">Declaring Functions</a></li> | 
 					<li><a title="implementation" href="#implementation">Implementing Functions</a></li> | 
-					<li><a title="usage" href="#useage">Using Functions</a></li> | 
+					<li><a title="usage" href="#usage">Using Functions</a></li> | 
 					<li><a title="exercises" href="#exercises">Exercises</a></li>
 				</ul>
 			</nav>
@@ -129,7 +129,7 @@ double calcRoot&#40;int a, int b, int c&#41;;</pre>
 	x = &#40;-b + sqrt&#40;b*b – 4*a*c&#41;&#41; / 2*a;
 	return x;
 }</pre>
-			<h2 id="useage">Using Functions</h2>
+			<h2 id="usage">Using Functions</h2>
 			<p>
 				Finally, you need to learn how to use your sparkly new function. This is called calling, or invoking, the function. To do so, simply type the name of your function. Simple enough. Then, add parenthesis and specify what are called the "actual" parameters. They represent the actual data that you pass to the function &mdash; the data you pass here will be contained in your parameters within your function. You can pass literal values or variables. Your data must match the types specified in your prototype, but note that your actual parameters do not need to be named the same as your formal parameters. This means that if you have a parameter named "value_one" of type <pre class="inline_code prettyprint">double</pre>, you can pass in a variable named "input," so long as it is also of type <pre class="inline_code prettyprint">double</pre>. They simply pass the data into the formal parameters.<br>
 				Whether or not your function returns a value, that's all you need to do &#40;remember your semicolon&#41;. However, if your function returns a value that you care about, you can receive the value using the assignment operator &#40;=&#41;, with the function on the right and a variable matching the return type on the left. This means if your function returns an <pre class="inline_code prettyprint">int</pre>, you must receive the with a variable of type <pre class="inline_code prettyprint">int</pre>.
