@@ -1,0 +1,228 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 06 - Loops &amp; Recursion</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" title="last lesson" href="..\05\05.html" id="last">Last</a>
+		<a class="top_button" title="next lesson" href="..\07\07.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 06 - Loops &amp; Recursion</h1>
+			<a id="home" title="homepage" href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a title="looping" href="#loop">Looping</a></li> | 
+					<li><a title="while" href="#while">While Loops</a></li> | 
+					<li><a title="dowhile" href="#dowhile">Do While Loops</a></li> | 
+					<li><a title="for" href="#for">For Loops</a></li> | 
+					<li><a title="nesting" href="#nesting">Nesting Loops</a></li> | 
+					<li><a title="recursion" href="#recursion">Recursion</a></li> |
+					<li><a title="exercises" href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.cpp" download>Download</a> | 
+				<a title="run example" href="https://ideone.com/Y83YVR" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int addFrom(int);
+
+int main() {
+	
+	char selection;
+	
+	//A simple do/while loop, where the loop will continue asking the user
+	//to continue until they enter something that is not 'y'
+	do {
+		cout &lt;&lt; "Continue? (y/n): ";
+		cin &gt;&gt; selection;
+	} while(selection == 'y');
+	
+	cout &lt;&lt; endl &lt;&lt; endl;
+	
+	//A nested for loop, will run the inner loop 10 times. Each time the outer
+	//loop is run, i is incremented, and hence the first output number goes up
+	//every ten outputs. Within each run of the outer loop, the inner loop sets
+	//j to 0, and counts it up to 10, which produces each pair of outpout numbers.
+	for(int i = 0; i &lt; 10; i++) {
+		for(int j = 0; j &lt; 10; j++) {
+			cout &lt;&lt; i &lt;&lt; "-" &lt;&lt; j &lt;&lt; " ";
+		}
+		cout &lt;&lt; endl;
+	}
+	
+	cout &lt;&lt; endl &lt;&lt; endl;
+	
+	//This calls the recursive function
+	cout &lt;&lt; "Recursion example: " &lt;&lt; addFrom(5) &lt;&lt; endl &lt;&lt; endl;
+	
+	system("pause");
+	
+	return 0;
+}
+
+//This is a recursive function. See the notes for how it works.
+int addFrom(int x) {
+	
+	if(x == 1)
+		return 1;
+	else
+		return x + addFrom(x - 1);
+	
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="loop">Looping</h2>
+			<p>
+				The basic concept of looping is very simple—a loop repeats the same code many times. All loops must have a few critical pieces in order to run correctly: an initialization, where starting conditions are set up; a condition to continue, which decides when the loop will stop; and finally an updating condition that specifies what will change each time the looped code is run. If your condition to continue is always met, the loop will continue to run for the life of your program—this is called an infinite loop, and is a bug, as your program cannot progress if it is stuck in one. While all loops have this basic functionality, and hence can be used interchangeably, there are several types of loops that are more suitable for different situations.
+			</p>
+			<h2 id="while">While Loops</h2>
+			<p>
+				The simplest type of loop is the while loop, where it repeats its block of code (funnily enough) while a Boolean expression is true. The syntax is also quite simple: type the keyword “while,” and then your Boolean terms in parenthesis. Hence, when your program gets to the loop, it will test your condition, and if it is true, it will run the looped code, and when it gets to the end of that, it will test your condition again, and so on. Because this loop only does one thing, you have to implement the other two parts of the loop yourself: before your loop you must perform the initialization, and within the loop you must specify your updating condition. While loops are usually used for event triggered loops, meaning loops where the updating condition is invalidated when something specific happens in the code, for example counting through a string or displaying a menu system, whereas the for loop (subtopic 4) is more suitable for loops where you know exactly how many times you want the loop to run. 
+			</p>
+			<pre class="example_code prettyprint">char selection;
+bool continueProgram = true;
+
+while(continueProgram) {
+	cout &lt;&lt; “Continue (y/n): “
+	cin &gt;&gt; selection;
+	if(selection == 'n')
+		continueProgram = false;
+}</pre>
+			<h2 id="dowhile">Do While Loops</h2>
+			<p>
+				The second type of loop is almost exactly the same as the while loop, except in a do while loop the loop code will always be run at least once. Basically, your program will go through the loop once under any condition, and then it will check your continue condition. If it is true, your program will go back to the start of the loop, and so on. The syntax is also very similar, except that you start with the keyword “do,” and put the “while” statement at the end of the code block, followed by a semicolon. Do/while loops are especially useful in things like menus, where you know it should be displayed at least once. 
+			</p>
+			<pre class="example_code prettyprint">do {
+	//do things, this will always happen at least once
+	//update your condition
+} while(condition);</pre>
+			<h2 id="for">For Loops</h2>
+			<p>
+				The third type of loop is my personal favorite (I use it for most things), the for loop. As mentioned previously, the “for” loop does essentially the same things as a while loop, but it does it in a much more compact manner. The ‘classic’ use of the “for” loop is to count from one value to another, which it excels at, but it can be used for many other things as well. A for loop has five parts to the definition: first, of course, type the keyword “for,” followed by parenthesis. Now, there are three things you have to include in these parenthesis. First, there is the initializing statement. This first statement will be run once when the program first gets to the loop, and never again. Generally, here you want to set up variables or counters that will be used in the loop. Then, add a semicolon to end the first statement and start the second one. The second statement describes the continue condition of the loop, and must be a Boolean expression. Finally, add another semicolon and the third statement, which is the updating condition. This statement will be run each time your program gets to the end of the loop. Then, it will check the continue condition—not before. Remember that. This statement usually includes some sort of numerical manipulation of a counter variable, such as adding one to it each time. Furthermore, you can add multiple operations to the first and third statements by simply adding a comma between each one. Lastly, as with other control flow code, if you only have one statement in your loop, you can omit the curly brackets. 
+			</p>
+			<pre class="example_code prettyprint">for(int i = 0; i < 20; i++) {
+	cout << “Loop is on number “ << i << endl;
+}</pre>
+			<pre class="example_code prettyprint">for(pizza = 0, steve = 10; pizza <= steve; pizza++, steve--)
+	cout << “Pizza is “ << steve – pizza << “ less than steve.” << endl;</pre>
+    		<p>
+    			You always need to pay close attention to where you start and end your loop, as improper use of greater than/less than/or equal to, and starting on values like 0 or 1 can lead to what are called “off-by-one” errors, where your loop will run one too many or one two few times. Be VERY careful of these errors, as they can be hard to find. For example, the first example would loop between values i = 9 and i = 19, not anything else. On the other hand, if the conditional used a less than or equal to instead of just a less than, it would loop between i = 0 and i = 20. 
+    		</p>
+    		<h2 id="nesting">Nesting Loops</h2>
+    		<p>
+    			Just like you can nest conditional statements, you can nest loops. It works just as you’d think—the outer loop runs the smaller loop several times, and each time the inner loop is run, it runs its code however many times. This will be especially useful when we get to topics such as multidimensional arrays. In this example, the numbers 0-1, 0-2, etc will display, then 1-1, 1-2, etc, etc:
+    		</p>
+    		<pre class="example_code prettyprint">for(int i = 0; i < 10; i++) {
+	for(int j = 0; j < 10; j++)	{
+		cout << i << “-“ << j << “ “;   
+	}
+	cout << endl;
+}</pre>
+			<h2 id="recursion">Recursion</h2>
+			<p>
+				Finally, there is the last type of looping—looping without loops. You’ve probably heard of it before, and it’s recursion. Recursion is the process of a function calling itself. There are more complicated forms of recursion, but what we’ll cover for now are tail-recursive functions, meaning that they must have some sort of conditional to end the recursion process, and if that is not triggered, it will call itself in the tail of the function with some sort of modified parameters. 
+			</p>
+			<pre class="example_code prettyprint">int addFrom(int x) {
+	if(x == 1)
+		return 1;
+	else
+		return x + addFrom(x – 1);
+}</pre>
+			<p>
+				This function will take a value, and if that value is equal to one, it will simply return 1. However, if the value is not one, it will return the value plus the return of itself, called with one less than x. This process will continue until the value of x – 1 is equal to 1, in which case the final call will return 1, and the return values will cascade back up, adding each returned value to the last. It will end up with x + (x – 1) + (x – 2) + … + 1, or basically the number plus each integer lower than it until 1. This may seem a bit hard to wrap your head around, try to think of it visually:
+			</p>
+			<img src="recursion.png" style="margin-left:33%;width:35%">
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Write a function that calculates a factorial using a loop, and one that calculates it using recursion.</li>
+				<li>Write a function that calculates a value to an exponent. It should be able to handle any integer exponent (i.e. positive and negative). You can use a loop, recursion, or both for this.</li>
+				<li>Write a function that checks if a number is prime.</li>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.cpp" download>Download</a> | 
+				<a title="run example" href="https://ideone.com/Y83YVR" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+int addFrom(int);
+
+int main() {
+	
+	char selection;
+	
+	//A simple do/while loop, where the loop will continue asking the user
+	//to continue until they enter something that is not 'y'
+	do {
+		cout &lt;&lt; "Continue? (y/n): ";
+		cin &gt;&gt; selection;
+	} while(selection == 'y');
+	
+	cout &lt;&lt; endl &lt;&lt; endl;
+	
+	//A nested for loop, will run the inner loop 10 times. Each time the outer
+	//loop is run, i is incremented, and hence the first output number goes up
+	//every ten outputs. Within each run of the outer loop, the inner loop sets
+	//j to 0, and counts it up to 10, which produces each pair of outpout numbers.
+	for(int i = 0; i &lt; 10; i++) {
+		for(int j = 0; j &lt; 10; j++) {
+			cout &lt;&lt; i &lt;&lt; "-" &lt;&lt; j &lt;&lt; " ";
+		}
+		cout &lt;&lt; endl;
+	}
+	
+	cout &lt;&lt; endl &lt;&lt; endl;
+	
+	//This calls the recursive function
+	cout &lt;&lt; "Recursion example: " &lt;&lt; addFrom(5) &lt;&lt; endl &lt;&lt; endl;
+	
+	system("pause");
+	
+	return 0;
+}
+
+//This is a recursive function. See the notes for how it works.
+int addFrom(int x) {
+	
+	if(x == 1)
+		return 1;
+	else
+		return x + addFrom(x - 1);
+	
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a title="contact email" href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a title="GitHub" href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>

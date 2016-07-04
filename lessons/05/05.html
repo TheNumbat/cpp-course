@@ -116,7 +116,7 @@ bool isNumGreat(int num) {
 			<p>
 				The basic concept of control flow is branching, or making your code follow different paths -depending on what happens within the program. This is an essential part of programming, and you’ll be using it for more or less everything in the future. For example, in a simple if statement:
 			</p>
-			<img src="branch.png" style="width: 30%;">
+			<img src="branch.png" style="width:30%;">
 			<h2 id="if">If Statements</h2>
 			<p>
 				The basic form of branching is an “if” statement, which simply evaluates an expression, and if that expression turns out to be true, it allows a branch of code to run. They’re very simple to use: you type the keyword “if,” followed by a Boolean expression in parenthesis, and finally the brackets defining the branch (or scope) of code that will be run. However, if there will only be one line of code under the “if,” the brackets can be omitted. A Boolean expression, or statement, is anything that will evaluate to true or false. This can include simply “true” or “false,” Boolean variables, functions that return Boolean values, and most commonly comparisons between values. The most basic comparison is equals to, which is performed by the comparison operator, ==. As you may have guessed, there are several other operators for other types of comparison:
@@ -149,41 +149,41 @@ bool isNumGreat(int num) {
 				When you use an “if” statement, it will test the Boolean expression you give it, and if it is true, it will execute the code in its branch. However, if the expression is false, nothing will happen at all—your program will simply skip the if statement. Now, most of the time you’re probably going to want something to happen on true, and something else to happen on false. This can be achieved through the use of if and else statements. An else statement simply runs its block of code if the “if” statement above it did not trigger. To use it, simply add the keyword “else” after an “if” statement and curly brackets (again, if there is only one statement in the block, these can be omitted). Additionally, you can add another “if” statement right onto the else block by adding the keyword “if” and another Boolean expression. This is called an else/if statement, and it will do the following: the first if statement will test, and if it fails, it will go to the second statement, and test that one instead. If the second statement also does not trigger, it will go on to the third, and so on, until it either runs out of statements or gets to an else block.
 			</p>
 			<pre class="example_code prettyprint">if(5 == 9) {
-   //this will not trigger
+	//this will not trigger
 } else {
-   //this will trigger
+	//this will trigger
 }</pre>
 			<pre class="example_code prettyprint">if(variable == thing) {
-   //this may or may not trigger
+	//this may or may not trigger
 }
 else if(variable == otherThing) {
-   //this may trigger if the first one does not trigger
+	//this may trigger if the first one does not trigger
 }
 else {
-   //this will trigger if neither of the first two do
+	//this will trigger if neither of the first two do
 }</pre>
 			<h2 id="nesting">Nesting Conditionals</h2>
 			<p>
 				You will often want to test multiple conditions, and execute some things for everything, or some things from other things, or a variety of other relatively complicated logic paths. You can do this by nesting conditional statements, meaning adding more if statements within other ones. This is very self-explanatory—you can just add another statement in another’s code block.
 			</p>
 			<pre class="example_code prettyprint">if(thisValue) {
-   //do something
+	//do something
    
-   if(otherThing == 5) {
-      //do another thing
-   }
+	if(otherThing == 5) {
+		//do another thing
+	}
 }</pre>
 			<h2 id="switch">Switch Statements</h2>
 			<p>
 				With your current knowledge, to choose a code path from several different options, you’d have to write a long chain of if/else statements—but wait! There’s a better way: the switch statement. The switch statement will take a character or integer value, and quite easily run a block of code corresponding with the value of the variable given to it.
 			</p>
 			<pre class="example_code prettyprint">switch(charVar) {
-   case ‘a’:
-      //do things
-   break;
-   case ‘b’:
-      //do other things
-   break;
+	case ‘a’:
+   		//do things
+	break;
+	case ‘b’:
+   		//do other things
+	break;
 }</pre>
 			<p>
 				So, to start, type the keyword “switch,” and the variable you want to switch on in parenthesis. Then define a block of code, which is where you will put your cases. Each “case” statement defines a value that the switch statement will test for and the block of code that will be run if that case is chosen. To add a case, simply type the keyword “case,” the integer or character value you want to test for, and a colon (note you don’t need brackets here). Then, add the code you want to process, and end it with the keyword “break.” “Break” tells the program that you are done with that case, and to be finished with the switch statement.
@@ -192,52 +192,52 @@ else {
 				However, you don’t technically have to include a break statement—if you don’t, your code will simply continue down the switch statement, which you may or may not want. Here’s an example that uses this feature to run the same code if a few different things are true (of course, if you actually use this you would have more than one possible path):
 			</p>
 			<pre class="example_code prettyprint">switch(charVar) {
-   case ‘1’:
-   case ‘a’:
-   case ‘A’:
-      //do something if character holds the characters 1, a, or A
-   break;
+	case ‘1’:
+	case ‘a’:
+	case ‘A’:
+		//do something if character holds the characters 1, a, or A
+	break;
 }</pre>
 			<p>
 				This can also be used to do something like this, which will increment “count” different numbers of times based on which case is chosen. Basically, if case 3 is chosen, if will run all three blocks of code, whereas if one is chosen, it will only run one:
 			</p>
 			<pre class="example_code prettyprint">switch(intVar) {
-   case 3:
-      count++;
-   case 2:
-      count++;
-   case 1:
-      count++;
-   break;
+	case 3:
+		count++;
+	case 2:
+		count++;
+	case 1:
+		count++;
+	break;
 }</pre>
 			<p>
 				The last thing you need to know about switch statements is how to have a section run if no cases are chosen, like how an else statement would run if no if/else statements are chosen. To do this, simply add another case, but instead of using the keyword “case,” use the keyword “default.” 
 			</p>
 			<pre class="example_code prettyprint">switch(intVar) {
-   case 1:
-      //do stuff
-   break;
-   default:
-      //this will run if none of the other cases are chosen
-   break;
+	case 1:
+		//do stuff
+	break;
+	default:
+		//this will run if none of the other cases are chosen
+	break;
 }</pre>
 			<h2 id="boolfunc">Boolean Functions</h2>
 			<p>
 				Finally, the last little subtopic is Boolean functions. Boolean functions are just like any other functions you’ve seen, except they have the return type “bool.” This makes them very useful, as they can be used in Boolean expressions (such as in “if” statements) and will act as the value that is returned from it. 
 			</p>
 			<pre class="example_code prettyprint">bool testEqual(int a, int b) {
-   return a == b;
+	return a == b;
 }
 
 int main() {
-   int x = 7;
-   int y = 13;
+	int x = 7;
+	int y = 13;
 
-   if(testEqual(x,y) &amp;&amp; x < y) {
-      cout &lt;&lt; x &lt;&lt; “ equals “ &lt;&lt; y &lt;&lt; endl;
-   } else {
-      cout &lt;&lt; x &lt;&lt; “ does not equal “ &lt;&lt; y &lt;&lt; endl;
-   }
+	if(testEqual(x,y) &amp;&amp; x < y) {
+		cout &lt;&lt; x &lt;&lt; “ equals “ &lt;&lt; y &lt;&lt; endl;
+	} else {
+		cout &lt;&lt; x &lt;&lt; “ does not equal “ &lt;&lt; y &lt;&lt; endl;
+	}
 }</pre>
 		</article>
 		<section class="exercises">
