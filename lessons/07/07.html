@@ -10,8 +10,8 @@
 	</head>
 	<body>
 	<header>
-		<a class="top_button" title="last lesson" href="..\05\05.html" id="last">Last</a>
-		<a class="top_button" title="next lesson" href="..\07\07.html" id="next">Next</a>
+		<a class="top_button" title="last lesson" href="..\06\06.html" id="last">Last</a>
+		<a class="top_button" title="next lesson" href="..\08\08.html" id="next">Next</a>
 	</header>
 	<div id="main">
 		<header role="banner">
@@ -143,7 +143,7 @@ void setArray(int arrayParam[], int arraySize, int setValue) {
 			<p>
 				Before we get to arrays, there’s a small but important concept that you need to be familiar with—reference parameters. In the past, I’ve emphasized how the formal parameters of your functions are simply copies of the actual parameters passed into the function when you call it. However, if you define a parameter as a reference parameter, how you change it in your function will actually change the value that was passed into it, for example in main. To define a reference parameter, the syntax is exactly the same as a normal parameter, except that you put an ampersand before the parameter name. As always, remember to also include it in the function prototype. 
 			</p>
-			<pre class="example_code prettyprint">void refFunction(int&);
+			<pre class="example_code prettyprint">void refFunction(int&amp;);
 
 main() {
 	int variable = 5;
@@ -190,10 +190,10 @@ void refFunction(int &amp;value) {
 			<p>
 				While being able to assign values to individual elements in an array is useful, most the array processing you’ll be doing will be in the form of loops. There isn’t anything new to learn here, but realize that you can do things like loop from 0 to your array size, and assign a value to each element in the array using your counter variable. This is one of the ways that the “for” loop is most useful. Finally, remember to be careful of off-by-one errors—for example, if the first example looped until “i” was less than or equal to 10, in the last iteration it would try to access array sub 10, meaning the 11th element and possibly an error. 
 			</p>
-			<pre class="example_code prettypring">for(int i = 0; i < 50; i++)
+			<pre class="example_code prettypring">for(int i = 0; i &lt; 50; i++)
 	integerArray[i] = 0;</pre>
 			<p>This example simply loops through each element in the array and sets it to 0.</p>
-			<pre class="example_code prettypring">for(int i = 0; i < 10; i++)
+			<pre class="example_code prettypring">for(int i = 0; i &lt; 10; i++)
 	characterArray[i] += i;</pre>
 			<p>This example will loop through each value of the array, adding one more to each one consecutively (i.e. add zero to the first element, so it will remain ‘a’, add one to the second element, so it will be ‘b’, etc.).</p>
 			<h2 id="params">Array Parameters</h2>
