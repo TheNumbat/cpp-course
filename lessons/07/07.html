@@ -1,0 +1,352 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 07 - Reference Parameters &amp; Arrays</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" title="last lesson" href="..\05\05.html" id="last">Last</a>
+		<a class="top_button" title="next lesson" href="..\07\07.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 07 - Reference Parameters &amp; Arrays</h1>
+			<a id="home" title="homepage" href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a title="references" href="#ref">Reference Parameters</a></li> | 
+					<li><a title="array concept" href="#arrcon">Concept of Arrays</a></li> | 
+					<li><a title="declaring" href="#declar">Declaring Arrays</a></li> | 
+					<li><a title="usage" href="#usage">Using Arrays</a></li> | 
+					<li><a title="loops" href="#loops">Arrays and Loops</a></li> | 
+					<li><a title="params" href="#params">Array Parameters</a></li> |
+					<li><a title="cstrings" href="#cstrings">C-Strings</a></li> |
+					<li><a title="exercises" href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.cpp" download>Download</a> | 
+				<a title="run example" href="https://ideone.com/lfoYXb" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+//The function prototype of a function with a reference parameter. To specify the
+//reference paramter, simply type and ampersand after the data type.
+//Note that it does not return anything, as the data will be passed back through
+//the reference parameter.
+void addNumber(int&amp;,int);
+
+//This function prototype includes an array, which automatically acts as a reference
+//parameter -- changes to the array within the funciton will also effect MAIN.
+//Note that you do not need to specify the array size.
+void setArray(int[],int,int);
+
+int main() {
+	
+	int result = 5;
+
+	cout &lt;&lt; "Number before function: " &lt;&lt; result &lt;&lt; endl;
+
+	//Passes the result value as a reference parameter, so that its value will
+	//be changed within MAIN.
+	addNumber(result, 10);
+
+	cout &lt;&lt; "Number after function: " &lt;&lt; result &lt;&lt; endl;
+
+	//This declares an array of integers with a size of ten.
+	int array[10];
+
+	cout &lt;&lt; endl;
+
+	//This will output a garbage value, as the values in the array have not been
+	//initialized. Note the use of array[0] to denote the first element.
+	cout &lt;&lt; "Garbage first value in array: " &lt;&lt; array[0] &lt;&lt; endl;
+
+	//For loops are particularly useful in looping through arrays. This loop sets
+	//the first value in the array to 1, the second to 2, and so on.
+	for(int i = 0; i &lt; 10; i++) {
+		array[i] = i + 1;
+	}
+
+	//Output the fourth and sixth values in the array, which will now be 4. Note the 
+	//use of array[3] and array[5] to denote the fourth and sixth elements.
+	cout &lt;&lt; "After the loop, the fourth value in the array is: " &lt;&lt; array[3] &lt;&lt; endl;
+	cout &lt;&lt; "After the loop, the sixth value in the array is: " &lt;&lt; array[5] &lt;&lt; endl;
+	
+	cout &lt;&lt; endl;
+	
+	//This calls the setArray function, which will set the first 10 values in the
+	//array "array" to 25. This will effect the "array" variable in MAIN.
+	setArray(array, 10, 25);
+
+	//Again, loop through the array, outputting each value. This shows that all the
+	//elements in the array have indeed been set to 25.
+	for(int i = 0; i &lt; 10; i++) {
+		cout &lt;&lt; "Array element " &lt;&lt; i &lt;&lt; ": " &lt;&lt; array[i] &lt;&lt; endl;
+	}
+
+	cout &lt;&lt; endl;
+
+	//Declares a c-string that can hold 50 characters, or 49 characters if you don't
+	//count the null character.
+	char testString[50];
+
+	//Input the string "in the agreegate," so that the word from the console will be
+	//automatically copied to the array, with a null terminator at the end.
+	cout &lt;&lt; "Enter string: ";
+	cin &gt;&gt; testString;
+
+	//Loop though the array until you get to the null character, and output each
+	//character in the string on a new line
+	for(int i = 0; testString[i]; i++)
+ 		cout &lt;&lt; testString[i] &lt;&lt; endl;
+
+	cout &lt;&lt; endl;
+	system("pause");
+	
+	return 0;
+}
+
+//This is the implemenation of the funciton with a reference parameter. As with the
+//prototype, the reference parameter is specified with an ampersand. The function
+//simply plus-equals the value into the result, but the important pard is that this
+//code will change the value of the "result" variable in MAIN
+void addNumber(int &amp;addTo, int value) {
+	addTo += value;
+}
+
+//This funciton loops through the elements in "arrayParam," setting each one to the
+//value specified by the parameter "setValue." Note that this will change the values
+//in the "array" variable in MAIN.
+void setArray(int arrayParam[], int arraySize, int setValue) {
+	for(int i = 0; i &lt; arraySize; i++) {
+		arrayParam[i] = setValue;
+	}
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="ref">Reference Parameters</h2>
+			<p>
+				Before we get to arrays, there’s a small but important concept that you need to be familiar with—reference parameters. In the past, I’ve emphasized how the formal parameters of your functions are simply copies of the actual parameters passed into the function when you call it. However, if you define a parameter as a reference parameter, how you change it in your function will actually change the value that was passed into it, for example in main. To define a reference parameter, the syntax is exactly the same as a normal parameter, except that you put an ampersand before the parameter name. As always, remember to also include it in the function prototype. 
+			</p>
+			<pre class="example_code prettyprint">void refFunction(int&);
+
+main() {
+	int variable = 5;
+
+	cout &lt;&lt; “Variable before function: “ &lt;&lt; variable &lt;&lt; endl;
+
+	refFunction(variable);
+
+	refFunction &lt;&lt; “Variable after function: “ &lt;&lt; variable &lt;&lt; endl;
+}
+
+void refFunction(int &amp;value) {
+	value += 5;
+}</pre>
+			<p>
+				This short program will first output that the variable is 5, as you would expect. However, after the function is called, because it has a reference parameter, the value will actually be changed within MAIN, and the program will output that the variable holds the value 10 after the function.
+			</p>
+			<h2 id="arrcon">Concept of Arrays</h2>
+			<p>
+				Now, on to another vitally important concept of programming—arrays! Arrays are the basic way you can store more than one piece of data in a variable. They’re quite simple: an array is essentially a collection of a type of variable. For example, you could have an array of 10 integers, meaning you can store 10 integer values in that one array. That’s really all you need to know to get started using them, although we will get into more complexities when we do pointers and dynamic memory.
+			</p>
+			<h2 id="declar">Declaring Arrays</h2>
+			<p>
+				Arrays are declared in the same way as variables, except with the addition of square brackets. As with normal variables, you first declare the type of your variable, for example an int, double, or char. Then, type your identifier, and finally the array size in square brackets at the end of the identifier. Finally, when you declare an array of a fundamental type (and only when you declare it), you can set all values to a certain initial value by adding “= {value}” to your declaration. 
+			</p>
+			<pre class="example_code prettyprint">int integerArray[50];</pre>
+			<p>Declares an array of 50 integers</p>
+			<pre class="example_code prettyprint">char characterArray[10] = {‘a’};</pre>
+			<p>Declares an array of 10 characters, and initializes all of them to ‘a.'</p>
+			<h2 id="usage">Using Arrays</h2>
+			<p>
+				Now, arrays aren’t very useful if you don’t know how to get at the data contained within them. Well, it’s also quite simple. To access an element in the array, simply write the array’s identifier followed by brackets with the position of the element in the array. Always remember that the positions of the elements, or indices, always begin at 0. This means that the first element in the array is at index 0, the second at 1, and so on. Additionally, while it may be tempting to simply set one array identifier equal to another to set the arrays equal, that is not allowed (for reasons we will get to later). Hence, if you want to cope one array to another, you must loop through it and copy each element individually.
+			</p>
+			<p>
+				This is one of biggest sources of errors for new programmers, as it can produce many of those “off-by-one” errors I mentioned when discussing loops. However, it’s not just off-by-one errors. If you try to access or assign a value that is past the end of an array, or before it begins, you may or may not generate an error, but it will always be a bug. You won’t always generate an error because if you go off the end of an array, you will start assigning values to whatever memory was after the end of your array. If that memory was used by the operating system, your program will throw an error known as a segmentation fault, or seg fault for short. People tend to have a love/hate relationship with seg faults, as if you have one, it’s good—you know that you have an error, and probably where the error is. However, they’re also bad—they might mean that you have other seg faults waiting to happen, but haven’t—remember that going into memory past or before your array might not cause your program to crash. To top it all off, the memory arrangement will be different on different computers, so your program may behave differently. If there’s anything to take from all this, just remember to be very diligent in looking for errors when using array.
+			</p>
+			<pre class="example_code prettyprint">integerArray[0] = 5;</pre>
+			<p>Sets the first element in the array to 5.</p>
+			<pre class="example_code prettyprint">characterArray[5] = ‘l’;</pre>
+			<p>Sets the sixth element in the array to ‘l.’</p>
+			<pre class="example_code prettyprint">char testValue = characterArray[10];</pre>
+			<p>This example will try to access the 11th element in the array, when it only contains 10 values. Hence, it will try to read the memory after your array, and might throw a segmentation fault.</p>
+			<h2 id="loops">Arrays and Loops</h2>
+			<p>
+				While being able to assign values to individual elements in an array is useful, most the array processing you’ll be doing will be in the form of loops. There isn’t anything new to learn here, but realize that you can do things like loop from 0 to your array size, and assign a value to each element in the array using your counter variable. This is one of the ways that the “for” loop is most useful. Finally, remember to be careful of off-by-one errors—for example, if the first example looped until “i” was less than or equal to 10, in the last iteration it would try to access array sub 10, meaning the 11th element and possibly an error. 
+			</p>
+			<pre class="example_code prettypring">for(int i = 0; i < 50; i++)
+	integerArray[i] = 0;</pre>
+			<p>This example simply loops through each element in the array and sets it to 0.</p>
+			<pre class="example_code prettypring">for(int i = 0; i < 10; i++)
+	characterArray[i] += i;</pre>
+			<p>This example will loop through each value of the array, adding one more to each one consecutively (i.e. add zero to the first element, so it will remain ‘a’, add one to the second element, so it will be ‘b’, etc.).</p>
+			<h2 id="params">Array Parameters</h2>
+			<p>
+				Remember the reference parameters we discussed at the start of this topic? Well, here is where they come into play with arrays. When you pass an array to a function, it will automatically act as a reference parameter, even if you don’t use the ampersand. Keep this in mind. 
+			</p>
+			<p>
+				To actually pass an array to a function, you must first make it clear that your function will take an array: in the prototype, simply type a pair of square brackets with nothing in between. You don’t actually have to specify the size of the array when you pass it to a function, it just has to know it’s an array (although this will change slightly with multidimensional arrays). You do the same in the function implementation, and finally, when calling the function with actual parameters, simply type the array identifier without any brackets at all. Lastly, remember that when you pass arrays to functions, they automatically act as reference parameter, so your function will change the variable in main. 
+			</p>
+			<pre class="example_code prettyprint">void clearArray(int[],int);
+
+main() {
+	int integerArray[10];
+
+	clearArray(integerArray,10);
+}
+
+void clearArray(int array[], int size) {
+	for(int I = 0; I < size; I++)
+		array[i] = 0;
+	}
+}</pre>
+			<h2 id="cstrigns">C-Strings</h2>
+			<p>
+				The final subtopic in this section are what are called C-Style strings, or just c-strings for short. C-strings are technically just arrays of characters, but there are many special ways of working with them. The basic principle is quite simple—each element in the array holds a corresponding character. C-strings are “null-terminated,” meaning a null character (‘\0’) signifies the end of the string. Because of this null character, the size of the array must always be at least one more than the number of actual characters in your string. You can use character arrays like you would expect: for example, you can cin right to a c-string and your program will automatically copy the inputted word to your array, and add a null character to the end. When you use a c-string like that, it is called using it in the aggregate, and is what creates the special properties like automatically adding a null terminator. Finally, you can easily do character-by-character manipulation of c-strings, as you know that you have reached the end of the string when you find a null character. We won’t be going very in-depth with c-strings (at least until we get to dynamic memory), but you should know how to declare and use them. 
+			</p>
+			<pre class="example_code prettyprint">char cstring[50];</pre>
+			<p>The first example declares a c-string that can hold 50 characters, but only 49 actual characters, as the null character must be the last one.</p>
+			<pre class="example_code prettyprint">cin >> cstring;</pre>
+			<p>This will input one word from the console and store it in the “cstring” array, automatically adding a null character at the end.</p>
+			<pre class="example_code prettyprint">for(int i = 0; cstring[i]; i++)
+	cout << cstring[i] << endl;</pre>
+			<p>The final example will loop through the array until it comes to a null character (you can simply use the character as the conditional statement, as it will evaluate to true if it is anything but null) and output each character on a new line.</p>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Write a function (using reference parameters) that calculates the roots of a quadratic function (feel free to use cmath for square roots and powers).</li>
+				<li>Write a function that puts random values into an array of integers, then another function that sorts the values from lowest to highest and finally outputs them in order. There are many methods of sorting, but they’re all pretty simple. If you’re stuck, look at <a href="..\09\09.html">lesson 09</a>.</li>
+				<li>Write a program to input a c-style string and output it backwards, character by character, encoded with a code-wheel type offset (each character is offset), or anything else you can think of.</li>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.cpp" download>Download</a> | 
+				<a title="run example" href="https://ideone.com/lfoYXb" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+//The function prototype of a function with a reference parameter. To specify the
+//reference paramter, simply type and ampersand after the data type.
+//Note that it does not return anything, as the data will be passed back through
+//the reference parameter.
+void addNumber(int&amp;,int);
+
+//This function prototype includes an array, which automatically acts as a reference
+//parameter -- changes to the array within the funciton will also effect MAIN.
+//Note that you do not need to specify the array size.
+void setArray(int[],int,int);
+
+int main() {
+	
+	int result = 5;
+
+	cout &lt;&lt; "Number before function: " &lt;&lt; result &lt;&lt; endl;
+
+	//Passes the result value as a reference parameter, so that its value will
+	//be changed within MAIN.
+	addNumber(result, 10);
+
+	cout &lt;&lt; "Number after function: " &lt;&lt; result &lt;&lt; endl;
+
+	//This declares an array of integers with a size of ten.
+	int array[10];
+
+	cout &lt;&lt; endl;
+
+	//This will output a garbage value, as the values in the array have not been
+	//initialized. Note the use of array[0] to denote the first element.
+	cout &lt;&lt; "Garbage first value in array: " &lt;&lt; array[0] &lt;&lt; endl;
+
+	//For loops are particularly useful in looping through arrays. This loop sets
+	//the first value in the array to 1, the second to 2, and so on.
+	for(int i = 0; i &lt; 10; i++) {
+		array[i] = i + 1;
+	}
+
+	//Output the fourth and sixth values in the array, which will now be 4. Note the 
+	//use of array[3] and array[5] to denote the fourth and sixth elements.
+	cout &lt;&lt; "After the loop, the fourth value in the array is: " &lt;&lt; array[3] &lt;&lt; endl;
+	cout &lt;&lt; "After the loop, the sixth value in the array is: " &lt;&lt; array[5] &lt;&lt; endl;
+	
+	cout &lt;&lt; endl;
+	
+	//This calls the setArray function, which will set the first 10 values in the
+	//array "array" to 25. This will effect the "array" variable in MAIN.
+	setArray(array, 10, 25);
+
+	//Again, loop through the array, outputting each value. This shows that all the
+	//elements in the array have indeed been set to 25.
+	for(int i = 0; i &lt; 10; i++) {
+		cout &lt;&lt; "Array element " &lt;&lt; i &lt;&lt; ": " &lt;&lt; array[i] &lt;&lt; endl;
+	}
+
+	cout &lt;&lt; endl;
+
+	//Declares a c-string that can hold 50 characters, or 49 characters if you don't
+	//count the null character.
+	char testString[50];
+
+	//Input the string "in the agreegate," so that the word from the console will be
+	//automatically copied to the array, with a null terminator at the end.
+	cout &lt;&lt; "Enter string: ";
+	cin &gt;&gt; testString;
+
+	//Loop though the array until you get to the null character, and output each
+	//character in the string on a new line
+	for(int i = 0; testString[i]; i++)
+ 		cout &lt;&lt; testString[i] &lt;&lt; endl;
+
+	cout &lt;&lt; endl;
+	system("pause");
+	
+	return 0;
+}
+
+//This is the implemenation of the funciton with a reference parameter. As with the
+//prototype, the reference parameter is specified with an ampersand. The function
+//simply plus-equals the value into the result, but the important pard is that this
+//code will change the value of the "result" variable in MAIN
+void addNumber(int &amp;addTo, int value) {
+	addTo += value;
+}
+
+//This funciton loops through the elements in "arrayParam," setting each one to the
+//value specified by the parameter "setValue." Note that this will change the values
+//in the "array" variable in MAIN.
+void setArray(int arrayParam[], int arraySize, int setValue) {
+	for(int i = 0; i &lt; arraySize; i++) {
+		arrayParam[i] = setValue;
+	}
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a title="contact email" href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a title="GitHub" href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
