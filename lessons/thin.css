@@ -17,4 +17,5 @@ section.exercises {
 }
 aside.example_program {
 	margin: 0;
+	max-width: 100%;
 }

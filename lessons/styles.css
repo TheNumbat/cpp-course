@@ -82,6 +82,7 @@ article {
 	margin-right: 1em;
 }
 aside.example_program {
+	max-width: 50%;
 	margin-left: 1em;
 	margin-bottom: 1em;
 	padding: 0em 1em 0em 1em;
