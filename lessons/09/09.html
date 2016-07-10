@@ -1,0 +1,514 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 09 - Multidimensional Arrays &amp; Sorting</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\08\08.html" id="last">Last</a>
+		<a class="top_button" href="..\10\10.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 09 - Multidimensional Arrays &amp; Sorting</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#mdarr">Multidimensional Arrays</a></li> | 
+					<li><a href="#usage">Using Multidimensional Arrays</a></li> | 
+					<li><a href="#strarr">Arrays of C-Strings</a></li> | 
+					<li><a href="#sort">Sorting</a></li> | 
+					<li><a href="#bubble">Bubble Sort</a></li> | 
+					<li><a href="#select">Selection Sort</a></li> | 
+					<li><a href="#quick">Quicksort</a></li> | 
+					<li><a href="#other">Other Sorting Algorithms</a></li> | 
+					<li><a href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.zip" download>Download</a> | 
+				<a href="http://ideone.com/egtY1e" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;ctime&gt;
+
+using namespace std;
+
+//Sorting funciton prototypes
+void bubbleSort(int[],int);
+void selectionSort(int[],int);
+void quickSort(int[],int,int);
+
+//Will put random values between 10 and to into an array
+void randomize(int[],int);
+
+//Shows how to pass a two dimensional array to a function
+void func(int[][10]);
+
+int main() {
+
+	srand(time(NULL));
+
+	//MULTIDIMENSIONAL ARRAYS	
+
+	//Declares a two dimensional array of integers of sizes 10 and 10, so it
+	//can store up to 100 integers in total.
+	int array2D[10][10];
+
+	//Declares a tree dimensional array of integers of sizes 10, 10, and 10, so it
+	//can store up to 1000 integers in total.
+	int array3D[10][10][10];
+
+	//Passing a multidimensional array is the same as a one dimensional array
+	func(array2D);
+
+	//Loop though all three dimentions of the 3D array using three nested loops
+	for(int i = 0; i &lt; 10; i++)
+		for(int j = 0; j &lt; 10; j++)
+			for(int k = 0; k &lt; 10; k++)
+				array3D[i][j][k] = 0;
+
+	//Output each value in the 3D Array
+	cout &lt;&lt; "3D Array: " &lt;&lt; endl;
+	for(int i = 0; i &lt; 10; i++) {
+		for(int j = 0; j &lt; 10; j++) {
+			for(int k = 0; k &lt; 10; k++)
+				cout &lt;&lt; array3D[i][j][k];
+			cout &lt;&lt; " ";
+		}
+		cout &lt;&lt; endl;
+	}
+	cout &lt;&lt; endl;
+
+
+	//SORTING
+
+	int sortArray[10];
+
+
+	//Demonstrate Bubble Sort
+	randomize(sortArray,10);
+
+	cout &lt;&lt; "Array: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+
+	bubbleSort(sortArray,10);
+
+	cout &lt;&lt; endl &lt;&lt; "Bubble Sort: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+	cout &lt;&lt; endl &lt;&lt; endl;
+
+
+	//Demonstrate selection sort
+	randomize(sortArray,10);
+
+	cout &lt;&lt; "Array: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+
+	selectionSort(sortArray,10);
+
+	cout &lt;&lt; endl &lt;&lt; "Selection Sort: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+	cout &lt;&lt; endl &lt;&lt; endl;
+
+
+	//Demonstrate quick sort
+	randomize(sortArray,10);
+
+	cout &lt;&lt; "Array: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+
+	quickSort(sortArray,0,10);
+
+	cout &lt;&lt; endl &lt;&lt; "Quick Sort: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+	cout &lt;&lt; endl &lt;&lt; endl;
+
+
+	//End program
+	cout &lt;&lt; endl;
+	system("pause");
+	
+	return 0;
+}
+
+void func(int array[][10]) {
+	//Do stuff with array
+}
+
+void bubbleSort(int array[], int size) {
+
+	int temp;
+
+	//See notes
+	for(int i = 0; i &lt; size; i++)
+		for(int j = 0; j &lt; size - 1; j++)
+			if(array[j] &gt; array[j+1]) {
+				temp = array[j];
+				array[j] = array[j+1];
+				array[j+1] = temp;
+			}
+}
+
+void selectionSort(int array[], int size) {
+
+	int temp, lowest;
+
+	//See notes
+	for(int i = 0; i &lt; size - 1; i++) {
+		lowest = i;
+		for(int j = i; j &lt; size; j++)
+			if(array[j] &lt; array[lowest])
+				lowest = j;
+		temp = array[i];
+		array[i] = array[lowest];
+		array[lowest] = temp;
+	}
+}
+
+void quickSort(int arr[], int left, int right) {
+
+	int i = left, j = right;
+	int tmp;
+	int pivot = arr[(left + right) / 2];
+ 
+ 	//See notes
+	while (i &lt;= j) {
+		while (arr[i] &lt; pivot)
+			i++;
+		while (arr[j] > pivot)
+			j--;
+		if (i &lt;= j) {
+	            tmp = arr[i];
+	            arr[i] = arr[j];
+	            arr[j] = tmp;
+	            i++;
+		    j--;
+		}
+	}
+ 
+	if (left &lt; j)
+		quickSort(arr, left, j);
+	if (i &lt; right)
+		quickSort(arr, i, right);
+}
+
+void randomize(int array[], int size) {
+	for(int i = 0; i &lt; size; i++)
+		array[i] = rand() % 10;
+}</pre>
+		</aside>
+		<article role="article">
+		<h2 id="mdarr">Multidimensional Arrays</h2>
+		<p>
+			Multidimensional arrays are just like the basic arrays we learned about last week, except they can hold values in more than one dimension. There are a few ways of thinking about it—the simplest is probably to think about a two dimensional array, for example, as simply an array of arrays, as that is how it works in your code. However, you could also think about it that a two dimensional array, again for example, stores a grid of values rather than simply a line of them. Either way can extend to more dimensions than two—for example, a three dimensional array is simply an array of arrays of arrays, or stores values in a three dimensional grid. It’s not too complex if you think about it, although a spatial view doesn’t work so well with arrays of greater than three dimensions.
+		</p>
+		<h2 id="usage">Using Multidimensional Arrays</h2>
+		<p>
+			Now that you’ve learned the concept of multidimensional arrays, you should know how to use them. To declare a multidimensional array, it’s almost exactly the same as a one-dimensional array: you just add the sizes of however many dimensions you want onto the end. 
+		</p>
+		<pre class="example_code prettyprint">array2D[10][10];</pre>
+		<p>Declares an array with dimensions 10 by 10.</p>
+		<pre class="example_code prettyprint">array4D[10][10][10][10];</pre>
+		<p>Declares a four dimensional array with dimensions 10 by 10 by 10 by 10.</p>
+		<p>
+			Using multidimensional arrays is also almost exactly the same as one-dimensional arrays: you still reference each value by specifying the index, except now you must specify the index in each of the dimensions. Remember that I mentioned that for example, 2D arrays are really just arrays of arrays within your code? Well, this comes into play because if you only specify the first index in, again for example, a 2D array, you will get the entire array that goes with that first index. Likewise, if you only specified the first index in a 3D array, you will get a 2D array, and so on. 
+		</p>
+		<pre class="example_code prettyprint">array2D[4][4];</pre>
+		<p>Accesses the element at location 4, 4.</p>
+		<pre class="example_code prettyprint">array4D[0][0][0];</pre>
+		<p>Accesses the <strong>entire array</strong> stored at the location 0,0,0 in the 4D array.</p>
+		<p>
+			Furthermore, passing multidimensional arrays to functions is, yet again, almost exactly the same as one dimensional arrays, although with one big catch. The catch is that you have to specify the length of every dimension except the first. This means that if you want to pass a 2D array into a function, you don’t have to know how many arrays will be stored in the first dimension, but you have to know how many values will be in each stored array, or essentially how large the second dimension is. Finally, again, to pass an array into a function, simply pass the name with no brackets at all. 
+		</p>
+		<pre class="example_code prettyprint">void func(int[][10]);
+
+void func(int array[][10]) {
+	//do stuff
+}</pre>
+		<p>A function that will take an integer array with any first dimension size, but only a second dimension size of 10.</p>
+		<pre class="example_code prettyprint">int array2D[5][10];
+func(array);</pre>
+		<p>This calls the function with the 2D array “array2D.”</p>
+		<p>
+			Finally, <em>again</em> as with one-dimensional arrays, you’re most often going to want to manipulate multidimensional arrays with loops. Nested loops are particularly useful for this purpose, as you can simply write “array[i][j]” and not have to worry about any fancy math.
+		</p>
+		<pre class="example_code prettyprint">for(int i = 0; i < 10; i++) {
+	for(int j = 0; j < 10; j++) {
+		array2D[i][j] = 0;
+	}
+}</pre>
+		<p>Sets all values in the 2D array with dimensions 10 by 10 to 0. In this example, the program will first loop though all 10 values in array2D[0], then array2D[1], and so on, until all 100 values have been passed over.</p>
+		<h2 id="strarr">Arrays of C-Strings</h2>
+		<p>
+			Another quick note here: an array of c-style strings is technically just a two-dimensional array of characters, but you can think of it of simply an array of c-strings, which is, again, technically an array of arrays. Elements of an array of c-strings can be used in any way you’d otherwise use a c-string, but keep in mind that when you specify the index of the first dimension, you are getting the entire array at that index.
+		</p>
+		<pre class="example_code prettyprint">char cstringArr[10][50];</pre>
+		<p>Declares an array of 10 c-strings, which each have a size of 50 chars.</p>
+		<pre class="example_code prettyprint">for(int i = 0; i < 10; i++) {
+	cout << cstringArr[i] << endl;
+}</pre>
+		<p>This will loop though the array of 10 c-strings and output each one. Remember that you can use each element of the first dimension of the c-string array as a c-string.</p>
+		<h2 id="sort">Sorting</h2>
+		<p>
+			Moving right along, in the previous few lessons I’ve mentioned ways of sorting arrays. Sorting is simply ordering the values of the array in a particular sequence, for example lowest to highest or vice versa. Now, we’ll go over a few different methods of sorting.
+		</p>
+		<h2 id="bubble">Bubble Sort</h2>
+		<p>
+			The bubble sort is the simplest of sorts to write code for, but it is also one of the most inefficient. Essentially, the algorithm will loop through the array, and whenever it finds a pair of values where one is larger than the next, it will swap the values and keep going. This means that higher values will “bubble up” in the array, until they find their correct places. Then, it will go back to the beginning and do the same thing again, and again, until the entire array is sorted. 
+		</p>
+		<img src="bubble.png" id="bubble">
+		<h2 id="select">Selection Sort</h2>
+		<p>
+			The selection sort is more efficient than the bubble sort and easier to understand, but is a bit more complicated to write the code for. The selection sort algorithm will simply find the lowest value in the array, put it in the first spot, find the next lowest value in the array, but it in the second spot, and so on. To do this, your code will want to first find the lowest value in the entire array, and swap it with the first value in the array. Then your program can do the same thing, except only start searching for the lowest value at the second element, and when you find it, put it in the second slot. Then, start searching from the third value, and so on. 
+		</p>
+		<div class="nocollapse">
+			<img src="selection.png" id="selection">
+			<p>
+				Because the selection sort only has to iterate over the array the number of elements in the array, it quickly becomes much less intensive for your computer compared to a bubble sort, where the number of iterations can be much higher than the number of elements. In fact, the graph of effort required by your computer compared to the array size, per se, looks something like this for a bubble and selection sort:
+			</p>
+			<img src="BvS.png" id="BvS">
+		</div>
+		<h2 id="quick">Quicksort</h2>
+		<p>
+			The last sorting algorithm we’ll be quickly covering is the quicksort algorithm, which is the most efficient of the three we’ve seen, but also by far the most complicated to write the code for. For this reason, we’ll just be going over the concept, although an example implementation is in the example code. Essentially, the quicksort algorithm sorts the array into two parts (usually called “partitions”), where the first partition holds all the lowest values, and the second holds all the highest values. Then, it does the same operation on each partition, so the lower and higher values are split into partitions within the first and second partition. This process is repeated until the partition size is just one element, and consequently the array has been sorted.
+		</p>
+		<img src="quick.png" id="quick">
+		<h2 id="other">Other Sorting Algorithms</h2>
+		<p>
+			We’ve only gone over three of many different types of sorting algorithms, so if you’d like to learn more, some other types are:
+		</p>
+		<dl class="nocollapse">
+			<dt>Insertion Sort</dt> 
+			<dd>the selection sort, but a bit better</dd>
+			<dt>Modified Bubble Sort</dt> 
+			<dd>the bubble sort, but a bit better</dd>
+			<dt>Exchange Sort</dt> 
+			<dd>similar to the bubble sort, but compares elements to the first value</dd>
+			<dt>Shell Sort</dt> 
+			<dd>similar to the bubble sort, but compares elements that are a certain distance away from each other</dd>
+			<dt>Heap Sort</dt> 
+			<dd>similar to the selection sort, but uses a heap data structure for storage</dd>
+			<dt>Merge Sort</dt> 
+			<dd>similar to quicksort, but combines sorted arrays and can be used with linked lists.</dd>
+		</dl>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Alphabetize a string input. Remember that the value of the characters increase from ‘a.’</li>
+				<li>Sort a randomized 2D array of integers using whichever method you wish. You should order the rows by their first elements.</li>
+				<li>Read in a multidimensional array of c-strings from a file and print them to the screen. Additionally, try sorting them alphabetically, and transferring the data to a one-dimensional array of c-strings (so technically a 2D array of characters).</li>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.zip" download>Download</a> | 
+				<a href="http://ideone.com/egtY1e" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;ctime&gt;
+
+using namespace std;
+
+//Sorting funciton prototypes
+void bubbleSort(int[],int);
+void selectionSort(int[],int);
+void quickSort(int[],int,int);
+
+//Will put random values between 10 and to into an array
+void randomize(int[],int);
+
+//Shows how to pass a two dimensional array to a function
+void func(int[][10]);
+
+int main() {
+
+	srand(time(NULL));
+
+	//MULTIDIMENSIONAL ARRAYS	
+
+	//Declares a two dimensional array of integers of sizes 10 and 10, so it
+	//can store up to 100 integers in total.
+	int array2D[10][10];
+
+	//Declares a tree dimensional array of integers of sizes 10, 10, and 10, so it
+	//can store up to 1000 integers in total.
+	int array3D[10][10][10];
+
+	//Passing a multidimensional array is the same as a one dimensional array
+	func(array2D);
+
+	//Loop though all three dimentions of the 3D array using three nested loops
+	for(int i = 0; i &lt; 10; i++)
+		for(int j = 0; j &lt; 10; j++)
+			for(int k = 0; k &lt; 10; k++)
+				array3D[i][j][k] = 0;
+
+	//Output each value in the 3D Array
+	cout &lt;&lt; "3D Array: " &lt;&lt; endl;
+	for(int i = 0; i &lt; 10; i++) {
+		for(int j = 0; j &lt; 10; j++) {
+			for(int k = 0; k &lt; 10; k++)
+				cout &lt;&lt; array3D[i][j][k];
+			cout &lt;&lt; " ";
+		}
+		cout &lt;&lt; endl;
+	}
+	cout &lt;&lt; endl;
+
+
+	//SORTING
+
+	int sortArray[10];
+
+
+	//Demonstrate Bubble Sort
+	randomize(sortArray,10);
+
+	cout &lt;&lt; "Array: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+
+	bubbleSort(sortArray,10);
+
+	cout &lt;&lt; endl &lt;&lt; "Bubble Sort: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+	cout &lt;&lt; endl &lt;&lt; endl;
+
+
+	//Demonstrate selection sort
+	randomize(sortArray,10);
+
+	cout &lt;&lt; "Array: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+
+	selectionSort(sortArray,10);
+
+	cout &lt;&lt; endl &lt;&lt; "Selection Sort: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+	cout &lt;&lt; endl &lt;&lt; endl;
+
+
+	//Demonstrate quick sort
+	randomize(sortArray,10);
+
+	cout &lt;&lt; "Array: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+
+	quickSort(sortArray,0,10);
+
+	cout &lt;&lt; endl &lt;&lt; "Quick Sort: ";
+	for(int i = 0; i &lt; 10; i++)
+		cout &lt;&lt; sortArray[i] &lt;&lt; " ";
+	cout &lt;&lt; endl &lt;&lt; endl;
+
+
+	//End program
+	cout &lt;&lt; endl;
+	system("pause");
+	
+	return 0;
+}
+
+void func(int array[][10]) {
+	//Do stuff with array
+}
+
+void bubbleSort(int array[], int size) {
+
+	int temp;
+
+	//See notes
+	for(int i = 0; i &lt; size; i++)
+		for(int j = 0; j &lt; size - 1; j++)
+			if(array[j] &gt; array[j+1]) {
+				temp = array[j];
+				array[j] = array[j+1];
+				array[j+1] = temp;
+			}
+}
+
+void selectionSort(int array[], int size) {
+
+	int temp, lowest;
+
+	//See notes
+	for(int i = 0; i &lt; size - 1; i++) {
+		lowest = i;
+		for(int j = i; j &lt; size; j++)
+			if(array[j] &lt; array[lowest])
+				lowest = j;
+		temp = array[i];
+		array[i] = array[lowest];
+		array[lowest] = temp;
+	}
+}
+
+void quickSort(int arr[], int left, int right) {
+
+	int i = left, j = right;
+	int tmp;
+	int pivot = arr[(left + right) / 2];
+ 
+ 	//See notes
+	while (i &lt;= j) {
+		while (arr[i] &lt; pivot)
+			i++;
+		while (arr[j] > pivot)
+			j--;
+		if (i &lt;= j) {
+	            tmp = arr[i];
+	            arr[i] = arr[j];
+	            arr[j] = tmp;
+	            i++;
+		    j--;
+		}
+	}
+ 
+	if (left &lt; j)
+		quickSort(arr, left, j);
+	if (i &lt; right)
+		quickSort(arr, i, right);
+}
+
+void randomize(int array[], int size) {
+	for(int i = 0; i &lt; size; i++)
+		array[i] = rand() % 10;
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>

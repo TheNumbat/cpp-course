@@ -136,3 +136,10 @@ footer {
 	line-height: 2em;
 	margin-top: 1em;
 }
+
+.nocollapse:after {
+	content: "";
+	display: block;
+	height: 0;
+	clear: both;
+}

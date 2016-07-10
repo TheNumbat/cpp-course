@@ -1,0 +1,27 @@
+
+#bubble {
+	width: 350px;
+}
+
+#selection {
+	width: 225px;
+	float: left;
+	padding-right: 20px;
+}
+
+#BvS {
+	padding-left: 10px;
+}
+
+#quick {
+	width: 400px;
+}
+
+dl > dt {
+	font-weight: bold;
+	clear: both;
+	width: 150px;
+}
+dl > dt, dd {
+	float: left;
+}

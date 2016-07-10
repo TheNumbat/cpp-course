@@ -10,30 +10,30 @@
 	</head>
 	<body>
 	<header>
-		<a class="top_button" title="last lesson" href="..\03\03.html" id="last">Last</a>
-		<a class="top_button" title="next lesson" href="..\05\05.html" id="next">Next</a>
+		<a class="top_button" href="..\03\03.html" id="last">Last</a>
+		<a class="top_button" href="..\05\05.html" id="next">Next</a>
 	</header>
 	<div id="main">
 		<header role="banner">
 			<h1>Lesson 04 - Functions</h1>
-			<a id="home" title="homepage" href="..\..\index.html">Home</a>
+			<a id="home"  href="..\..\index.html">Home</a>
 			<nav role="navigation">
 				<ul class="subsections">
-					<li><a title="introduction" href="#intro">Introduction</a></li> | 
-					<li><a title="theory" href="#theory">Function Theory &#40;in C/C++&#41;</a></li> | 
-					<li><a title="declaration" href="#declaration">Declaring Functions</a></li> | 
-					<li><a title="implementation" href="#implementation">Implementing Functions</a></li> | 
-					<li><a title="usage" href="#usage">Using Functions</a></li> | 
-					<li><a title="exercises" href="#exercises">Exercises</a></li>
+					<li><a href="#intro">Introduction</a></li> | 
+					<li><a href="#theory">Function Theory &#40;in C/C++&#41;</a></li> | 
+					<li><a href="#declaration">Declaring Functions</a></li> | 
+					<li><a href="#implementation">Implementing Functions</a></li> | 
+					<li><a href="#usage">Using Functions</a></li> | 
+					<li><a href="#exercises">Exercises</a></li>
 				</ul>
 			</nav>
 		</header>
-		<main role="main">
+		<main role="main" class="nocollapse">
 			<aside role="complementary" class="example_program top">
 			<h2>Example Program</h2>
 			<div class="example_links">
-				<a title="download example" href="example.cpp" download>Download</a> | 
-				<a title="run example" href="http://ideone.com/SZVpa3" target="_blank">Run this Code</a>
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/SZVpa3" target="_blank">Run this Code</a>
 			</div>
 			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
 // previous example programs, notes, or email a question.
@@ -109,7 +109,7 @@ void displayDbls&#40;double disp1, double disp2&#41;
 			</p>
 			<pre class="example_code prettyprint">&lt;data type&gt; functionName&#40;&lt;data type&gt; parameter1, &lt;data type&gt; parameter2, ...&#41;;</pre>
 			<p>
-				There are several components to this statement: first, the first data type describes what type of data the function will return. More on that under <a title="usage" href="#useage">Using functions</a>. If you don't want your function to return any data, you can use <pre class="inline_code prettyprint">void</pre> instead of a data type such as <pre class="inline_code prettyprint">int</pre> or <pre class="inline_code prettyprint">double</pre>. Second, there is your function identifier, which you will use to refer to your function in the future. Finally, you have your function's parameters enclosed in parenthesis. Parameters describe the data your function will receive when it is called by other inline_code. To specify a parameter, type the data type of the parameter, for example <pre class="inline_code prettyprint">int</pre> or <pre class="inline_code prettyprint">char</pre>, and then the identifier of the parameter. This will be how you refer to the parameter <em>within</em> the function. To add more parameters, simply add a comma and repeat the process.<br>
+				There are several components to this statement: first, the first data type describes what type of data the function will return. More on that under <a href="#useage">Using functions</a>. If you don't want your function to return any data, you can use <pre class="inline_code prettyprint">void</pre> instead of a data type such as <pre class="inline_code prettyprint">int</pre> or <pre class="inline_code prettyprint">double</pre>. Second, there is your function identifier, which you will use to refer to your function in the future. Finally, you have your function's parameters enclosed in parenthesis. Parameters describe the data your function will receive when it is called by other inline_code. To specify a parameter, type the data type of the parameter, for example <pre class="inline_code prettyprint">int</pre> or <pre class="inline_code prettyprint">char</pre>, and then the identifier of the parameter. This will be how you refer to the parameter <em>within</em> the function. To add more parameters, simply add a comma and repeat the process.<br>
 				The parameters specified here are called formal parameters, as they define the structure of the function and how the data will be refereed to <em>within</em> the function. <br>
 				Of course, don't forget to end your prototype with a semicolon.<br>
 				Examples:
@@ -155,8 +155,8 @@ result = calcRoot&#40;value_a, value_b, 12&#41;;</pre>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
 			<div class="example_links">
-				<a title="download example" href="example.cpp" download>Download</a> | 
-				<a title="run example" href="http://ideone.com/SZVpa3" target="_blank">Run this Code</a>
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/SZVpa3" target="_blank">Run this Code</a>
 			</div>
 			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
 // previous example programs, notes, or email a question.
@@ -212,7 +212,7 @@ void displayDbls&#40;double disp1, double disp2&#41;
 		</aside>
 		</main>
 		<footer role="contentinfo">
-			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a title="contact email" href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a title="GitHub" href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
 		</footer>
 	</div>
 	</body>
