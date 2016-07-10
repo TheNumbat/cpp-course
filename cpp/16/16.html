@@ -1,0 +1,435 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 16 - Linked Lists</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\15\15.html" id="last">Last</a>
+		<a class="top_button" href="..\17\17.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 16 - Linked Lists</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#llist">Linked Lists</a></li> | 
+					<li><a href="#nodes">Nodes</a></li> | 
+					<li><a href="#links">Links</a></li> | 
+					<li><a href="#addrem">Adding and Removing Nodes</a></li> | 
+					<li><a href="#clear">Clearing Nodes</a></li> | 
+					<li><a href="#types">Other Types of Linked Lists</a></li> | 
+					<li><a href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/OY7COv" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+// Forward declare the LinkedList class for the node to use
+class LinkedList;
+
+// Example node class for linked lists
+class node {
+	// Paramterized constructor
+	node(int v, node* n = NULL);
+	// Destructor
+	~node();
+
+	// Data members. Note that one part is the data held in the node,
+	// and one part is a pointer (or link) to the next node in the list
+	int value;
+	node* next;
+
+	// We only want our list class to use nodes, so we can make the node
+	// constructor private, and have the list class as a friend
+	friend class LinkedList;
+
+	// We also need the list insertion operator to be a friend of the node
+	// class so it can retrieve values from nodes in the list.
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&amp; src);
+};
+
+// Example singly-circularly linked list class
+// values will be added and removed at the "head" of the list, 
+// making this technically a stack. We'll learn more about those later
+class LinkedList {
+public:
+	// Default constructor
+	LinkedList();
+	// Desctructor
+	~LinkedList();
+
+	// Example manipulation functions
+	void addValue(int value);
+	int removeValue();
+
+	// You'd usually have several more functions here, but for the purposes
+	// of this example only the essential few have been shown
+
+	// Output operator
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&amp; src);
+
+private:
+	node* head;
+};
+
+node::node(int v, node* n) {
+	value = v;
+	next = n;
+}
+
+node::~node() {
+
+}
+
+LinkedList::LinkedList() {
+	// Start with no nodes
+	head = NULL;
+}
+
+// Clear all nodes (delete memory)
+LinkedList::~LinkedList() {
+	// While we still have nodes in the list
+	while(head) {
+		// Store a pointer to the next node 
+		node* temp = head-&gt;next;
+		// Delete the current head node
+		delete head;
+		// Set the head node to the next node.
+		// Note that when we get to the end of the list, this will
+		// make head NULL, stopping this loop.
+		head = temp;
+	}
+}
+
+void LinkedList::addValue(int value) {
+	// Here we create a new node with the new value and "head" as the next node
+	// and set head to point to it. This inserts the new node at the start of the list,
+	// as it will be the new head, and point to the previous head node. Note that if
+	// head was NULL, the new node will have NULL as the next node, signifying that it's
+	// the last node in the list.
+	head = new node(value,head);
+}
+
+int LinkedList::removeValue() {
+	int result = 0;
+	// Check that we have at least one node
+	if(head) {
+		// Get result
+		result = head-&gt;value;
+		// Store a pointer to the next node
+		node* temp = head-&gt;next;
+		// Delete the head node
+		delete head;
+		// Set the head to the next node. If we just removed the last node, head will
+		// be set to NULL, signifying that the list is empty.
+		head = temp;
+	}
+	return result;
+}
+
+// Operator to output the list graphically
+ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&amp; src) {
+	// Declare temp pointer to iterate through the list
+	node* temp = src.head;
+	// Iterate through the list
+	while(temp) {
+		out &lt;&lt; temp-&gt;value;
+		// Write an arrow if there is another node
+		if(temp-&gt;next) {
+			out &lt;&lt; " -&gt; ";
+		}
+
+		// Move the next node
+		temp = temp->next;
+	}
+
+	// Return out for chaining
+	return out;
+}
+
+int main() {
+	// Test our list class
+	
+	LinkedList l1;
+	cout &lt;&lt; "List 1: " &lt;&lt; l1 &lt;&lt; endl;
+
+	for(int index = 0; index &lt; 10; index++) {
+		l1.addValue(index);
+	}
+
+	cout &lt;&lt; "List 1: " &lt;&lt; l1 &lt;&lt; endl;
+
+	l1.removeValue();
+	l1.removeValue();
+	l1.removeValue();
+
+	cout &lt;&lt; "List 1: " &lt;&lt; l1 &lt;&lt; endl;
+
+	system("pause");
+	return 0;	
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="llist">Linked Lists</h2>
+			<p>
+				Linked lists are another fundamental concept in computer science, as they are used as the underlying implementation of many data structures, and can be used in a variety of situations. As of yet, we’ve only used arrays (dynamically allocated or otherwise) to store collections of data. A linked list is another way to store collections of data, but with a different set of advantages and disadvantages.
+			</p>
+			<p>
+				The main advantage of linked lists verses arrays is that they have no set limit on capacity (other than the maximum memory or your system), and the size can grow and shrink dynamically when data is added and removed. In an array, to change the size one must completely delete and reallocate the memory. Additionally, a linked list does not need to find a contiguous block of memory like an array does, making it faster and easier to allocate. 
+			</p>
+			<p>
+				However, there is a significant disadvantage to linked lists: to access the data within them, you must traverse a number of spaces in memory to find the data you’re looking for. This will make more sense in a minute. On the other hand, arrays, because they are a contiguous block of memory, can always retrieve any of their data in a constant, short amount of time.
+			</p>
+			<h2 id="nodes">Nodes</h2>
+			<p>
+				The basic component of a linked list is what’s called a “node.” A node is what it sounds like: it represents one piece of the list and includes one piece of data. A node has two parts: data, to hold what is actually contained in the list, and one or more pointers to another node. 
+			</p>
+			<img src="node.png">
+			<h2 id="links">Links</h2>
+			<p>
+				The pointer portion of the node is what constitutes the “links” of the linked lists. You can probably guess where this is going: each node is “linked” to the next one in the list by storing its address in the node’s pointer portion. With many nodes, this creates a chain. Of course, if you don’t have a way to access the first node in the chain, you can’t access any of them, so when you’re using a linked list, you should always store a pointer to the “head,” or first node. Note that here, if you ever lose your pointer to the first node, you have leaked memory, as you will never be able to get back to the first node.
+			</p>
+			<img src="link.png">
+			<h2 id="addrem">Adding and Removing Nodes</h2>
+			<p>
+				That’s pretty much the entire basic concept of linked lists, although there are many other types of linked lists that add more complications. So, let’s move on to working with linked lists. The basic operations are, of course, adding and removing nodes. Imagine we have a “cursor,” which is a pointer to a node in the list. Adding a node after the cursor is extremely simple: you just have to have the new node point to the next node after where you’re inserting it (new node->next = cursor->next), then have the node before it point to your new node (cursor->next = new node). Removing a node is also simple, although it is much easier if you are removing the node after your cursor.
+			</p>
+			<p>
+				Remember that the examples here are only one case of what could happen. For example, image what you would need to do if you want to remove a node, but your cursor is pointing to the last node in your list. Further, these example processes are assuming you’re using a singly linked list.
+			</p>
+			<p>Inserting a node:</p>
+			<img src="add.png">
+			<p>Removing a Node after the Cursor:</p>
+			<img src="remove.png">
+			<p>
+				Again, there are many more situations than those shown here. For example, what if you wanted to remove the node that the cursor is pointing to? What if you want to insert a node before the cursor? There are too many possibilities to go into great detail here, but hopefully you can figure out what to do on your own.
+			</p>
+			<p>
+				<strong>Drawing pictures is extremely helpful!</strong> Diagramming simple processes like the ones above can make linked lists easy to deal with.
+			</p>
+			<h2 id="clear">Clearing Nodes</h2>
+			<p>
+				We’ll go over one more process related to linked lists here: clearing them. At some point, you’re always going to want to clear your linked lists, and you don’t want to leak memory when doing so. As with the other processes, diagramming what needs to happen is a great idea.
+			</p>
+			<img src="clear.png">
+			<p>Repeat this process to remove all nodes.</p>
+			<h2 id="types">Other Types of Linked Lists</h2>
+			<p>
+				So far, these examples have been diagrammed assuming a singly linked list. However, there are several other types you should know of.
+			</p>
+			<h3>Singly Linked</h3>
+			<p>A list is singly linked if each node has one pointer to the next node in the chain. This is the simplest type of list. The end node should have “NULL” as the next node.</p>
+			<img src="1link.png">
+			<h3>Circularly Linked</h3>
+			<p>A circularly linked list is exactly the same as a singly linked list, except that the final node’s “next” node points back to the head of the list.</p>
+			<img src="clink.png">
+			<h3>Doubly Linked</h3>
+			<p>A doubly linked list is what it sounds like: each node has two pointers, one two the next node, and one to the previous node. This makes traversing the list backwards way faster than a singly linked list (where you would have to traverse the list from the beginning until you found the node behind where you are), but comes at the cost of storing an extra pointer in each node.</p>
+			<img src="dlink.png">
+			<p>Of course, you can also make a doubly linked list circular by having the first node point back to the last node and the last node point up to the first node.</p>
+			<h3>Trees</h3>
+			<p>Finally, there are linked trees, which are a bit more complicated to deal with. They’re also what they sound like: each node can have multiple “child” nodes, and point back towards their “parent” node.</p>
+			<img src="tree.png">
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Create your own data structure using a circularly, singularly linked list.</li>
+				<p>This will be a “List” data structure, meaning it uses a “cursor” to point to a node, and the member functions move the cursor around and manipulate the list at that point. You should make sure that all of your member functions account for each possible state of the list (e.g. you probably want to do something different if the list is empty vs if it has nodes) in order to work correctly and fail elegantly (not crash).</p>
+				<p>Basic features:</p>
+				<ul>
+					<li>next() – move cursor forward one node</li>
+					<li>prev() – move cursor back one node</li>
+					<li>get() – get the value of the node at the cursor</li>
+					<li>set(value) – set the value of the node at the cursor</li>
+					<li>insert(value) – insert a new node at the cursor with a value</li>
+					<li>remove() – remove a node at the cursor</li>
+					<li>operator<< – output the list</li>
+					<li>operator= – assign one list to another</li>
+				</ul>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/OY7COv" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+// Forward declare the LinkedList class for the node to use
+class LinkedList;
+
+// Example node class for linked lists
+class node {
+	// Paramterized constructor
+	node(int v, node* n = NULL);
+	// Destructor
+	~node();
+
+	// Data members. Note that one part is the data held in the node,
+	// and one part is a pointer (or link) to the next node in the list
+	int value;
+	node* next;
+
+	// We only want our list class to use nodes, so we can make the node
+	// constructor private, and have the list class as a friend
+	friend class LinkedList;
+
+	// We also need the list insertion operator to be a friend of the node
+	// class so it can retrieve values from nodes in the list.
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&amp; src);
+};
+
+// Example singly-circularly linked list class
+// values will be added and removed at the "head" of the list, 
+// making this technically a stack. We'll learn more about those later
+class LinkedList {
+public:
+	// Default constructor
+	LinkedList();
+	// Desctructor
+	~LinkedList();
+
+	// Example manipulation functions
+	void addValue(int value);
+	int removeValue();
+
+	// You'd usually have several more functions here, but for the purposes
+	// of this example only the essential few have been shown
+
+	// Output operator
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&amp; src);
+
+private:
+	node* head;
+};
+
+node::node(int v, node* n) {
+	value = v;
+	next = n;
+}
+
+node::~node() {
+
+}
+
+LinkedList::LinkedList() {
+	// Start with no nodes
+	head = NULL;
+}
+
+// Clear all nodes (delete memory)
+LinkedList::~LinkedList() {
+	// While we still have nodes in the list
+	while(head) {
+		// Store a pointer to the next node 
+		node* temp = head-&gt;next;
+		// Delete the current head node
+		delete head;
+		// Set the head node to the next node.
+		// Note that when we get to the end of the list, this will
+		// make head NULL, stopping this loop.
+		head = temp;
+	}
+}
+
+void LinkedList::addValue(int value) {
+	// Here we create a new node with the new value and "head" as the next node
+	// and set head to point to it. This inserts the new node at the start of the list,
+	// as it will be the new head, and point to the previous head node. Note that if
+	// head was NULL, the new node will have NULL as the next node, signifying that it's
+	// the last node in the list.
+	head = new node(value,head);
+}
+
+int LinkedList::removeValue() {
+	int result = 0;
+	// Check that we have at least one node
+	if(head) {
+		// Get result
+		result = head-&gt;value;
+		// Store a pointer to the next node
+		node* temp = head-&gt;next;
+		// Delete the head node
+		delete head;
+		// Set the head to the next node. If we just removed the last node, head will
+		// be set to NULL, signifying that the list is empty.
+		head = temp;
+	}
+	return result;
+}
+
+// Operator to output the list graphically
+ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&amp; src) {
+	// Declare temp pointer to iterate through the list
+	node* temp = src.head;
+	// Iterate through the list
+	while(temp) {
+		out &lt;&lt; temp-&gt;value;
+		// Write an arrow if there is another node
+		if(temp-&gt;next) {
+			out &lt;&lt; " -&gt; ";
+		}
+
+		// Move the next node
+		temp = temp->next;
+	}
+
+	// Return out for chaining
+	return out;
+}
+
+int main() {
+	// Test our list class
+	
+	LinkedList l1;
+	cout &lt;&lt; "List 1: " &lt;&lt; l1 &lt;&lt; endl;
+
+	for(int index = 0; index &lt; 10; index++) {
+		l1.addValue(index);
+	}
+
+	cout &lt;&lt; "List 1: " &lt;&lt; l1 &lt;&lt; endl;
+
+	l1.removeValue();
+	l1.removeValue();
+	l1.removeValue();
+
+	cout &lt;&lt; "List 1: " &lt;&lt; l1 &lt;&lt; endl;
+
+	system("pause");
+	return 0;	
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>

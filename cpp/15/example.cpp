@@ -6,8 +6,7 @@
 using namespace std;
 
 // Example class implementing several overloaded operators
-class Vector2 
-{
+class Vector2 {
 public:
 	// Default constructor
 	Vector2();
@@ -42,35 +41,29 @@ private:
 	int x, y;
 };
 
-Vector2::Vector2()
-{
+Vector2::Vector2() {
 	x = 0;
 	y = 0;
 }
 
-Vector2::Vector2(int _x, int _y)
-{
+Vector2::Vector2(int _x, int _y) {
 	x = _x;
 	y = _y;
 }
 
-Vector2::Vector2(const Vector2& src)
-{
+Vector2::Vector2(const Vector2& src) {
 	// Don't have to do any checking here, as we know we are creating a new object
 	x = src.x;
 	y = src.y;
 }
 
-Vector2::~Vector2()
-{
+Vector2::~Vector2() {
 
 }
 
-Vector2& Vector2::operator=(const Vector2& src)
-{
+Vector2& Vector2::operator=(const Vector2& src) {
 	// Check that you're not assigning the object to itself
-	if(this != &src)
-	{
+	if(this != &src) {
 		x = src.x;
 		y = src.y;
 	}
@@ -78,51 +71,44 @@ Vector2& Vector2::operator=(const Vector2& src)
 	return *this;
 }
 
-Vector2 Vector2::operator+(const Vector2& src)
-{
+Vector2 Vector2::operator+(const Vector2& src) {
 	// Use the paramterized constructor to return a new Vector2
 	// with the added data
 	return Vector2(x + src.x, y + src.y);
 }
 
-Vector2& Vector2::operator+=(const Vector2& src)
-{
+Vector2& Vector2::operator+=(const Vector2& src) {
 	// Here you want to modify the calling object
 	x += src.x;
 	y += src.y;
 	return *this;
 }
 
-bool Vector2::operator==(const Vector2& comp)
-{
+bool Vector2::operator==(const Vector2& comp) {
 	// Compare data members
 	return x == comp.x && y == comp.y;
 }
 
-bool Vector2::operator<(const Vector2& comp)
-{
+bool Vector2::operator<(const Vector2& comp) {
 	// Compare data members
 	return x < comp.x && y < comp.y;
 }
 
-ostream& operator<<(ostream& out, const Vector2& src)
-{
+ostream& operator<<(ostream& out, const Vector2& src) {
 	// Output values. Note that there is no calling object
 	out << "x: " << src.x << " y: " << src.y;
 	// Return for chaining
 	return out;
 }
 
-istream& operator>>(istream& in, Vector2& src)
-{
+istream& operator>>(istream& in, Vector2& src) {
 	// Input values
 	in >> src.x >> src.y;
 	// Return for chaining
 	return in;
 }
 
-int main() 
-{
+int main()  {
 	Vector2 v1;
 	Vector2 v2(1,5);
 	Vector2 v3(v2);
