@@ -1,0 +1,361 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 08 - File IO</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" title="last lesson" href="..\07\07.html" id="last">Last</a>
+		<a class="top_button" title="next lesson" href="..\09\09.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 08 - File IO</h1>
+			<a id="home" title="homepage" href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a title="files" href="#files">Files</a></li> | 
+					<li><a title="file out" href="#fout">File Output</a></li> | 
+					<li><a title="file in" href="#fin">File Input</a></li> | 
+					<li><a title="file in" href="#fin3">Three Methods of File Input</a></li> | 
+					<li><a title="io" href="#io">IO Functions</a></li> | 
+					<li><a title="exercises" href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.zip" download>Download</a> | 
+				<a title="run example" href="http://ideone.com/cJfL1n" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+
+using namespace std;
+
+int main() {
+	
+	//Declare an array of strings, ints, and chars to be inputted from 
+	//the file
+	string strings[5] = {};
+	int ints[5] = {}, numInts;
+	char chars[5] = {};
+
+	//Declare variables to be used with our files
+	ifstream fin;
+	ofstream fout;
+
+	//Open the file in the input stream - note you must include
+	//the file extention (".txt").
+	fin.open("File IO - Example - In.txt");
+
+	//The actual data begins after a colon character, so ingore all data
+	//until after the colon.
+	fin.ignore(1000,':');
+
+	//Loop three times, inputting the strings from the file
+	for(int i = 0; i &lt; 3; i++)
+		fin &gt;&gt; strings[i];
+
+	//Ignore the data until another colon
+	fin.ignore(1000,':');
+
+	//Input the number of ints to input, and loop that many times. Note
+	//that if this is greater than five, this will try to go off the end
+	//of the array and create an error.
+	fin &gt;&gt; numInts;
+	for(int i = 0; i &lt; numInts; i++)
+		fin &gt;&gt; ints[i];
+
+	//Ignore the data until another colon
+	fin.ignore(1000,':');
+
+	//Input characters until the file says it cannot input any more data.
+	//Again, if this happens more than five times you will get an error,
+	//as 5 is the size of the chars array.
+	for(int i = 0; fin.good(); i++)
+		fin &gt;&gt; chars[i];
+
+	//Close the input file, as we are done with it
+	fin.close();
+
+
+	//Output the data to the console so we can see the input worked 
+	//correctly
+	for(int i = 0; i &lt; 5; i++)
+		cout &lt;&lt; strings[i] &lt;&lt; " ";
+	cout &lt;&lt; endl;
+	for(int i = 0; i &lt; 5; i++)
+		cout &lt;&lt; ints[i] &lt;&lt; " ";
+	cout &lt;&lt; endl;
+	for(int i = 0; i &lt; 5; i++)
+		cout &lt;&lt; chars[i] &lt;&lt; " ";
+	cout &lt;&lt; endl;
+
+
+	//Open the output file - note this will create the file it it does not
+	//already exist. If it already exists, it will overwrite it.
+	fout.open("File IO - Example - Out.txt");
+
+	//Output the full arrays, one character from each per line. There's no
+	//particular reason to do it this way, but this is an example. Note 
+	//that this is exactly the same as outputting it to the console, except
+	//you are using your variable "fout" rather than "cout."
+		//Additionally, since we intialized our arrays to 0, if there is
+		//nothing in the value, it operator won't print anything.
+	for(int i = 0; i &lt; 5; i++)
+		fout &lt;&lt; strings[i] &lt;&lt; " " &lt;&lt; ints[i] &lt;&lt; " " &lt;&lt; chars[i] &lt;&lt; endl;
+
+	//Close the output file, as we are done with it.
+	fout.close();
+
+	cout &lt;&lt; endl;
+	system("pause");
+	
+	return 0;
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="#files">Files</h2>
+			<p>
+				In the past, you’ve been limited to input and output to and from the console window. No longer! File IO is simply how you can take input data from files, for example a text file, and output other data to files! It’s not very complicated, so this should be a pretty short topic.
+			</p>
+			<h2 id="#fout">File Output</h2>
+			<p>
+				File output is a bit simpler than file input—it’s essentially the same as what you’ve been doing with “cout,” except with files. First, if you are going to do any file input or output, you need to include the “fstream” header, in the same was as you include the “iostream” header. Then, if you want to output to a file, you declare a variable of type “ofstream.” 
+			</p>
+			<pre class="example_code prettyprint">ofstream fout;</pre>
+			<p>
+				Then, to open a file, you can call the method “open” with the name of your file as the parameter. If the file you specify already exists in the same directory as your executable, it will overwrite the file, and if not, your program will create a new file with your file name. Additionally, while it can be useful to create “.txt” files, as windows will automatically recognize it as a text file, but you can use any filename and extension that you want, and it will all work just the same. Note that the file name must be a c-style string, meaning either a character array or a string literal. 
+			</p>
+			<pre class="example_code prettyprint">fout.open(“outfile.txt”);</pre>
+			<p>
+				Finally, you can use your “fout” variable in the exact same way you would use “cout,” and your data will be written to the file as you would expect. 
+			</p>
+			<pre class="example_code prettyprint">fout &lt;&lt; “Start of file:” &lt;&lt; endl;
+fout &lt;&lt; data &lt;&lt; “ “ &lt;&lt; moreData &lt;&lt; endl &lt;&lt; endl;</pre>
+			<p>
+				That’s pretty much all there is to basic file output—just remember it works in exactly the same way as outputting to the console.
+			</p>
+			<h2 id="#fin">File Input</h2>
+			<p>
+				File input is a bit more complicated, as you have to deal with the fact that you may not get the data you expect from the file. However, like file output, it works in much the same way that your input had in the past. Again, to work with files, include the “fstream” header, and to declare a file input variable, declare a variable of type “ifstream.” 
+			</p>
+			<pre class="example_code prettyprint">ifstream fin;</pre>
+			<p>
+				To open a file, it’s the same as output—call “open” with a c-style string of your file name. However, if the file does not exist, your program will not create the file—in fact, it won’t do anything at all. Well, not absolutely nothing. If your program can’t find the specified file, your “fin” variable will be marked as invalid. To test if your file stream is still valid, you can call the method “good.” Hence, you can use this to test if you received a legitimate file, or, as you will see in a second, to test if your inputs worked correctly.
+			</p>
+			<pre class="example_code prettyprint">fin.open(“infile.txt”);
+
+if(fin.good()) {
+	// Do stuff
+} else {
+	cout &lt;&lt; “File was invalid!” &lt;&lt; endl;
+}</pre>
+			<p>
+				Once you have opened your input file, you can proceed how you would expect. File input works in the exact same was as input from the console, except the user doesn’t have to enter anything, as the data should already be described in the file. Remember that when you input a value using the extraction operator, where you are in the file will move forward until past the data. Additionally, when you input using the extraction operator, if your program sees whitespace (spaces, tabs, or newlines) in the file, it will automatically skip over them until it comes to a valid piece of data. Finally, when creating a data file, because of how the system works, be sure to add a blank line after the end of your data, or your program may see the last data input from the file as invalid. 
+			</p>
+			<pre class="example_code prettyprint">fin &gt;&gt; someData &gt;&gt; moreData;</pre>
+			<p>
+				If the file was simply “100 234,” the first input to “someData” would move your program forward in the file, so it would see “ 234” – note that there is still a space in front of the 234. Then, when you input to the variable “moreData,” your proram will skip over any white space in the file (spaces, tabs, newlines), until it comes to the next piece of data, 234, and input it.
+			</p>
+			<p>
+				Finally, you may be wondering what happens when your file does not have the correct data, or the file ends before you’re done inputting it. Well, this works in the same way as if you try to open a bad file—if your program fails at inputting the data, meaning either for example, you try to input a character into an integer, or the file doesn’t have any more data to input, your file stream variable will be marked as invalid, and you can test if it is alright by using the “good” method. For example, after you input data, you usually want to test if the data was inputted correctly, as if it was not, you don’t know if you have good data or not, so you should probably output an error and maybe try to input the data again. 
+			</p>
+			<pre class="example_code prettyprint">for(int i = 0; i < 10; i++) {
+	fin >> array[i];
+}</pre>
+			<pre class="example_code prettyprint">if(!fin.good())
+	cout << “Data did not input correctly!” << endl;</pre>
+			<h2 id="#fin3">Three Methods of File Input</h2>
+			<p>
+				Using file input in the exact same way as console input is useful for inputting single values and the like, for inputting more data (which you will normally be doing) there are tree general methods of doing so.
+			</p>
+			<p>
+				First, there is the simplest, but it requires that you know how much data you want to input before you actually run your program. The method is simply to loop the number of times you want to input, and input a value each time. 
+			</p>
+			<pre class="example_code prettyprint">for(int i = 0; i < 10; i++) {
+	fin >> array[i];
+}</pre>
+			<p>This inputs 10 values from the fin file stream to an array.</p>
+			<p>
+				Second, you can specify the amount of data you want to input within the file itself. Basically, you put the number of values before the actual values, and loop that many times to input the actual data. 
+			</p>
+			<pre class="example_code prettyprint">File: 5   9 34 23 1 8
+
+fin >> numValues;
+for(int i = 0; i < numValues; i++) {
+	fin >> array[i];
+}</pre>
+			<p>
+				This will first input that there are 5 values in the file, then loop 5 times to input the values.
+			</p>
+			<p>
+				Finally, the third type of input is looping input until you reach the end of the file. This is arguably the easiest way to input data, but it can only be used if you want to input all the data in the file until the end. To implement this type of input, you want to keep inputting values until the end of the file, so you can do something like this...
+			</p>
+			<pre class="example_code prettyprint">do {
+	fin >> dummyData;
+} while(fin.good());</pre>
+			<p>This code will input a value from the file, and if the file is still valid, it will input another value, and so on.</p>
+			<p>
+				However, you have to be careful when using this type of file input. For example, you probably noticed that the code uses a do...while loop rather than simply a while loop. This is because you need to input the value before it checks if the file is still good. Why does the program need to do that? Well, if you test the validity of the file before you input the value, when you get to the last legitimate value, you will input another value before the program realized you’ve reached the end of the file. This is another one of those pesky off-by-one errors, except this time it will give you an extra, garbage value.
+			</p>
+			<h2 id="#io">IO Functions</h2>
+			<p>
+				These are a few functions that can be called from your file variables, or, actually, from cin. These will be very useful in formatting and checking your input.
+			</p>
+			<h3>getline()</h3>
+			<p>
+				This first function is not actually called from “cin” or a file stream variable, but simply called on its own. As the name suggests, it is used to input an entire line of a file, rather than just one word. For example, if you entered the text “first last,” and used the extraction operator to input a string, you’d only get the word “first.” However, if you use the getline function, you can input the entire line “first last” as one string. getline takes three parameters: the input stream you want to take from (i.e. “cin” or “fin”), the string variable you want to input into, and the delimiting character. By default, the delimiting character is the newline character, which means the function will input text until the end of the line. However, if you want, you can specify a different character to input until.
+			</p>
+			<pre class="example_code prettyprint">getline(cin,stringVar);</pre>
+			<p>Inputs a line from the console.</p>
+			<pre class="example_code prettyprint">getline(fin,stringVar,’:’);</pre>
+			<p>Inputs text from a file until it gets to a colon.</p>
+			<h3>.getline()</h3>
+			<p>
+				This is almost exactly the same as getline(), except it is used with c-style strings, and it is called from cin or a file variable. It also takes slightly different parameters: the character array, or c-string, the maximum characters to input if the delimiting character is not reached, and again, optionally a delimiting character. 
+			</p>
+			<pre class="example_code prettyprint">cin.getline(charArray,1000);</pre>
+			<p>Inputs text from the console until it gets to the end of the line or inputs 1000 characters.</p>
+			<pre class="example_code prettyprint">fin.getline(charArray,1000,’:’);</pre>
+			<p>Inputs text from a file until it gets to a colon or inputs 1000  characters.</p>
+			<h3>.ignore()</h3>
+			<p>
+				Ignore is a very simple but very useful function: it is used to simply skip data from a file if it is irrelevant. For example, if you had a file containing “Data: 1 2 3 4,” you can’t just start inputting the values, as the word “Data” is in the way. With ignore, you can skip the label and get straight to the data. Ignore is called from your file variable or “cin,” and it takes two parameters: the maximum number of characters to ignore, and the delimiting character. Note that ignore will throw away the data up to and <strong>including</strong> the delimiting character, so you would want to ignore until a colon in the above example. 
+			</p>
+			<pre class="example_code prettyprint">cin.ignore(1000,’\n’);</pre>
+			<p>Ignores the console input until the end of the line, or after 1000 characters.</p>
+			<pre class="example_code prettyprint">fin.ignore(1000,’:’);</pre>
+			<p>Ignores the data in the file until it reaches a colon, or has ignored 1000 characters.</p>
+			<h3>.get()</h3>
+			<h3>.peek()</h3>
+			<p>
+				Get and peek are very simple functions: they return the next character in the input stream, but do not ignore white space like the extraction operator. This means that if the program is at “ data” in the file, get() will give you a space, whereas the extraction operator would ignore the space and give you “data.” The difference between get() and peek() is very simple—get() will remove the character from the input stream when it gives it to you, whereas peek() will return the character without removing it from the input stream. Both are called from “cin” or your file variable, and do not take any parameters.
+			</p>
+			<pre class="example_code prettyprint">charTest = cin.get();</pre>
+			<p>Gives you the next character from the console input.</p>
+			<pre class="example_code prettyprint">peekChar = fin.peek();</pre>
+			<p>Gives you the next character in the file without removing it from the stream.</p>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Write a program to count the number of lines and the number of characters in a text file.</li>
+				<li>Write a program to input a specified number of integer values from a file into an array, sort the array from lowest to highest, and output the array to the console.</li>
+				<li>Write a program that allows the user to write their inputs to a text file line by line, until they enter “quit.”</li>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a title="download example" href="example.zip" download>Download</a> | 
+				<a title="run example" href="http://ideone.com/cJfL1n" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+
+using namespace std;
+
+int main() {
+	
+	//Declare an array of strings, ints, and chars to be inputted from 
+	//the file
+	string strings[5] = {};
+	int ints[5] = {}, numInts;
+	char chars[5] = {};
+
+	//Declare variables to be used with our files
+	ifstream fin;
+	ofstream fout;
+
+	//Open the file in the input stream - note you must include
+	//the file extention (".txt").
+	fin.open("File IO - Example - In.txt");
+
+	//The actual data begins after a colon character, so ingore all data
+	//until after the colon.
+	fin.ignore(1000,':');
+
+	//Loop three times, inputting the strings from the file
+	for(int i = 0; i &lt; 3; i++)
+		fin &gt;&gt; strings[i];
+
+	//Ignore the data until another colon
+	fin.ignore(1000,':');
+
+	//Input the number of ints to input, and loop that many times. Note
+	//that if this is greater than five, this will try to go off the end
+	//of the array and create an error.
+	fin &gt;&gt; numInts;
+	for(int i = 0; i &lt; numInts; i++)
+		fin &gt;&gt; ints[i];
+
+	//Ignore the data until another colon
+	fin.ignore(1000,':');
+
+	//Input characters until the file says it cannot input any more data.
+	//Again, if this happens more than five times you will get an error,
+	//as 5 is the size of the chars array.
+	for(int i = 0; fin.good(); i++)
+		fin &gt;&gt; chars[i];
+
+	//Close the input file, as we are done with it
+	fin.close();
+
+
+	//Output the data to the console so we can see the input worked 
+	//correctly
+	for(int i = 0; i &lt; 5; i++)
+		cout &lt;&lt; strings[i] &lt;&lt; " ";
+	cout &lt;&lt; endl;
+	for(int i = 0; i &lt; 5; i++)
+		cout &lt;&lt; ints[i] &lt;&lt; " ";
+	cout &lt;&lt; endl;
+	for(int i = 0; i &lt; 5; i++)
+		cout &lt;&lt; chars[i] &lt;&lt; " ";
+	cout &lt;&lt; endl;
+
+
+	//Open the output file - note this will create the file it it does not
+	//already exist. If it already exists, it will overwrite it.
+	fout.open("File IO - Example - Out.txt");
+
+	//Output the full arrays, one character from each per line. There's no
+	//particular reason to do it this way, but this is an example. Note 
+	//that this is exactly the same as outputting it to the console, except
+	//you are using your variable "fout" rather than "cout."
+		//Additionally, since we intialized our arrays to 0, if there is
+		//nothing in the value, it operator won't print anything.
+	for(int i = 0; i &lt; 5; i++)
+		fout &lt;&lt; strings[i] &lt;&lt; " " &lt;&lt; ints[i] &lt;&lt; " " &lt;&lt; chars[i] &lt;&lt; endl;
+
+	//Close the output file, as we are done with it.
+	fout.close();
+
+	cout &lt;&lt; endl;
+	system("pause");
+	
+	return 0;
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a title="contact email" href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a title="GitHub" href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
