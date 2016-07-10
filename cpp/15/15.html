@@ -1,0 +1,523 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 15 - Operator Overloading</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\14\14.html" id="last">Last</a>
+		<a class="top_button" href="..\16\16.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 15 - Operator Overloading</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#ops">Operators</a></li> | 
+					<li><a href="#overload">Operator Overloading</a></li> | 
+					<li><a href="#ret">Return Types &amp; Chaining</a></li> | 
+					<li><a href="#fvm">Friend vs. Member Operators</a></li> | 
+					<li><a href="#avcc">Assignment Operator vs. Copy Constructor</a></li> | 
+					<li><a href="#inex">Insertion &amp; Extraction Operators</a></li> | 
+					<li><a href="#brpr">Brackets &amp; Parenthesis Operators</a></li> | 
+					<li><a href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/iy2HBv" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+// Example class implementing several overloaded operators
+class Vector2 
+{
+public:
+	// Default constructor
+	Vector2();
+	// Paramterized constructor
+	Vector2(int _x, int _y);
+	// Copy constructor
+	Vector2(const Vector2&amp; src);
+
+	// Destructor
+	~Vector2();
+
+	// Assignment operator
+	Vector2&amp; operator=(const Vector2&amp; src);
+
+	// Example math operators
+	Vector2 operator+(const Vector2&amp; src); // Note that this is not returned by reference, 
+										 // as we are returning a new object
+	Vector2&amp; operator+=(const Vector2&amp; src); // Note that this is returned by reference, 
+								// as we are returning an object that already exists
+
+	// Example comparison operators
+	bool operator==(const Vector2&amp; comp);
+	bool operator&lt;(const Vector2&amp; comp);
+
+	// Input/output operators
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const Vector2&amp; src);
+	friend istream&amp; operator&gt;&gt;(istream&amp; in, Vector2&amp; src); // Note that src is not constant, 
+												// as its values will be changed
+
+private:
+	// Data members
+	int x, y;
+};
+
+Vector2::Vector2()
+{
+	x = 0;
+	y = 0;
+}
+
+Vector2::Vector2(int _x, int _y)
+{
+	x = _x;
+	y = _y;
+}
+
+Vector2::Vector2(const Vector2&amp; src)
+{
+	// Don't have to do any checking here, as we know we are creating a new object
+	x = src.x;
+	y = src.y;
+}
+
+Vector2::~Vector2()
+{
+
+}
+
+Vector2&amp; Vector2::operator=(const Vector2&amp; src)
+{
+	// Check that you're not assigning the object to itself
+	if(this != &amp;src)
+	{
+		x = src.x;
+		y = src.y;
+	}
+	// Return for chaining
+	return *this;
+}
+
+Vector2 Vector2::operator+(const Vector2&amp; src)
+{
+	// Use the paramterized constructor to return a new Vector2
+	// with the added data
+	return Vector2(x + src.x, y + src.y);
+}
+
+Vector2&amp; Vector2::operator+=(const Vector2&amp; src)
+{
+	// Here you want to modify the calling object
+	x += src.x;
+	y += src.y;
+	return *this;
+}
+
+bool Vector2::operator==(const Vector2&amp; comp)
+{
+	// Compare data members
+	return x == comp.x &amp;&amp; y == comp.y;
+}
+
+bool Vector2::operator&lt;(const Vector2&amp; comp)
+{
+	// Compare data members
+	return x &lt; comp.x &amp;&amp; y &lt; comp.y;
+}
+
+ostream&amp; operator&lt;&lt;(ostream&amp; out, const Vector2&amp; src)
+{
+	// Output values. Note that there is no calling object
+	out &lt;&lt; "x: " &lt;&lt; src.x &lt;&lt; " y: " &lt;&lt; src.y;
+	// Return for chaining
+	return out;
+}
+
+istream&amp; operator&gt;&gt;(istream&amp; in, Vector2&amp; src)
+{
+	// Input values
+	in &gt;&gt; src.x &gt;&gt; src.y;
+	// Return for chaining
+	return in;
+}
+
+int main() 
+{
+	Vector2 v1;
+	Vector2 v2(1,5);
+	Vector2 v3(v2);
+
+	cout &lt;&lt; "v1: " &lt;&lt; v1 &lt;&lt; endl
+		 &lt;&lt; "v2: " &lt;&lt; v2 &lt;&lt; endl
+		 &lt;&lt; "v3: " &lt;&lt; v3 &lt;&lt; endl &lt;&lt; endl;
+
+	Vector2 v4 = v2 + v3;
+	Vector2 v5;
+	v5 += v4;
+
+	bool test1 = v4 == v5;
+	bool test2 = v1 &lt; v4;
+
+	cout &lt;&lt; "v4: " &lt;&lt; v4 &lt;&lt; endl
+		 &lt;&lt; "v5: " &lt;&lt; v5 &lt;&lt; endl
+		 &lt;&lt; "test1: " &lt;&lt; test1 &lt;&lt; endl
+		 &lt;&lt; "test2: " &lt;&lt; test2 &lt;&lt; endl &lt;&lt; endl;
+
+	// THIS WILL CALL THE COPY CONSTRUCTOR
+	Vector2 v6 = v3;
+	// THIS WILL CALL THE ASSIGNMENT OPERATOR
+	Vector2 v7;
+	v7 = v3;
+
+	cout &lt;&lt; "v6: " &lt;&lt; v6 &lt;&lt; endl
+		 &lt;&lt; "v7: " &lt;&lt; v7 &lt;&lt; endl &lt;&lt; endl;
+
+	system("pause");
+
+	return 0;
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="ops">Operators</h2>
+			<p>
+				First off, what exactly is an operator? You’ve probably heard me mention them before, what with the “assignment operator” or the “insertion operator” or whatever else. Well, an operator is basically a certain character (or two) that the language uses to describe an operation on one or more pieces of data. For example, some of the operators in C++ are:
+			</p>
+			<pre class="example_code prettyprint">+, -, *, /, %, ++, --, ==, !=, >, <, >=, <=, &amp;&amp;, ||, !, &amp;, |, ^, ~, >>, <<, =, +=, -=, *=, /=</pre>
+			<p>
+				Most of these operators you’ve seen before: for example “+” will add two values, “=” will assign a value to another value, and “>” will test if one value is greater than another. All these operators are automatically defined for some types, usually the primitive types (int, float, char, etc). However, if you were to try to use one on an ADT that you have created, you’ll notice you can’t: you’ll get compiler errors. Operator overloading is a way to use these operators on your own data types.
+			</p>
+			<p>
+				Why do you want to do this, you may ask? Well, technically operator overloading does nothing more than what you can do with normal member functions, but using them will very often make your code cleaner, easier to understand, and easier to create.
+			</p>
+			<h2 id="overload">Operator Overloading</h2>
+			<p>
+				So, how does one go about overloading an operator? It’s probably more straightforward than you think: an operator overload is prototyped in much the same way a member function is. The basic syntax is:
+			</p>
+			<pre class="example_code prettyprint">&lt;return type&gt; operator&lt;operator&gt;(&lt;parameters&gt;);</pre>
+			<p>for example</p>
+			<pre class="example_code prettyprint">bool operator==(const type&amp; comp);</pre>
+			<p>
+				However, calling an overloaded operator is much simpler than calling a member function: you simply use the operator. There are a few things to remember here: first, the left hand object is the calling object, meaning that it contains the operator function that will be called, and the right hand object is the parameter. 
+			</p>
+			<pre class="example_code prettyprint">result = obj1 == obj2;</pre>
+			<p>is equivalent to</p>
+			<pre class="example_code prettyprint">result = obj1.operator==(obj2);</pre>
+			<p>Implementing an overloaded operator is also not much different than any other member function, for example a simple equality compare operator...</p>
+			<pre class="example_code prettyprint">bool type::operator==(const type&amp; comp) {
+	return x == comp.x &amp;&amp; y = comp.y;
+}
+</pre>
+			<p>Which tests if the data members “x” and “y” are the same in both the calling object and the comparison object passed to the function. Pretty simple, right? You can apply this same logic to most of the other operators. For example, a “+” operator...</p>
+			<pre class="example_code prettyprint">class type {
+	type(int _x, int _y);
+
+	type operator+(const type&amp; add);
+	
+	int x, y;
+}
+
+type type::operator+(const type&amp; add) {
+	return type(x + add.x, y + add.y);
+}</pre>
+			<p>Which returns a new object of type “type” using the “x” and “y” values of the calling object and parameter added together. Note that this uses a parametrized constructor to create the object to return, so that would have to exist as well.</p>
+			<h2 id="ret">Return Types &amp; Chaining</h2>
+			<p>
+				Before we get into the details of how to use operators, you should know what return types are used with overloaded operators. Technically, the return type is no different than any other function. However, overloaded operators almost always return the type, or a reference to the type it uses. For example, the assignment operator, used to copy values from one object to another of the same type, is almost always prototyped as...
+			</p>
+			<pre class="example_code prettyprint">type&amp; operator=(const type&amp; src);</pre>
+			<p>
+				First, we return by reference because we are returning an object that already exists, the calling object. When you create a new object, for example in the “+” operator, you cannot return by reference. The reason we don’t just return “void” is for “chaining,” which means using multiple operators in a row, as in...
+			</p>
+			<pre class="example_code prettyprint">obj1 = obj2 = obj3;</pre>
+			<p>Because the assignment operator is right-associative, this statement is equivalent to...</p>
+			<pre class="example_code prettyprint">obj1.operator=(obj2.operator=(obj3));</pre>
+			<p>
+				Here you can see why the operator has to return the same type as the object it’s using: the inner assignment returns another object of the same type so that the object 1’s assignment operator can use that. This works the same way with operators such as “+,” “-,” “++,” and many others.
+			</p>
+			<p>
+				It’s very straightforward to return your result in operators such as “+” and “-,” as you are creating a new object that contains your values added together. However, in operators that modify the calling object (for example the assignment operator or “+=”), you must somehow return the calling object. The keyword “this” gives you a pointer to the calling object, but you must return an actual object (or reference), so you can dereference “this” to get your actual calling object. 
+			</p>
+			<pre class="example_code prettyprint">type&amp; type::operator=(const type&amp; src) {
+	x = src.x;
+	return *this;
+}</pre>
+			<h2 id="fvm">Friend vs. Member Operators</h2>
+			<p>
+				As of yet, I’ve only talked about overloading operators as member functions. However, you can also implement them as free functions, if you make them a friend of the class(es) you want them to manipulate. The syntax of a friend operator is very similar, except that because the operator is technically a normal, free, function, there will be no calling object, and hence you must pass both objects in as parameters. 
+			</p>
+			<pre class="example_code prettyprint">friend ostream&amp; operator<<(ostream&amp; out, const type&amp; source);</pre>
+			<p>As with all other friend functions, the operator is implemented like a free function, and like operator members, the name is still “operator” plus the actual operator.</p>
+			<pre class="example_code prettyprint">ostream&amp; operator<<(ostream&amp; out, const type&amp; source) {
+	out << source.x << source.y << endl;
+}</pre>
+			<p>
+				It may seem that there is no point to make an operator a friend over a member, or vice versa, and this is true for most operators. It doesn’t matter how you implement your operators, except for a few special cases. These are that the assignment operator must always be a member, and the insertion/extraction operator must be friends, as well as any other operators that would require you to modify a different class. What I mean by this, you will learn in the last two sections.
+			</p>
+			<h2 id="avcc">Assignment Operator vs. Copy Constructor</h2>
+			<p>
+				You might think that the assignment operator and the copy constructor do much the same thing, and you’d be right: they both copy data from one instance of a type into another. However, there are a couple of key differences. First, you should remember that the constructor of an object is only called once, when the object is instantiated. This means that the copy constructor will always start with a blank slate, and never needs to clean up data before copying in new data. 
+			</p>
+			<p>
+				Additionally, because the copy constructor is only called when you’re creating a new object, you know that your parameter, the source object, cannot be the same object as the calling object. On the other hand, with the assignment operator, you have no such guarantee. This may sound confusing, but look at the code...
+			</p>
+			<pre class="example_code prettyprint">type object1(object1);</pre>
+			<p>This makes no sense, and will not compile.</p>
+			<pre class="example_code prettyprint">object2 = object2;</pre>
+			<p>This is totally valid and will compile.</p>
+			<p>
+				This means that within your assignment operator, you should always make sure the source object is not the same as the calling object. Of course, the only way to know for sure if two things are exactly the same is to compare their addresses, and the keyword “this” conveniently provides us with a pointer to the current calling object. Note that to do this, you must pass your source object by reference, or else a copy will be made when it is passed to the function.
+			</p>
+			<pre class="example_code prettyprint">type&amp; type::operator=(const type&amp; source) {
+	if(this != &amp;source)
+	{
+		// do copy
+	}
+}</pre>
+			<p>Finally, although counterintuitive, if you use the assignment operator while creating an object, your program will actually call the copy constructor. The assignment operator is only called when you have two objects, already instantiated, set equal to each other.</p>
+			<pre class="example_code prettyprint">type object2 = object1;</pre>
+			<p>Will call the copy constructor</p>
+			<pre class="example_code prettyprint">type object2;
+object2 = object1;</pre>
+			<p>Will call the assignment operator</p>
+			<h2 id="inex">Insertion &amp; Extraction Operators</h2>
+			<p>
+				The final thing we’re going to cover is how to overload the insertion and extraction operators in your own class. 
+			</p>
+			<pre class="example_code prettyprint">cout << object1;</pre>
+			<p>
+				Earlier, I said that the left hand object is the one that calls the function, so would that make “cout” the calling object? Actually, yes. However, we can’t modify the type of “cout,” so we need another way to describe the operator. This is why it must be a friend rather than a member of our ADT.
+			</p>
+			<p>
+				Other than friendship, the insertion/extraction operators are exceedingly simple to implement. The insertion operator should take a parameter of type “ostream&,” as this is what describes an output stream. It should return the same type, for chaining. On the other hand, the extraction operator should take a parameter of type “istream&,” as this is what describes an input stream. Again, it should return the same type for chaining.
+			</p>
+			<p>
+				Using the types as described will allow you to simply use “cout” and “cin” with your ADT, but will also work for any input/output streams, including file streams.
+			</p>
+			<pre class="example_code prettyprint">ostream&amp; operator<<(ostream&amp; out, const type&amp; source) {
+	out << source.x << “ “ << source.y << endl;
+	return out;
+}</pre>
+			<p>Is called with...</p>			
+			<pre class="example_code prettyprint">cout << object1;</pre>
+			<p>(Assuming object1 is of type “type”).</p>
+			<h2 id="brpr">Brackets &amp; Parenthesis Operators</h2>
+			<p>
+				Finally, a quick word on the bracket/parenthesis operators: they are usually used to look up a piece of data within a data structure (if your class is a data structure), and take any parameters you want. 
+			</p>
+			<pre class="example_code prettyprint">char operator[](int index);
+char operator()(int index);
+
+char type::operator[](int index) {
+	return data[index];
+}
+
+char type::operator()(int index) {
+	return data[index];
+}</pre>
+			<p>You get the idea.</p>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<p>Most all your data in these classes should be private! Member functions should mostly be public.</p>
+			<ol>
+				<li>Create your own “string” class that uses a dynamically allocated c-style string at its core. It should implement at least the following operators:</li>
+				<pre>= - copy strings
++ - concatenate strings
+[] – get character at an index
+== - test if strings are equal
+<< - output string
+>> - input string</pre>
+				<li>If you’d like to continue in the strain the card games project, try creating a “card” class which implements overloaded operators.</li>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/iy2HBv" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+// Example class implementing several overloaded operators
+class Vector2 
+{
+public:
+	// Default constructor
+	Vector2();
+	// Paramterized constructor
+	Vector2(int _x, int _y);
+	// Copy constructor
+	Vector2(const Vector2&amp; src);
+
+	// Destructor
+	~Vector2();
+
+	// Assignment operator
+	Vector2&amp; operator=(const Vector2&amp; src);
+
+	// Example math operators
+	Vector2 operator+(const Vector2&amp; src); // Note that this is not returned by reference, 
+										   // as we are returning a new object
+	Vector2&amp; operator+=(const Vector2&amp; src); // Note that this is returned by reference, 
+											 // as we are returning an object that already exists
+
+	// Example comparison operators
+	bool operator==(const Vector2&amp; comp);
+	bool operator&lt;(const Vector2&amp; comp);
+
+	// Input/output operators
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const Vector2&amp; src);
+	friend istream&amp; operator&gt;&gt;(istream&amp; in, Vector2&amp; src); // Note that src is not constant, 
+														   // as its values will be changed
+
+private:
+	// Data members
+	int x, y;
+};
+
+Vector2::Vector2()
+{
+	x = 0;
+	y = 0;
+}
+
+Vector2::Vector2(int _x, int _y)
+{
+	x = _x;
+	y = _y;
+}
+
+Vector2::Vector2(const Vector2&amp; src)
+{
+	// Don't have to do any checking here, as we know we are creating a new object
+	x = src.x;
+	y = src.y;
+}
+
+Vector2::~Vector2()
+{
+
+}
+
+Vector2&amp; Vector2::operator=(const Vector2&amp; src)
+{
+	// Check that you're not assigning the object to itself
+	if(this != &amp;src)
+	{
+		x = src.x;
+		y = src.y;
+	}
+	// Return for chaining
+	return *this;
+}
+
+Vector2 Vector2::operator+(const Vector2&amp; src)
+{
+	// Use the paramterized constructor to return a new Vector2
+	// with the added data
+	return Vector2(x + src.x, y + src.y);
+}
+
+Vector2&amp; Vector2::operator+=(const Vector2&amp; src)
+{
+	// Here you want to modify the calling object
+	x += src.x;
+	y += src.y;
+	return *this;
+}
+
+bool Vector2::operator==(const Vector2&amp; comp)
+{
+	// Compare data members
+	return x == comp.x &amp;&amp; y == comp.y;
+}
+
+bool Vector2::operator&lt;(const Vector2&amp; comp)
+{
+	// Compare data members
+	return x &lt; comp.x &amp;&amp; y &lt; comp.y;
+}
+
+ostream&amp; operator&lt;&lt;(ostream&amp; out, const Vector2&amp; src)
+{
+	// Output values. Note that there is no calling object
+	out &lt;&lt; "x: " &lt;&lt; src.x &lt;&lt; " y: " &lt;&lt; src.y;
+	// Return for chaining
+	return out;
+}
+
+istream&amp; operator&gt;&gt;(istream&amp; in, Vector2&amp; src)
+{
+	// Input values
+	in &gt;&gt; src.x &gt;&gt; src.y;
+	// Return for chaining
+	return in;
+}
+
+int main() 
+{
+	Vector2 v1;
+	Vector2 v2(1,5);
+	Vector2 v3(v2);
+
+	cout &lt;&lt; "v1: " &lt;&lt; v1 &lt;&lt; endl
+		 &lt;&lt; "v2: " &lt;&lt; v2 &lt;&lt; endl
+		 &lt;&lt; "v3: " &lt;&lt; v3 &lt;&lt; endl &lt;&lt; endl;
+
+	Vector2 v4 = v2 + v3;
+	Vector2 v5;
+	v5 += v4;
+
+	bool test1 = v4 == v5;
+	bool test2 = v1 &lt; v4;
+
+	cout &lt;&lt; "v4: " &lt;&lt; v4 &lt;&lt; endl
+		 &lt;&lt; "v5: " &lt;&lt; v5 &lt;&lt; endl
+		 &lt;&lt; "test1: " &lt;&lt; test1 &lt;&lt; endl
+		 &lt;&lt; "test2: " &lt;&lt; test2 &lt;&lt; endl &lt;&lt; endl;
+
+	// THIS WILL CALL THE COPY CONSTRUCTOR
+	Vector2 v6 = v3;
+	// THIS WILL CALL THE ASSIGNMENT OPERATOR
+	Vector2 v7;
+	v7 = v3;
+
+	cout &lt;&lt; "v6: " &lt;&lt; v6 &lt;&lt; endl
+		 &lt;&lt; "v7: " &lt;&lt; v7 &lt;&lt; endl &lt;&lt; endl;
+
+	system("pause");
+
+	return 0;
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
