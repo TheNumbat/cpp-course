@@ -1,0 +1,351 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 10 - Pointers</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\09\09.html" id="last">Last</a>
+		<a class="top_button" href="..\11\11.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 10 - Pointers</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#mem">Memory and Addresses</a></li> | 
+					<li><a href="#usage">Using Pointers</a></li> | 
+					<li><a href="#arrs">Pointers and Arrays</a></li> | 
+					<li><a href="#mov">Moving Pointers</a></li> | 
+					<li><a href="#params">Pointer Parameters</a></li> | 
+					<li><a href="#void">Void Pointers</a></li> | 
+					<li><a href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.zip" download>Download</a> | 
+				<a href="http://ideone.com/egtY1e" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+//This will take a pointer to a character value (or array), and can change the data in main
+void func1(char* value);
+//This will also take a char pointer, but WITHIN THE FUCNTION it cannot change where the pointer 
+//points, meaning you can't do stuff like value++. It can still change the data in main.
+void func2(const char* value);
+//This function is just like the first, but not only can it change the data in main, it can
+//actuallly change where the pointer in main is pointing to.
+void func3(char*&amp; value);
+
+int main() {
+
+	char cstring[50];
+	int integer = 0;
+
+	//Creates an integer pointer and assigns it to the adddress of "integer"
+	int* valuePtr = &integer;
+
+	cout &lt;&lt; valuePtr &lt;&lt; endl; //This outputs the address of "integer"
+	cout &lt;&lt; *valuePtr &lt;&lt; endl; //This will output the actual value of "integer"
+	*valuePtr = 5; //This actually sets the value in "integer" to 5
+	cout &lt;&lt; integer &lt;&lt; endl; //This will output the 5
+
+
+	//Creates a pointer to a character and points it to the first element in the "cstring" array
+	char* stringPtr = cstring;
+	cout &lt;&lt; "Enter a string: ";
+	cin &gt;&gt; cstring;
+
+	//Iterate through the string using the pointer
+	while(*stringPtr) {
+		cout &lt;&lt; *stringPtr &lt;&lt; endl;
+		stringPtr++;
+	}
+	//Now, "stringPtr" will be pointing off the end of the array, so using it would result in a seg fault.
+	//It's a good idea to set it to NULL so that you program can check if it is valid in the future.
+	stringPtr = NULL;
+
+
+	//Declares a void pointer and sets it to point to "integer"
+	void* voidPtr = &integer;
+	*(int*)voidPtr = 10; //Sets the value to 10 - note that you must specify that "voidPtr" is pointing to an integer
+	cout &lt;&lt; endl &lt;&lt; *(int*)voidPtr &lt;&lt; endl; //Again, you must specify that "voidPtr" is pointing to an integer
+
+
+	//End program
+	cout &lt;&lt; endl;
+	system("pause");	
+	return 0;
+}
+
+
+//SEE PROTOTYPES
+void func1(char* value) {
+	//Sets the values in the c-string pointed to by value
+	for(int i = 0; *value; i++) {
+		*value = 'a' + i;
+		value++;
+	}
+}
+
+void func2(const char* value) {
+	//This works because offset notation does NOT move the pointer
+	//Note that if value held less than 5 values, this would most likely create a seg fault
+	for(int i = 0; i &lt; 5; i++) {
+		cout &lt;&lt; value[i] &lt;&lt; endl;
+	}
+}
+
+void func3(char*&amp; value) {
+	//It doesn't make sense to change the pointer in main right now, but it will when
+	//we talk about dynamic memory next week.
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="mem">Memory and Addresses</h2>
+			<p>
+				All data from your program is stored in your computer’s memory, so it has to have some method of storing and retrieving data from memory. Hence, each location in memory has an address, which is basically a number (up to 2^64 – 1 for 64-bit machines) that corresponds directly to its place in memory. How your program uses this memory is managed by the operating system and is very complicated, but memory and addresses in your program is very simple. The fundamental concept in this topic is pointers. A pointer is simply a variable in your program, just like any other, except it holds a memory address. This means that it can “point” to another value in your program, meaning. They are very useful and hence used extensively in programming, so as with all these basic topics, they will be very important. 
+			</p>
+			<p>When using pointers, if you don’t understand the relationship between some values, try to draw a diagram—they are very helpful. A very basic example:</p>
+			<img src="ptr.png">
+			<p>Corresponds to simplified memory:</p>
+			<table>
+				<tbody>
+				<tr><td>Address</td><td>Type</td><td>Identifier</td><td>Value</td></tr>
+				<tr><td>0</td><td>-</td><td>-</td><td>-</td></tr>
+				<tr><td>1</td><td>Character</td><td>data</td><td>'x'</td></tr>
+				<tr><td>2</td><td>-</td><td>-</td><td>-</td></tr>
+				<tr><td>3</td><td>-</td><td>-</td><td>-</td></tr>
+				<tr><td>4</td><td>Pointer to Character</td><td>dataPtr</td><td>1</td></tr>
+				<tr><td>5</td><td>-</td><td>-</td><td>-</td></tr>
+				</tbody>
+			</table>
+			<h2 id="usage">Using Pointers</h2>
+			<p>
+				So, when creating a pointer, you must always (well, almost always) declare what data type it will point to. This is because when you use your pointer later, your program must know what kind of data it points to. To declare a pointer, first describe what type the pointer will point to, then add an asterisk (‘*’). This marks the variable as a pointer to the type before the asterisk. Then, add your pointer’s identifier and you’ve declared a pointer. 
+			</p>
+			<pre class="example_code prettyprint">char* characterPtr;
+double* dblPtr;</pre>
+			<p>
+				To assign an address for your pointer to point to, you can’t just set it to a literal value, as the memory “space,” or range of values available will change with every execution of your program. In fact, I don’t believe most compilers will even let you do this, except for setting pointer to 0. A pointer with the value 0 is called a null pointer, and will cause an error if used (a good thing, as you will see). Hence, to set your pointer to point to a certain other value in your program, you use the “address of” operator, which is a single ampersand.
+			</p>
+			<pre class="example_code prettyprint">char value;
+char* valuePtr = &value;</pre>
+			<p>'valuePtr' now points to 'value.'</p>
+			<p>
+				At least in this use case, pointers wouldn’t be very useful without a way to access the actual data they point to, rather than just the address it actually contains. To do this, you simply use the dereference operator (also an asterisk) followed by the pointer you want to dereference. This statement will act like the data type your pointer points to. The data you get from dereferencing the pointer will be the actual data contained in what it’s pointing to. This means that if you change that data, you are actually changing it within the value you’re pointing to. This means that if you have a pointer to an integer, for example, and you assign a value to dereferencing that pointer, you have changed the value in the actual integer. 
+			</p>
+			<pre class="example_code prettyprint">char character = ‘x’;
+char* valuePtr = &character;
+
+*valuePtr = ‘y’;</pre>
+			<p>This will actually change the value in “character;” it will hold ‘y’ after this line.</p>
+			<pre class="example_code prettyprint">cout << valuePtr << endl;</pre>
+			<p>Will output the address of 'value'</p>
+			<pre class="example_code prettyprint">cout << *valuePtr << endl;</pre>
+			<p>Will output the actual data of “character,” which is now ‘y’</p>
+			<p>
+				Finally, pointers don’t ever have to be pointing to a valid piece of data—and because of this, if you try to dereference a pointer that doesn’t point to a valid object, you will get one of those dreaded segmentation faults. This is why null pointers are so important. If you know a pointer does not currently point to any actual piece of data, always set it to null (or 0), so that you can test if it is valid later. Also, remember that pointers, like everything else, are initialized with garbage values, so if you try to dereference a pointer you’ve just created, the program will most likely crash. 
+			</p>
+			<pre class="example_code prettyprint">char* valuePtr;
+cout << *valuePtr << endl;</pre>
+			<p>Will probably crash - wrong</p>
+			<pre class="example_code prettyprint">char* valuePtr = NULL;
+if(valuePtr)
+	cout << *valuePtr << endl;</pre>
+			<p>Will not crash because it makes sure that valuePtr is not NULL, and it is set to NULL if it is not pointing to a valid piece of data - correct</p>
+			<h2 id="arrs">Pointers and Arrays</h2>
+			<p>
+				You’ve actually been using pointers ever since we learned about arrays—arrays are technically just pointers to data, that cannot themselves be changed. The actual identifier of your array (say “array”) actually holds the address of the first element in the array, and to get a value from the array, you put the offset from that pointer in your brackets. This is why arrays are 0-based: to get to the first element, you move 0 pieces of data away from the first one. Note that offset notation does NOT move the pointer, it simply take a value relative to it. 
+			</p>
+			<table>
+				<tbody>
+				<tr><td>Address</td><td>Type</td><td>Identifier</td><td>Value</td></tr>
+				<tr><td>0</td><td>Pointer to Character</td><td>array</td><td>2</td></tr>
+				<tr><td>1</td><td>-</td><td>-</td><td>-</td></tr>
+				<tr><td>2</td><td>Character</td><td>-</td><td>'s'</td></tr>
+				<tr><td>3</td><td>Character</td><td>-</td><td>'t'</td></tr>
+				<tr><td>4</td><td>Character</td><td>-</td><td>'r'</td></tr>
+				</tbody>
+			</table>
+			<p>
+				Here, “array” is the address of the start of the array. array[0] would go 0 places from the start of the array (so it would be at memory address 2, the first element), and then dereferences that address to get the actual value at that spot in the array (‘h’). Likewise, array[2] would go to address 4 and return ‘l.’
+			</p>
+			<p>
+				So, because arrays are technically just pointers, you can assign pointers to point to arrays, and basically use them exactly as you would use the same array. You can use brackets on pointers, which is called offset notation. Remember that offset notation will go that many spots after the first element in the array, and then dereference that address.
+			</p>
+			<pre class="example_code prettyprint">char charArray[10];
+char* arrayPtr = charArray;
+
+for(int i = 0; i < 10; i++) {
+	arrayPtr[i] = ‘a’;
+}
+
+cout << charArray[1] << endl;</pre>
+			<p>This will output the letter ‘a,’ because when every value in “arrayPtr” was set to ‘a,’ it really set every value in “charArray” to ‘a.’</p>
+			<h2 id="mov">Moving Pointers</h2>
+			<p>
+				One of the advantages to using pointers is that you can do math with them, just like you’d do math with integers. For example, if you have a pointer that points to the first value in an array, if you increment that pointer, it will now be pointing to the second value in an array. It’s that simple! However, you must be very careful about doing pointer math, as you can easily send pointers into invalid memory, and when you try to access them, you will get a segmentation fault. For example, if you have a c-style string (which you know will be null terminated), you can loop through it with a pointer, without knowing its length, as such:
+			</p>
+			<pre class="example_code prettyprint">char cstring[LENGTH];
+cin >> cstring;
+
+char* strPtr = cstring;
+while(*strPtr) {
+	cout << *strPtr << endl;
+	strPtr++;
+}</pre>
+			<p>This will output the string with each character on a new line regardless of the length, as it will iterate through each value in the array until it comes to a value that is 0, i.e. the null character.</p>
+			<h2 id="params">Pointer Parameters</h2>
+			<p>
+				As with all other variables, you can pass pointer parameters to functions. They work just as you’d expect: the parameter will still hold the same address as it does in main, and you can access that data from within your function. Because of that, if you change data pointed to by a pointer parameter, it will be changed in main, or wherever else you call the function from. Because arrays are technically pointers, you can actually pass an array as a pointer parameter. Obviously, you’re going to want to design your function so that it will deal with an array if it is going to be passed an array. 
+			</p>
+			<p>
+				There are a couple other ways to pass pointers that you should know: first, do you remember leaning about how to pass normal parameters by reference? You can do the same thing with pointers. However, if you do, that means that the function can not only change the data pointed to by the pointer in main, it can actually change where the pointer points in main. This is pretty much useless right now, but it will come into play next week when we go over dynamic memory. Second, there is passing the pointer as a constant. If you do this, it does not allow your function to move the pointer (i.e. you can’t set it to somewhere else, or increment it, etc.), but you can still change the data it points to. Additionally, this allows you to pass literal strings to your functions without a warning from the compiler. Note that this does not make the pointer in main constant.
+			</p>
+			<pre class="example_code prettyprint">void func1(char* value);</pre>
+			<p>This will take a pointer to a character value (or array), and can change the data in main.</p>
+			<pre class="example_code prettyprint">void func2(const char* value);</pre>
+			<p>This will also take a char pointer, but <strong>within the function</strong> it cannot change where the pointer points, meaning you can't do stuff like value++. It can still change the data in main.</p>
+			<pre class="example_code prettyprint">void func3(char*&amp; value);</pre>
+			<p>This function is just like the first, but not only can it change the data in main, it can actually change where the pointer in main is pointing to.</p>
+			<h2 id="void">Void Pointers</h2>
+			<p>
+				Finally, void pointers. Void pointers are just like any other pointer, except they do not have to know what type they are pointing to; they do one thing and one thing only: store an address. These are useful when you don’t know what exactly your type will be, but we won’t be running into any of those situations for a while yet. To use a void pointer, you can use it just as any other pointer in terms of math and addresses, but to access any actual data that it holds, you must first cast it to the correct type. This basically tells the compiler to treat the void pointer as a pointer to a certain data type, and it can then get the data from that type. 
+			</p>
+			<pre class="example_code prettyprint">void* voidPtr;
+
+int value;
+voidPtr = &value;</pre>
+			<pre class="example_code prettyprint">cout << *voidPtr << endl;</pre>		
+			<p>This does <strong>not</strong> work, because the program doesn’t know what type voidPtr points to.</p>
+			<pre class="example_code prettyprint">cout << *((int*)voidPtr) << endl;</pre>
+			<p>This does work, as you tell the program to treat voidPtr as an integer pointer before dereferencing it.</p>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Try using pointers instead of arrays in one of your previous functions, and don’t use offset notation! Instead find each value by incrementing or decrementing your pointers.</li>
+				<li>See if you can figure out how double or even triple pointers work. Hint: they’re pointers to pointers.</li>
+				<li>Use a void pointer.</li>
+				<li>Create some c-string functions using only character pointers and no offset notation. Try these:</li>
+				<ul>
+					<li>String copy: copies one c-string into another</li>
+					<li>String concat: adds one string onto the end of another</li>
+					<li>String length: returns the length of a string</li>
+					<li>Substring: returns the position of a substring within a string</li>
+					<li>String insert: inserts a string into another string</li>
+					<li>String replace: inserts a string into another string but doesn’t push back the following characters.</li>
+					<li>String fill: fills a string with a character from a starting position to an ending position.</li>
+					<li>String reverse: flips a string backwards.</li>
+				</ul>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.zip" download>Download</a> | 
+				<a href="http://ideone.com/egtY1e" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+//This will take a pointer to a character value (or array), and can change the data in main
+void func1(char* value);
+//This will also take a char pointer, but WITHIN THE FUCNTION it cannot change where the pointer 
+//points, meaning you can't do stuff like value++. It can still change the data in main.
+void func2(const char* value);
+//This function is just like the first, but not only can it change the data in main, it can
+//actuallly change where the pointer in main is pointing to.
+void func3(char*&amp; value);
+
+int main() {
+
+	char cstring[50];
+	int integer = 0;
+
+	//Creates an integer pointer and assigns it to the adddress of "integer"
+	int* valuePtr = &integer;
+
+	cout &lt;&lt; valuePtr &lt;&lt; endl; //This outputs the address of "integer"
+	cout &lt;&lt; *valuePtr &lt;&lt; endl; //This will output the actual value of "integer"
+	*valuePtr = 5; //This actually sets the value in "integer" to 5
+	cout &lt;&lt; integer &lt;&lt; endl; //This will output the 5
+
+
+	//Creates a pointer to a character and points it to the first element in the "cstring" array
+	char* stringPtr = cstring;
+	cout &lt;&lt; "Enter a string: ";
+	cin &gt;&gt; cstring;
+
+	//Iterate through the string using the pointer
+	while(*stringPtr) {
+		cout &lt;&lt; *stringPtr &lt;&lt; endl;
+		stringPtr++;
+	}
+	//Now, "stringPtr" will be pointing off the end of the array, so using it would result in a seg fault.
+	//It's a good idea to set it to NULL so that you program can check if it is valid in the future.
+	stringPtr = NULL;
+
+
+	//Declares a void pointer and sets it to point to "integer"
+	void* voidPtr = &integer;
+	*(int*)voidPtr = 10; //Sets the value to 10 - note that you must specify that "voidPtr" is pointing to an integer
+	cout &lt;&lt; endl &lt;&lt; *(int*)voidPtr &lt;&lt; endl; //Again, you must specify that "voidPtr" is pointing to an integer
+
+
+	//End program
+	cout &lt;&lt; endl;
+	system("pause");	
+	return 0;
+}
+
+
+//SEE PROTOTYPES
+void func1(char* value) {
+	//Sets the values in the c-string pointed to by value
+	for(int i = 0; *value; i++) {
+		*value = 'a' + i;
+		value++;
+	}
+}
+
+void func2(const char* value) {
+	//This works because offset notation does NOT move the pointer
+	//Note that if value held less than 5 values, this would most likely create a seg fault
+	for(int i = 0; i &lt; 5; i++) {
+		cout &lt;&lt; value[i] &lt;&lt; endl;
+	}
+}
+
+void func3(char*&amp; value) {
+	//It doesn't make sense to change the pointer in main right now, but it will when
+	//we talk about dynamic memory next week.
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
