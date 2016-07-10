@@ -6,26 +6,26 @@
 		<link rel="stylesheet" href="styles.css">
 		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
 		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-		<title>Lesson 13 - Classes I</title>
+		<title>Lesson 14 - Classes II</title>
 	</head>
 	<body>
 	<header>
-		<a class="top_button" href="..\12\12.html" id="last">Last</a>
-		<a class="top_button" href="..\14\14.html" id="next">Next</a>
+		<a class="top_button" href="..\13\13.html" id="last">Last</a>
+		<a class="top_button" href="..\15\15.html" id="next">Next</a>
 	</header>
 	<div id="main">
 		<header role="banner">
-			<h1>Lesson 13 - Classes I</h1>
+			<h1>Lesson 14 - Classes II</h1>
 			<a id="home"  href="..\..\index.html">Home</a>
 			<nav role="navigation">
 				<ul class="subsections">
-					<li><a href="#oop">Object Oriented Programming</a></li> | 
-					<li><a href="#decl">Defining Classes</a></li> | 
-					<li><a href="#access">Access Modifiers</a></li> | 
-					<li><a href="#members">Member Functions</a></li> | 
-					<li><a href="#getset">Getters and Setters</a></li> | 
-					<li><a href="#construct">Constructors</a></li> | 
-					<li><a href="#destruct">Destructors</a></li> | 
+					<li><a href="#copy">Copy Constructors</a></li> | 
+					<li><a href="#const">Constants</a></li> | 
+					<li><a href="#constv">Constant Variables</a></li> | 
+					<li><a href="#constp">Constant Parameters</a></li> | 
+					<li><a href="#constr">Constant Returns</a></li> | 
+					<li><a href="#constm">Constant Member Functions</a></li> | 
+					<li><a href="#friend">Friendship</a></li> | 
 					<li><a href="#exercises">Exercises</a></li>
 				</ul>
 			</nav>
@@ -35,7 +35,7 @@
 			<h2>Example Program</h2>
 			<div class="example_links">
 				<a href="example.cpp" download>Download</a> | 
-				<a href="http://ideone.com/45Dyt0" target="_blank">Run this Code</a>
+				<a href="http://ideone.com/RE4pN1" target="_blank">Run this Code</a>
 			</div>
 			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
 //previous example programs, notes, or ask a question.
@@ -45,337 +45,205 @@
 
 using namespace std;
 
-
-//CARD CLASS
+class deck {};
 class card {
 public:
-	//Default constructor
 	card();
-	//Parameterized constructor
-	card(const char*, const char*, int);
-	//Destructor
-	~card();
-
-	//Getters and setters. I realize that right now, some of these
-	//are pretty much useless. However, you will often want
-	//to use these for more complicated operations, for example
-	//how the setRank and setSuit functions reallocate memory
-	char* getRank();
-	void setRank(const char*);
-	char* getSuit();
-	void setSuit(const char*);
-	int getValue();
-	void setValue(int);
-
-	//A member that will print the card's data to the console
-	void print();
+	card(const char* r); //Constant char pointer paramter means that the pointer
+						 //cannot be moved. Also, it allows you to pass string
+						 //literals ("literal")
+	card(const card&amp; src); //Copy constructor
+	
+	char* getRank() const; //Constant because it will not change the rank member
+	void setRank(const char* r); //Not constant because it will change the rank member
 
 private:
-	char* rank;
-	char* suit;
-	int value;
+	//Private data member
+	char rank[10];
+
+	//The print function will be able to access the private rank member of a card
+	friend void print(const card&amp; c);
+	//The deck class will be able to access private members of cards
+	friend class deck;
 };
 
-//Default constructor
 card::card() {
-	cout &lt;&lt; endl &lt;&lt; "In default constructor!" &lt;&lt; endl;
-
-	//Set data members to default values
-	rank = NULL;
-	suit = NULL;
-	value = 0;
+	//Clear rank
+	strcpy(rank,"");
 }
 
-//Parameterized constructor
-card::card(const char* r, const char* s, int v) {
-	cout &lt;&lt; endl &lt;&lt; "In Parameterized constructor!" &lt;&lt; endl;
-
-	//Set data members to the parameters
-	rank = new char[strlen(r) + 1];
-	suit = new char[strlen(s) + 1];
+card::card(const char* r) {
+	//Copy rank
 	strcpy(rank,r);
-	strcpy(suit,s);
-	value = v;
 }
 
-//Destructor
-card::~card() {
-	cout &lt;&lt; endl &lt;&lt; "In destructor!" &lt;&lt; endl;
-
-	//Delete the data members, if we allocated them
-	//(delete will not delete if it is given a null pointer)
-	delete[] rank;
-	delete[] suit;
+//Passed by const reference in copy constructor to prevent infinite call
+//loop
+card::card(const card&amp; src) {
+	//Copy the rank member from the source card
+	strcpy(rank,src.rank);
 }
 
-//Getters and setters
-char* card::getRank() {
-	return rank;
+char* card::getRank() const {
+	//This function cannot change rank
+	return (char*)rank;
 }
 
-//As you can see, this setter is useful, because it automatically manages
-//the dynamic memory
 void card::setRank(const char* r) {
-	delete[] rank;
-	rank = new char[strlen(r) + 1];
+	//Copy rank
 	strcpy(rank,r);
 }
 
-char* card::getSuit() {
-	return suit;
+//Note that if this was a member function (it is NOT), this could also be constant
+//because it does not change any data in the card. However, normal functions
+//(as in not member functions) cannot be constant.
+void print(const card&amp; c) {
+	//Output card. This function can access "c.rank" even though it's a private
+	//data member because this is a friend function to the card class
+	cout &lt;&lt; "Card rank: " &lt;&lt; c.rank &lt;&lt; endl;
 }
-
-void card::setSuit(const char* s) {
-	delete[] suit;
-	suit = new char[strlen(s) + 1];
-	strcpy(suit,s);
-}
-
-int card::getValue() {
-	return value;
-}
-
-void card::setValue(int v) {
-	value = v;
-}
-
-//This is a normal member function, and will output the card's values
-void card::print() {
-	//If suit points to null, say we don't have a suit
-	if(!rank)
-		cout &lt;&lt; "no rank ";
-	else
-		cout &lt;&lt; rank &lt;&lt; " ";
-	if(!suit)
-		cout &lt;&lt; "no suit ";
-	else
-		cout &lt;&lt; suit &lt;&lt; " ";
-	cout &lt;&lt; value &lt;&lt; endl;
-}
-//END CARD CLASS
-
 
 int main() {
 
-	cout &lt;&lt; endl &lt;&lt; "Creating static card" &lt;&lt; endl;
+	card c1;
+	const card c2("king"); //You must give the rank here, because you cannot call
+						   //setRank on a const card
 
-	//Create a card and a card pointer
-	card card1;
-	card* card2 = NULL;
+	c1.setRank("queen");
+	//c2.setRank("jack"); This would give an error
 
-	//Print inital values
-	cout &lt;&lt; endl &lt;&lt; "Initial card:" &lt;&lt; endl;
-	card1.print();
+	card c3(c1); //Create a copy of card one using the copy constructor
 
-	//Use setters
-	card1.setRank("king");
-	card1.setSuit("hearts");
-	card1.setValue(13);
+	//Note that the print function is not called from an instance of the class,
+	//as it is not a member function.
+	print(c1);
+	print(c2);
+	print(c3);
 
-	//Print set valeus
-	cout &lt;&lt; endl &lt;&lt; "After setters called:" &lt;&lt; endl;
-	card1.print();
+	//getRank is allowed on c2 because it is a constant member
+	char* r1 = c1.getRank();
+	char* r2 = c2.getRank();
+	char* r3 = c3.getRank();
 
-	//Use getters
-	char* rank = card1.getRank();
-	char* suit = card1.getSuit();
-	int value = card1.getValue();
+	cout &lt;&lt; "rank 1: " &lt;&lt; r1 &lt;&lt; endl
+		 &lt;&lt; "rank 2: " &lt;&lt; r2 &lt;&lt; endl
+		 &lt;&lt; "rank 3: " &lt;&lt; r3 &lt;&lt; endl;
 
-	//Print gotten values
-	cout &lt;&lt; endl &lt;&lt; "Values from card:" &lt;&lt; endl
-		 &lt;&lt; rank &lt;&lt; " " &lt;&lt; suit &lt;&lt; " " &lt;&lt; value &lt;&lt; endl;
-
-	//Create dynamic card using the parameterized constructor
-	cout &lt;&lt; endl &lt;&lt; "Creating dynamic card" &lt;&lt; endl;
-	card2 = new card("two","spades",2);
-
-	//Print the card (note the use of the arrow operator)
-	cout &lt;&lt; endl &lt;&lt; "Dynamic card:" &lt;&lt; endl;
-	card2-&gt;print();
-
-	//Delete dynamic card. Note the destructor will be called here
-	cout &lt;&lt; endl &lt;&lt; "Deleting dynamic card" &lt;&lt; endl;
-	delete card2;
-
-
-	cout &lt;&lt; endl &lt;&lt; "End of program --- ";
 	system("pause");
-	//Note that the destructor for the statically declared card will
-	//be called as main exits.
 	return 0;
 }</pre>
 		</aside>
 		<article role="article">
-			<h2 id="oop">Object Oriented Programming</h2>
+			<h2 id="copy">Copy Constructors</h2>
 			<p>
-				We’re now going to start learning about one of the most popular programming paradigms, Object Oriented Programming, or OOP. OOP is not necessarily the best programming method in general (despite what some may tell you), but it is often very useful and is certainly the most popular. So, the basic element of OOP, is, unsurprisingly, the object. Essentially, an object is simply something that can hold both data and logic to manipulate that data. Hence, the programming style is centered on creating these objects and the relationships between them. The basic concept is really just that simple, although, of course, there are many, many different ways in which you can manipulate objects in C++, so there’s a lot to learn.
+				The first topic we’re covering today is the 3rd and final type of constructor. We’ve talked about default and parameterized constructors, but this is neither. As the name implies, the copy constructor will only take another object of the same class type to copy data from. There are four instances where a copy constructor is called, but you only have to worry about three of them: using another instance of your class as an initialization parameter, when you pass an object to a function by value, and when you return an object from a function by value. 
 			</p>
+			<pre class="example_code prettyprint">myClass c;
+myClass x(c);</pre>
+			<p>Calls the copy constructor, using ‘c’ as the parameter</p>
+			<pre class="example_code prettyprint">//Because ‘p’ is passed by value, the copy constructor of myClass will be called to copy your actual parameter into ‘p’
+void func(myClass p) { 
+	//The copy constructor will be called again here, as the compiler creates a copy of ‘p’ to return to the calling fuction.
+	return p; 
+}</pre>
 			<p>
-				C++ is an object oriented language, and it’s concept of an object is implemented using classes. A class is like a structure in that it’s an abstract datatype that you define, which we learned about previously, except that it can utilize several more features that the structure can’t. We’ll get into some of the more complicated aspects next semester, so for now, just know that a class can use these three new concepts: private and public data, member functions, and self-contained memory. Technically, structures can also have member functions, but it is congenital to use a class if you want your type to contain more than just data.
-			</p>
-			<h2 id="decl">Defining Classes</h2>
-			<p>
-				To declare an object in C++, simply use the “class” keyword. The basic structure is the same as with structures: after “class,” add the type name of your class, brackets, and end it with a semicolon. Also like structures, you put your data within your class’s scope. However, with classes you can also define member functions of the class here. Declaring a member function is just like declaring any other function: start with the return type, type the function name, and add your parameters. These functions, like the data, will be a part of your class, and hence will operate on the data contained within it. 
+				Because the copy constructor is called when you pass an object by value, and the copy constructor takes a parameter of your class type, if you pass the parameter by value, you’ll create an infinite loop of calling the copy constructor. Hence, you must pass the parameter by reference, and because your copy constructor shouldn’t change anything in the parameter object, a constant reference. Remember that the copy constructor is still a constructor, so you will want to initialize all of your data members, do memory allocation, and all that, as well as copying the values from your “source” object. 
 			</p>
 			<pre class="example_code prettyprint">class card {
-	char* rank;
-	char* suit;
+public:
+	card::card(const card&amp; source);
+private:
 	int value;
+}
+
+card::card(const card&amp; source) {
+	value = source.value;
+}</pre>
+			<h2 id="const">Constants</h2>
+			<p>
+				You’ve probably seen the keyword “const,” written before a variable or parameter definition. As one would expect, it stands for ‘constant,’ and marks some value or some code in your program that cannot be changed. As you may have seen, constants are commonly used to define global values, but there are actually four cases in which it can be useful to mark code as constant.
+			</p>
+			<h2 id="constv">Constant Variables</h2>
+			<p>
+				The most obvious use of the constant keyword is to define variables whose values cannot change. While it is often not incredibly useful to have constant values within your code, they can still be used to make sure a value that should not change doesn’t change (you will get an error), and can be used to define “global constants,” which are global values that can be used by your entire program, but cannot be changed. These global constants are usually named in all caps, and are acceptable, while global variables are not. Additionally, you can make any variable constant, no matter the type. Hence, you can have a constant integer, character, student, or card, or whatever you want. 
+			</p>
+			<pre class="example_code prettyprint">const int NUM_CARDS = 52;</pre>
+			<p>Global constant defining the size of a deck.</p>
+			<pre class="example_code prettyprint">const char* welcome = “Welcome to this program”;</pre>
+			<p>Creates a welcome text string that cannot be changed. If you try to change it later in your program, you will get an error.</p>
+			<h2 id="constp">Constant Parameters</h2>
+			<p>
+				The other case in which you have seen the constant keyword is in the definition of a function’s parameters. This use case is very similar to creating constant variables, as it tells your function that the value of the parameter cannot be changed within the function. This means that if you passed a constant integer, your function would not be able to change the value of the integer. Using constant parameters is more useful if you take into account passing parameters by reference, and passing pointers to functions. If you pass a constant reference to a function (the keyword “const” as well as the ampersand), you will have the speed benefit of passing by reference, but because your function will not be able to change the value of the parameter, you don’t have to worry about your function messing with the parameters you pass in. Hence, you should always do this when passing a class (not a pointer to a class) to a function. Second, when you pass a constant pointer to a function, it means that the function cannot change where the pointer <em>points</em>, but it can still change the data that the parameter points to. Hence, you must be wary of this. 
+			</p>
+			<pre class="example_code prettyprint">void func(const string&amp; str);</pre>
+			<p>This function takes a constant reference to a string class. It will not be able to change the value of the string.</p>
+			<pre class="example_code prettyprint">void func2(const char* str);</pre>
+			<p>This function takes a constant character pointer. This means the function will not change where the pointer points, but it can still change the data. Additionally, you must use “const” to pass a string literal (i.e. “hello”) without generating a warning.</p>
+			<h2 id="constr">Constant Returns</h2>
+			<p>
+				There are two more places in which you can use constants, which you probably haven’t encountered before. The first is a constant return type. You will probably never use constant returns, as they are essentially obsolete and were never incredibly useful anyhow. Basically, marking a returned value as constant prevents the function from being called on a temporary object, for example the result of an addition before it is captured elsewhere. It doesn’t do anything like cause the value to become constant in the calling function, so you will most likely never see it do anything at all. If you’re not exactly sure how this works, that’s fine, we’ll talk about this more later. 
+			</p>
+			<pre class="example_code prettyprint">const card deck::shuffle() {
+	return x;
+}</pre>
+			<p>This function returns a constant card.</p>
+			<h2 id="constm">Constant Member Functions</h2>
+			<p>
+				Finally, we have the most important use of constant, and why this lesson relates to classes. Essentially, member functions of classes can be marked as constant, and it means that they will never change any of the data members of the class. For example, a print function should simply print out all the values of an object, and not change any of them. Hence, the print function should be constant. So, why is this useful? Two reasons: first, it is useful simply as a documentation feature, as others will know the function will not change any data. Second, if you create a constant variable of a class type, you’ll notice you get an error if you try to call any of the member functions. You can only call constant member functions from a constant instance of your object, because you know that they will not change the data of the object. Finally, the syntax for this is simply to add the “const” keyword after your member function prototype, but before the semicolon. 
+			</p>
+			<pre class="example_code prettyprint">class card {
+public:
+	void setRank(string r);             // Not a constant member
+	void print() const;                     // Constant member
+private:
+	string rank;
+};</pre>
+			<p>So later in your program, if you declare a constant card...</p>
+			<pre class="example_code prettyprint">const card c;</pre>
+			<p>You can <strong>not</strong> call the set function.</p>			
+			<pre class="example_code prettyprint">c.setRank(“king”);</pre>
+			<p>But you can still call the print function.</p>
+			<pre class="example_code prettyprint">c.print();</pre>
+			<h2 id="friend">Friendship</h2>
+			<p>
+				Moving on from the uses of constants, we have our second mini-lesson, friendship. Friendship is extremely simple: it allows non-member functions and classes to have access to the private data members of a specific class type. You have to specifically specify what functions or classes can access the private data in your class definition. To do this, simply add the keyword “friend” before either the prototype of the friend function, or the name of the friend class. This allows the function or class to access private data members of objects of the specified type, but note that they are not member functions of that class. This means that, for example, if a friend function is passed a class object of your type, it can access the private members of that parameter. Additionally, because friend functions are not member functions, they are not called using an instance of the object and the dot operator, but instead are called just like any other normal function you’ve used in the past. Granted, if your function does not take a parameter of your type, it’s not very useful for it to be a friend. 
+			</p>
+			<pre class="example_code prettyprint">class card {
+public:
+	//functions
+private:
+	char* rank;
 	
-	//These are member functions, and will operate on the classes’ data.
-	void print();
-	char* getSuit(); 
+	friend void print(const card&amp; c);
+	friend class deck;
 };</pre>
-			<h2 id="access">Access Modifiers</h2>
-			<p>
-				If you try creating a class like the one above, you’ll run into an error if you ever try to use the class, and it will say that something or other is trying to access a “private” member of the class. This is because the default access modifier of data within a class is private. This means that no part of your program other than member functions of the class itself can access that data—your main function, for example, cannot ever touch any of that data. However, this also means that if everything is private, nothing can use your class, which you don’t want. Instead, you can specify that some member functions and/or data is “public,” meaning that anyone can access it—both your main function and the member functions, for example. However, you’re usually going to want your actual data members of the class to be private, because only your class should be able to operate on them. If any part of your program can have access to the data contained in your class, they can change it, and your class won’t know what happened! Hence, you want all use of data to go through your class, meaning you write member functions that will operate on the data instead of other parts of the program. Finally, to specify that a section of your class is public, and a section is private, use the keywords “public” and “private” followed by a colon to mark that section of your class as specified. Generally, your public member functions should go before the private ones. 
-			</p>
-			<pre class="example_code prettyprint">class card {
-public:
-	//These member functions will be able to be accessed from anywhere
-	void print();
-	char* getSuit(); 
-
-private:
-	//These data members will only be able to be changed by the other member functions.
-	char* rank;
-	char* suit;
-	int value;
-};</pre>
-			<h2 id="members">Member Functions</h2>
-			<p>
-				So, I’ve been talking about member functions for the last few sections, but I haven’t exactly explained how they are used. First, remember that they belong to the class, just like the data belongs to the class. Hence, to access or call a member function of a class, you can also use the dot or arrow operator, depending on your situation. For example, if we have an instance of the “card” class from above...
-			</p>
-			<pre class="example_code prettyprint">card c1;
-c1.print();</pre>
-			<p>Will call the print() function of the “card” class.</p>
-			<p>
-				Also like structures, each of your instances of your class will have its own set of data, so calling the member functions that act on that data will produce different results for each instance. 
-			</p>
-			<p>
-				Now, while you can technically implement your functions directly where they are prototyped within your class, it is conventional to define them outside your class—in fact usually in a different file. However, we’ll get to multiple files later. To implement your class members outside of your class, it’s just like implementing any other function, except you type the class type name and the scope resolution operator (two colons or “::”) before the name of the function. You then implement your function as usual, except that because this function is a member of a class, you know it will have to be attached to an instance of a class, and will also have access to the data of that object. To access the data (because it’s a member function), you can simple type the variable names declared in your class definition. These will pertain only to the “calling object,” which essentially means from the instance of the object from which you use the dot/arrow operator to call the function. 
-			</p>
-			<pre class="example_code prettyprint">void card::print() {
-	cout << rank << “ “ << suit << “ “ << value << endl;
-}
-
-int main() {
-	card c2;
-	c2.print();
-}
-</pre>
-			<p>This implements the card’s print member function. It automatically has the data members available to it. So, when you call the print function from an instance of a card, this function will be called, and it will use the data from that particular instance of card.</p>
-			<h2 id="getset">Getters and Setters</h2>
-			<p>
-				Member functions are usually used to manipulate the data contained by the class, but because your data will be private, you will often need a quick way to read from or write to the data. This is where getter and setter member functions come into play—they do what they say on the box, read from and write to your data members. While it is indeed worse than absolutely useless to have a getter and setter for a value if (somewhat counterintuitively) literally all they do is return the value or set the value, but when you start to build more complicated objects than what are basically data containers, they will necessitate more complicated methods of assigning and retrieving data. This is the real value of getters and setters—they encapsulate the accessing and assigning logic and make it very easy for the rest of your program to use your class.
-			</p>
-			<pre class="example_code prettyprint">char* card::getRank() {
-	return rank;
-}
-
-void card::setRank(const char* r) {
-	delete[] rank;
-	rank = new char[strlen(r) + 1];
-	strcpy(rank,r);
+			<p>Here, friendship allows the print function and the deck class access to the normally private rank data member.</p>
+			<pre class="example_code prettyprint">void print(const char&amp; c) {
+	cout << “rank: “ << c.rank;
 }</pre>
-			<p>You can see that while the getter shown here is pretty useless, the setter will automatically work with the dynamically allocated string, so your main function or wherever else does not have to worry about it.</p>
-			<h2 id="construct">Constructors</h2>
-			<p>
-				There is a special type of member function that all classes have, whether you implement it or not. This is the constructor. The constructor, as the name implies, is called once and only once, when an instance of you object comes into being, technically known as instantiated. There are several types of constructors, but they all serve the same purpose: to initialize the data of your class in an intelligent manner so the rest of your class as a starting point. For now, this will most likely mean setting values to default values and sometimes allocating dynamic memory. Another important aspect of constructors is that you never directly call them (i.e. you never do something like class.constructor()). Instead, it is automatically called for you when a variable of your classes’ type is instantiated. For example, your constructor will be called in both of these situations...
-			</p>
-			<pre class="example_code prettyprint">myclass var1;
-myclass* var2 = new myclass;</pre>
-			<p>
-				To define a constructor, you must add it as a member function, just like any other. However, there are a few specifics here. First, all constructors must have the same name as the class. This means that, for example, if you have a class named “card,” all of your constructors will literally be named “card.” Second, constructors have no return type—not even “void.” You simply leave out the return type. Third, your constructor must be public, or else nothing in your program will be able to create an instance of your class—the constructor is called when you instantiate an object, and if it’s private, you can’t call it, and hence can’t create the object. Implementing a constructor is just like any other member function, except that you know when your constructor is called, it will be as if your data members were just declared—for example, they will have garbage values. You must keep this in mind—the point of the constructor is to initialize them.
-			</p>
-			<pre class="example_code prettyprint">class card {
-public:
-	card();
-	//other functions
-private:
-	int value;
-}
-
-//Implement the constructor
-card::card() {
-	value = 0;
+			<p>This function can access the private rank member of the card.</p>
+			<pre class="example_code prettyprint">int main() {
+	card c;
+	print(c);
 }</pre>
+			<p>Calling the friend function is no different than calling any other funciton.</p>
 			<p>
-				There are three major types of constructors, and we’ll cover the first two here. The first type is the simplest—it has no parameters and will simply set your data to default values. Because it has no parameters, this is called a default constructor. An example of a default constructor is displayed above. Your default constructor will be called if you create an object without specifying anything, for example...
+				Finally, an interesting feature of friendship is that it gives you the option to only allow a specific class or function the ability to create objects of another class. Remember when I said your constructors should always be public? Well, if you make all your constructors private, and give another class friendship, that class can create instances of your private class, as it can access private members, but no one else can.	
 			</p>
-			<pre class="example_code prettyprint">card card1;</pre>
-			<p>Will call the default constructor.</p>
-			<p>
-				Next, there is the parameterized constructor. As the name suggests, this constructor takes parameters that signify what the data members should be initialized to. The implementation is exactly the same as the default constructor, except that it takes parameters. Finally, remember when we went over overloaded functions, quite a while ago? Well, you can overload the constructor, meaning you can have different constructors for different situations. For example, this class as a default and a parameterized constructor...
-			</p>
-			<pre class="example_code prettyprint">class card {
-public:
-	card();
-	card(int);
-private:
-	int value;
-}
-
-//Default constructor
-card::card() {
-	value = 0;
-}
-
-//Parameterized constructor
-card::card(int v) {
-	value = v;
-}</pre>
-			<p>
-				You might be wondering how your program knows what constructor to call if you have more than one. Well, we already mentioned how to use the default constructor, but to specify that you want to use your parameterized constructor, simply add your parameters when instantiating the class.
-			</p>
-			<pre class="example_code prettyprint">card card1;</pre>
-			<p>Will use your default constructor.</p>
-			<pre class="example_code prettyprint">card card2(10);</pre>
-			<p>Will use your parameterized constructor.</p>
-			<pre class="example_code prettyprint">card* card3 = new card(10);</pre>
-			<p>Will also use your parameterized constructor.</p>			
-			<h2 id="destruct">Destructors</h2>
-			<p>
-				The counterpart to constructors is, of course, the destructor. The destructor is like the constructor in that it is only called once in the life of an object, except this time it’s when the object is destroyed. Hence, the point of the destructor is to clean up your classes’ data, which for now will mean cleaning up any dynamic memory allocated by your class. The object is either destroyed when it goes out of scope (if it’s a statically declared variable), or it is deleted (if it’s a dynamically allocated variable). Like the constructor, the destructor has a specific name, which is a tilde (“~”) followed by the name of the class. Finally, although you can have multiple constructors, you can only have one destructor.
-			</p>
-			<pre class="example_code prettyprint">class card {
-public:
-	card();
-	~card();
-private:
-	char* name;
-}
-
-//Constructor
-card::card() {
-	name = new char[10];
-}
-
-//Destructor
-card::~card() {
-	delete[] name;
-}</pre>
-			<p>This is an example of a class that will allocate memory on construction, and deallocate it on destruction. The dynamic memory is only seen and managed by the class itself, so the rest of your program does not have to worry about memory leaks or the like.</p>
-			<pre class="example_code prettyprint">{
-	card card1;   //The default constructor will be called here on instantiation
-}   //And the destructor will be called here, when the object goes out of scope</pre>			
-			<p>The constructor allocates memory, and the destructor deletes it, without you doing anything in your main function.</p>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
-			<p>The example program should be very helpful this week, be sure to take a look at it and run it to see what functions are called when.</p>
 			<p>Most all your data in these classes should be private! Member functions should mostly be public.</p>
 			<ol>
-				<li>This time, create a simple deck of cards using a dynamic array of “card” classes. Write member functions to output the card, getters and setters, and a method to input the card if you can figure it out.</li>
-				<li>If you still want to follow the basic text game path, try starting a new little game (maybe solve a simple puzzle), using objects to describe the main aspects of your game. For example, you’d have an object to describe your entire game, maybe an object to describe your playing field, maybe an object to describe your player, etc.</li>
-				<li>Continuing the bent of objectifying these exercises: create a simple cataloguing system for “student” objects. You should be able to add a student with their relevant data, print them, sort them, and remove them. You should include some dynamically allocated data members, implement member functions, a default constructor, parameterized constructor, and destructor.</li>
+				<li>Create a “card” class, representing a playing card. Implement all three types of constructors, functions to input the card, set data members, retrieve data members, and print the card. Use constant parameters and member functions as needed.</li>
+				<li>Create a deck class that is a friend of the card class, containing a dynamically allocated array of cards. Make the card constructors private, so only the deck class can create cards. The deck should have at least a default and copy constructor, contain member functions to input the deck, output the deck, shuffle the deck, and deal cards from the deck.</li>
 			</ol>
 		</section>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
 			<div class="example_links">
 				<a href="example.cpp" download>Download</a> | 
-				<a href="http://ideone.com/45Dyt0" target="_blank">Run this Code</a>
+				<a href="http://ideone.com/RE4pN1" target="_blank">Run this Code</a>
 			</div>
 			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
 //previous example programs, notes, or ask a question.
@@ -385,163 +253,92 @@ card::~card() {
 
 using namespace std;
 
-
-//CARD CLASS
+class deck {};
 class card {
 public:
-	//Default constructor
+	//Constructors cannot be constant
 	card();
-	//Parameterized constructor
-	card(const char*, const char*, int);
-	//Destructor
-	~card();
-
-	//Getters and setters. I realize that right now, some of these
-	//are pretty much useless. However, you will often want
-	//to use these for more complicated operations, for example
-	//how the setRank and setSuit functions reallocate memory
-	char* getRank();
-	void setRank(const char*);
-	char* getSuit();
-	void setSuit(const char*);
-	int getValue();
-	void setValue(int);
-
-	//A member that will print the card's data to the console
-	void print();
+	card(const char* r); //Constant char pointer paramter means that the pointer
+						 //cannot be moved. Also, it allows you to pass string
+						 //literals ("literal")
+	card(const card&amp; src); //Copy constructor
+	
+	char* getRank() const; //Constant because it will not change the rank member
+	void setRank(const char* r); //Not constant because it will change the rank member
 
 private:
-	char* rank;
-	char* suit;
-	int value;
+	//Private data member
+	char rank[10];
+
+	//The print function will be able to access the private rank member of a card
+	friend void print(const card&amp; c);
+	//The deck class will be able to access private members of cards
+	friend class deck;
 };
 
-//Default constructor
 card::card() {
-	cout &lt;&lt; endl &lt;&lt; "In default constructor!" &lt;&lt; endl;
-
-	//Set data members to default values
-	rank = NULL;
-	suit = NULL;
-	value = 0;
+	//Clear rank
+	strcpy(rank,"");
 }
 
-//Parameterized constructor
-card::card(const char* r, const char* s, int v) {
-	cout &lt;&lt; endl &lt;&lt; "In Parameterized constructor!" &lt;&lt; endl;
-
-	//Set data members to the parameters
-	rank = new char[strlen(r) + 1];
-	suit = new char[strlen(s) + 1];
+card::card(const char* r) {
+	//Copy rank
 	strcpy(rank,r);
-	strcpy(suit,s);
-	value = v;
 }
 
-//Destructor
-card::~card() {
-	cout &lt;&lt; endl &lt;&lt; "In destructor!" &lt;&lt; endl;
-
-	//Delete the data members, if we allocated them
-	//(delete will not delete if it is given a null pointer)
-	delete[] rank;
-	delete[] suit;
+//Passed by const reference in copy constructor to prevent infinite call
+//loop
+card::card(const card&amp; src) {
+	//Copy the rank member from the source card
+	strcpy(rank,src.rank);
 }
 
-//Getters and setters
-char* card::getRank() {
-	return rank;
+char* card::getRank() const {
+	//This function cannot change rank
+	return (char*)rank;
 }
 
-//As you can see, this setter is useful, because it automatically manages
-//the dynamic memory
 void card::setRank(const char* r) {
-	delete[] rank;
-	rank = new char[strlen(r) + 1];
+	//Copy rank
 	strcpy(rank,r);
 }
 
-char* card::getSuit() {
-	return suit;
+//Note that if this was a member function (it is NOT), this could also be constant
+//because it does not change any data in the card. However, normal functions
+//(as in not member functions) cannot be constant.
+void print(const card&amp; c) {
+	//Output card. This function can access "c.rank" even though it's a private
+	//data member because this is a friend function to the card class
+	cout &lt;&lt; "Card rank: " &lt;&lt; c.rank &lt;&lt; endl;
 }
-
-void card::setSuit(const char* s) {
-	delete[] suit;
-	suit = new char[strlen(s) + 1];
-	strcpy(suit,s);
-}
-
-int card::getValue() {
-	return value;
-}
-
-void card::setValue(int v) {
-	value = v;
-}
-
-//This is a normal member function, and will output the card's values
-void card::print() {
-	//If suit points to null, say we don't have a suit
-	if(!rank)
-		cout &lt;&lt; "no rank ";
-	else
-		cout &lt;&lt; rank &lt;&lt; " ";
-	if(!suit)
-		cout &lt;&lt; "no suit ";
-	else
-		cout &lt;&lt; suit &lt;&lt; " ";
-	cout &lt;&lt; value &lt;&lt; endl;
-}
-//END CARD CLASS
-
 
 int main() {
 
-	cout &lt;&lt; endl &lt;&lt; "Creating static card" &lt;&lt; endl;
+	card c1;
+	const card c2("king"); //You must give the rank here, because you cannot call
+						   //setRank on a const card
 
-	//Create a card and a card pointer
-	card card1;
-	card* card2 = NULL;
+	c1.setRank("queen");
+	//c2.setRank("jack"); This would give an error
 
-	//Print inital values
-	cout &lt;&lt; endl &lt;&lt; "Initial card:" &lt;&lt; endl;
-	card1.print();
+	card c3(c1); //Create a copy of card one using the copy constructor
 
-	//Use setters
-	card1.setRank("king");
-	card1.setSuit("hearts");
-	card1.setValue(13);
+	//Note that the print function is not called from an instance of the class,
+	//as it is not a member function.
+	print(c1);
+	print(c2);
+	print(c3);
 
-	//Print set valeus
-	cout &lt;&lt; endl &lt;&lt; "After setters called:" &lt;&lt; endl;
-	card1.print();
+	//getRank is allowed on c2 because it is a constant member
+	char* r1 = c1.getRank();
+	char* r2 = c2.getRank();
+	char* r3 = c3.getRank();
 
-	//Use getters
-	char* rank = card1.getRank();
-	char* suit = card1.getSuit();
-	int value = card1.getValue();
+	cout &lt;&lt; "rank 1: " &lt;&lt; r1 &lt;&lt; endl
+		 &lt;&lt; "rank 2: " &lt;&lt; r2 &lt;&lt; endl
+		 &lt;&lt; "rank 3: " &lt;&lt; r3 &lt;&lt; endl;
 
-	//Print gotten values
-	cout &lt;&lt; endl &lt;&lt; "Values from card:" &lt;&lt; endl
-		 &lt;&lt; rank &lt;&lt; " " &lt;&lt; suit &lt;&lt; " " &lt;&lt; value &lt;&lt; endl;
-
-	//Create dynamic card using the parameterized constructor
-	cout &lt;&lt; endl &lt;&lt; "Creating dynamic card" &lt;&lt; endl;
-	card2 = new card("two","spades",2);
-
-	//Print the card (note the use of the arrow operator)
-	cout &lt;&lt; endl &lt;&lt; "Dynamic card:" &lt;&lt; endl;
-	card2-&gt;print();
-
-	//Delete dynamic card. Note the destructor will be called here
-	cout &lt;&lt; endl &lt;&lt; "Deleting dynamic card" &lt;&lt; endl;
-	delete card2;
-
-
-	cout &lt;&lt; endl &lt;&lt; "End of program --- ";
 	system("pause");
-	//Note that the destructor for the statically declared card will
-	//be called as main exits.
 	return 0;
 }</pre>
 		</aside>

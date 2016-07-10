@@ -6,162 +6,90 @@
 
 using namespace std;
 
-
-//CARD CLASS
+class deck {};
 class card {
 public:
-	//Default constructor
 	card();
-	//Parameterized constructor
-	card(const char*, const char*, int);
-	//Destructor
-	~card();
-
-	//Getters and setters. I realize that right now, some of these
-	//are pretty much useless. However, you will often want
-	//to use these for more complicated operations, for example
-	//how the setRank and setSuit functions reallocate memory
-	char* getRank();
-	void setRank(const char*);
-	char* getSuit();
-	void setSuit(const char*);
-	int getValue();
-	void setValue(int);
-
-	//A member that will print the card's data to the console
-	void print();
+	card(const char* r); //Constant char pointer paramter means that the pointer
+						 //cannot be moved. Also, it allows you to pass string
+						 //literals ("literal")
+	card(const card& src); //Copy constructor
+	
+	char* getRank() const; //Constant because it will not change the rank member
+	void setRank(const char* r); //Not constant because it will change the rank member
 
 private:
-	char* rank;
-	char* suit;
-	int value;
+	//Private data member
+	char rank[10];
+
+	//The print function will be able to access the private rank member of a card
+	friend void print(const card& c);
+	//The deck class will be able to access private members of cards
+	friend class deck;
 };
 
-//Default constructor
 card::card() {
-	cout << endl << "In default constructor!" << endl;
-
-	//Set data members to default values
-	rank = NULL;
-	suit = NULL;
-	value = 0;
+	//Clear rank
+	strcpy(rank,"");
 }
 
-//Parameterized constructor
-card::card(const char* r, const char* s, int v) {
-	cout << endl << "In Parameterized constructor!" << endl;
-
-	//Set data members to the parameters
-	rank = new char[strlen(r) + 1];
-	suit = new char[strlen(s) + 1];
+card::card(const char* r) {
+	//Copy rank
 	strcpy(rank,r);
-	strcpy(suit,s);
-	value = v;
 }
 
-//Destructor
-card::~card() {
-	cout << endl << "In destructor!" << endl;
-
-	//Delete the data members, if we allocated them
-	//(delete will not delete if it is given a null pointer)
-	delete[] rank;
-	delete[] suit;
+//Passed by const reference in copy constructor to prevent infinite call
+//loop
+card::card(const card& src) {
+	//Copy the rank member from the source card
+	strcpy(rank,src.rank);
 }
 
-//Getters and setters
-char* card::getRank() {
-	return rank;
+char* card::getRank() const {
+	//This function cannot change rank
+	return (char*)rank;
 }
 
-//As you can see, this setter is useful, because it automatically manages
-//the dynamic memory
 void card::setRank(const char* r) {
-	delete[] rank;
-	rank = new char[strlen(r) + 1];
+	//Copy rank
 	strcpy(rank,r);
 }
 
-char* card::getSuit() {
-	return suit;
+//Note that if this was a member function (it is NOT), this could also be constant
+//because it does not change any data in the card. However, normal functions
+//(as in not member functions) cannot be constant.
+void print(const card& c) {
+	//Output card. This function can access "c.rank" even though it's a private
+	//data member because this is a friend function to the card class
+	cout << "Card rank: " << c.rank << endl;
 }
-
-void card::setSuit(const char* s) {
-	delete[] suit;
-	suit = new char[strlen(s) + 1];
-	strcpy(suit,s);
-}
-
-int card::getValue() {
-	return value;
-}
-
-void card::setValue(int v) {
-	value = v;
-}
-
-//This is a normal member function, and will output the card's values
-void card::print() {
-	//If suit points to null, say we don't have a suit
-	if(!rank)
-		cout << "no rank ";
-	else
-		cout << rank << " ";
-	if(!suit)
-		cout << "no suit ";
-	else
-		cout << suit << " ";
-	cout << value << endl;
-}
-//END CARD CLASS
-
 
 int main() {
 
-	cout << endl << "Creating static card" << endl;
+	card c1;
+	const card c2("king"); //You must give the rank here, because you cannot call
+						   //setRank on a const card
 
-	//Create a card and a card pointer
-	card card1;
-	card* card2 = NULL;
+	c1.setRank("queen");
+	//c2.setRank("jack"); This would give an error
 
-	//Print inital values
-	cout << endl << "Initial card:" << endl;
-	card1.print();
+	card c3(c1); //Create a copy of card one using the copy constructor
 
-	//Use setters
-	card1.setRank("king");
-	card1.setSuit("hearts");
-	card1.setValue(13);
+	//Note that the print function is not called from an instance of the class,
+	//as it is not a member function.
+	print(c1);
+	print(c2);
+	print(c3);
 
-	//Print set valeus
-	cout << endl << "After setters called:" << endl;
-	card1.print();
+	//getRank is allowed on c2 because it is a constant member
+	char* r1 = c1.getRank();
+	char* r2 = c2.getRank();
+	char* r3 = c3.getRank();
 
-	//Use getters
-	char* rank = card1.getRank();
-	char* suit = card1.getSuit();
-	int value = card1.getValue();
+	cout << "rank 1: " << r1 << endl
+		 << "rank 2: " << r2 << endl
+		 << "rank 3: " << r3 << endl;
 
-	//Print gotten values
-	cout << endl << "Values from card:" << endl
-		 << rank << " " << suit << " " << value << endl;
-
-	//Create dynamic card using the parameterized constructor
-	cout << endl << "Creating dynamic card" << endl;
-	card2 = new card("two","spades",2);
-
-	//Print the card (note the use of the arrow operator)
-	cout << endl << "Dynamic card:" << endl;
-	card2->print();
-
-	//Delete dynamic card. Note the destructor will be called here
-	cout << endl << "Deleting dynamic card" << endl;
-	delete card2;
-
-
-	cout << endl << "End of program --- ";
 	system("pause");
-	//Note that the destructor for the statically declared card will
-	//be called as main exits.
 	return 0;
 }
