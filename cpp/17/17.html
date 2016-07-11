@@ -1,0 +1,509 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 17 - Templates</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\16\16.html" id="last">Last</a>
+		<a class="top_button" href="..\18\18.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 17 - Templates</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#gen">Generic Programming</a></li> | 
+					<li><a href="#cpp">C++ Templates</a></li> | 
+					<li><a href="#func">Template Functions</a></li> | 
+					<li><a href="#param">Template Parameters</a></li> | 
+					<li><a href="#adt">Template Structures &amp; Classes</a></li> | 
+					<li><a href="#usage">Using Template Structurs &amp; Classes</a></li> | 
+					<li><a href="#node">Templated Nodes</a></li> | 
+					<li><a href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/5pim2e" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+
+// SEE THE LAST EXAMPLE FOR COMMENTS ON THE ACTUAL LIST DATA STRUCTURE,
+// COMMENTS HERE ARE ONLY ON TEMPLATE FEATURES
+
+
+// Our forward declaration has to be template
+template &lt;typename T&gt; class LinkedList;
+
+// Here our node is templated so each node can hold an arbitrary data type
+template &lt;typename T&gt; 
+class node {
+	// Our value paramter is of our template paramter "T"
+	// This is also implemented here, in the class definition
+	node(T v, node* n = NULL) {
+		value = v;
+		next = n;
+	}
+	// Don't need this to do anything
+	~node() {}
+
+	// The value this node holds should, of course, be of generic type "T"
+	T value;
+	node* next;
+
+	// Note that we must specify that LinkedList is templated
+	friend class LinkedList&lt;T&gt;;
+
+	// We can't implement a friend here, as it's not a member
+	// We also have to specify what kind of list we're outputting, so we do LinkedList&lt;type&gt;.
+	// Hence, the friend must also be templated. Note that the template declaration goes before
+	// "friend," and that we must use U as our argument, as T is already defined.
+	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
+};
+
+// Here our actual list is templated to accomodate the templated nodes and arbitrary data input/output
+template &lt;typename T&gt; 
+class LinkedList {
+public:
+	LinkedList() {
+		head = NULL;
+	}
+	// We need a copy constructor for later
+	LinkedList(const LinkedList&amp; src) {
+		head = NULL;
+		node&lt;T&gt;* temp = src.head;
+		while(temp) {
+			addValue(temp-&gt;value);
+			temp = temp-&gt;next;
+		}
+	}
+	// We need an assignment operator for later
+	LinkedList&amp; operator=(const LinkedList&amp; src) {
+		while(head) {
+			node&lt;T&gt;* temp = head-&gt;next;
+			delete head;
+			head = temp;
+		}
+		node&lt;T&gt;* temp = src.head;
+		while(temp) {
+			addValue(temp-&gt;value);
+			temp = temp-&gt;next;
+		}
+	}
+	~LinkedList() {
+		while(head) {
+			node&lt;T&gt;* temp = head-&gt;next;
+			delete head;
+			head = temp;
+		}
+	}
+
+	// Here we add a value of generic type T
+	void addValue(T value) {
+		head = new node&lt;T&gt;(value,head);
+	}
+	// Here we remove a value, returning generic type T
+	T removeValue() {
+		T result;
+		if(head) {
+			result = head-&gt;value;
+			node&lt;T&gt;* temp = head-&gt;next;
+			delete head;
+			head = temp;
+		}
+		return result;
+	}
+
+	// Again, we can't implement a friend here, and we must specify that the LinkedList uses type U
+	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
+
+private:
+	// Our node must use generic type T
+	node&lt;T&gt;* head;
+};
+
+// Here we actually implement our friend, note the use of another template
+template &lt;typename T&gt;
+ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;T&gt;&amp; src) {
+	node&lt;T&gt;* temp = src.head;
+	while(temp) {
+		// Output brackets for list-of-list clarity
+		// Later, we create a list of lists, so in that case "out &lt;&lt; temp-&gt;value"
+		// will actually recursively call this function 
+		out &lt;&lt; "[" &lt;&lt; temp-&gt;value &lt;&lt; "]";
+		if(temp-&gt;next) {
+			out &lt;&lt; " -&gt; ";
+		}
+
+		temp = temp-&gt;next;
+	}
+
+	return out;
+}
+
+int main() {
+	// Declare list using integers
+	LinkedList&lt;int&gt; intList;
+	// Declare list using floats
+	LinkedList&lt;float&gt; floatList;
+	// Delcare list using lists that use integers
+	// prior to c++11, you have to leave a space between two '&gt;' brackets in a
+	// nested template, otherwise the compiler thinks you're using the "&gt;&gt;" operator 
+	LinkedList&lt;LinkedList&lt;int&gt; &gt; listList;
+
+	// Output lists
+	cout &lt;&lt; "Int list: " &lt;&lt; intList &lt;&lt; endl;
+	cout &lt;&lt; "Float list: " &lt;&lt; floatList &lt;&lt; endl;
+	cout &lt;&lt; "List list: " &lt;&lt; listList &lt;&lt; endl;
+
+	// Add values to the int list
+	for(int index = 0; index &lt; 10; index++) {
+		intList.addValue(index);
+	}
+
+	// Add values to the float list
+	for(float index = 0.5; index &lt; 10; index++) {
+		floatList.addValue(index);
+	}
+
+	// Add values to list list
+	for(int index = 0; index &lt; 10; index++) {
+		LinkedList&lt;int&gt; value;
+		for(int index = 0; index &lt; 10; index++) {
+			value.addValue(index);
+		}
+		listList.addValue(value);
+	}
+
+	// Output lists
+	cout &lt;&lt; "Int list: " &lt;&lt; intList &lt;&lt; endl;
+	cout &lt;&lt; "Float list: " &lt;&lt; floatList &lt;&lt; endl;
+	cout &lt;&lt; "List list: " &lt;&lt; listList &lt;&lt; endl;
+
+	system("pause");
+	return 0;	
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="gen">Generic Programming</h2>
+			<p>
+				Generic programming is a general topic of discussion in computer science, and it represents the ability to program logic without knowing or caring about the actual type of data you will be using. Generic programming is particularly useful for abstracting data structures to the point that all you have to think about is the logic behind your data’s organization, not the data itself. Realistically, this would mean (for example) creating a list data structure that is agnostic of what type of data it stores, whether it be integers, strings, or even lists. 
+			</p>
+			<h2 id="cpp">C++ Templates</h2>
+			<p>
+				Most languages support most, if not all, of what we’ve learned so far, although classes (i.e. objects) are specific to object oriented ones. However, we’re now going to start covering some C++ specific features, and templates are one of them. Other languages do support generic programming, but C++’s templates are an implementation specific to the language. 
+			</p>
+			<p>
+				So, templates are C++’s way to do generic programming, giving you the ability to make functions and data structures type-agnostic. However, you have to be wary of using them—they may cause more problems than they solve. They are hard to validate in all cases, they can significantly slow compilation time, old C++ compilers don’t support them, and error messages from templates are practically incomprehensible. Seriously—template errors can generate a hundred or so lines of error messages from one problem, and give you no straightforward information but the line number of the error.
+			</p>
+			<p>
+				So, why would you want to use templates? Often, you won’t. However, when used in moderation, they can allow you to reuse data structures and methods to significant effect.
+			</p>
+			<h2 id="func">Template Functions</h2>
+			<p>
+				To declare a templated function, you begin with the word “template,” as you might expect. However, you can then add template parameters, the important part. Template parameters, specified in pointy brackets, can be normal parameter data, or the name of a type. To declare a type name parameter, simply define the type as “typename,” or “class.” 
+			</p>
+			<pre class="example_code prettyprint">template &lt;typename T, int x&gt;
+// templated thing</pre>
+			<p>
+				Now, in your templated “thing,” you can use the template parameters as constants (in the case of regular parameters), or actual types (in the case of type names). This is the generic part: the arbitrary type parameter can be used specify variables, pointers, the function return type, parameters, and anything else. For example, if we wanted to make a templated function that creates an array of a type of a specified length...
+			</p>
+			<pre class="example_code prettyprint">template &lt;typename T, int n&gt;
+T* createArray()
+{
+	return new T[n];
+}</pre>
+			<p>Of course, “n” could be passed as a normal parameter, but for the sake of the example it’s a template parameter.</p>
+			<p>
+				So, since templates are used to abstract the type of data you’ll be working with, when actually using a templated function or object, you must specify what type of data you’re working with. Passing template parameters parallels passing normal parameters: you pass actual values, but this time inside pointy brackets, and before your actual parameters. For example, if we wanted to call the previous example to create an array of 10 integers, we would do:
+			</p>
+			<pre class="example_code prettyprint">int* array = createArray&lt;int,10&gt;();</pre>
+			<p>Here, we pass “int” as the type name “T,” and “10” as the integer template parameter “n.” This will create an array of 10 integers.</p>
+			<h2 id="param">Template Parameters</h2>
+			<p>
+				Another useful feature of templates is that if possible, the compiler will automatically detect what types you’re using as template parameters. In these cases, you can leave off the template parameters entirely. 
+			</p>
+			<pre class="example_code prettyprint">template &lt;typename T&gt;
+T abs_value(T value)
+{
+	if(value < 0) return –value;
+	return value;
+}
+
+abs_value(-10);	   // This will automatically use “int” as “T”
+abs_value(5.45);	   // This will automatically use “float” as “T”</pre>
+			<p>
+				Templates can be used to create many useful utility functions, for example a to-string function, a from-string function, operator overloads, and more, but the main use is creating reusable data structures in the next section.
+			</p>
+			<h2 id="adt">Template Structures &amp; Classes</h2>
+			<p>
+				Declaring a templated structure or class is much the same as templating a function: you begin with the keyword “template” and the template parameters, then declare the class/struct as usual, except using your template parameters. For example, say we want to create a “vector” structure, which contains N elements of type T. In this case, note that N would not work as a normal parameter, as you cannot create a static array with a non-constant variable. Also, you would want a constructor/destructor, but they are omitted for the example:
+			</p>
+			<pre class="example_code prettyprint">template &lt;typename T, int N&gt;
+struct Vector
+{
+	T elements[N];
+
+	Vector&amp; operator=(const Vector&amp; src);
+	T operator*(const Vector&amp; other);
+};</pre>
+			<p>Here, we create an array of type “T” with length “N,” and prototype some member functions. Note that “Vector” is still used normally, and “T” can be used as the return type for the * operator. </p>
+			<p>If you were to implement member functions of a templated struct/class normally, the syntax is very obtuse, as you have to declare the member as a template, and each time you were to write “Vector,” you have to write the type with all template parameters. </p>
+			<pre class="example_code prettyprint">template <typename T, int N>
+Vector&lt;T,N&gt;&amp; Vector&lt;T,N&gt;::operator=(const Vector&lt;T,N&gt;&amp; src)
+{
+	// …
+}</pre>
+			<p>Because this is ugly and prone to errors, it’s conventional to simply implement your member functions directly in the declaration of your struct/class, for example:</p>
+			<pre class="example_code prettyprint">template &lt;typename T, int N&gt;
+struct Vector
+{
+	T elements[N];
+
+	Vector&amp; operator=(const Vector&amp; src)
+	{
+		// …
+	}
+
+	T operator*(const Vector&amp; other)
+	{
+		// …
+	}
+}</pre>
+			<h2 id="usage">Using Template Structurs &amp; Classes</h2>
+			<p>
+				You’re probably going to want to use your fancy new templatized data types. Creating a templated type is very similar to calling a templated function: simply specify your template parameters in pointy brackets. 
+			</p>
+			<pre class="example_code prettyprint">Vector&lt;int,3&gt; vec1;</pre>
+			<p>Creates a vector holding 3 integers named “vec1.”</p>
+			<p>Using your newly created object is no different than anything else you’ve dealt with, member functions, data members, operators, and everything else works the same way.</p>
+			<h2 id="node">Templated Nodes</h2>
+			<p>
+				As I’ve mentioned several times, templates are often used to create generic data structures. I don’t have much to say here: first, we’ve already created a simple templated data structure, the Vector. Simply templating a struct/class is often enough to create your data structure. However, say you wanted to template a linked list-based structure, like we made last week. Here, you would need to template both the “node,” to hold arbitrary types, and the list to accommodate templatized nodes. See the example program.
+			</p>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Template last week’s exercise, the linked-list based list data structure. Make sure it will work with any data type, including another list.</li>
+				<li>Create your own full-featured, templated, arbitrarily sized vector class. Try implementing the following members:</li>
+				<div class="nocollapse">
+				<ul style="float:left;width:25%;">
+					<li>Default constructor</li>
+					<li>Parametrized constructor</li>
+					<li>Copy constructor</li>
+					<li>Destructor</li>
+					<li>operator=</li>
+					<li>operator+</li>
+					<li>operator-</li>
+					<li>operator+=</li>
+					<li>operator-=</li>
+				</ul>
+				<ul style="float:right;width:45%;">
+					<li>length()</li>
+					<li>normal() – same direction, length = 1</li>
+					<li>round() – round to integer vector</li>
+					<li>rotate()</li>
+					<li>angle()</li>
+					<li>operator==</li>
+					<li>operator!=</li>
+					<li>templated operator* -- multiply by constant</li>
+					<li>operator * -- dot product</li>
+				</ul>
+				</div>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/5pim2e" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+
+// SEE THE LAST EXAMPLE FOR COMMENTS ON THE ACTUAL LIST DATA STRUCTURE,
+// COMMENTS HERE ARE ONLY ON TEMPLATE FEATURES
+
+
+// Our forward declaration has to be template
+template &lt;typename T&gt; class LinkedList;
+
+// Here our node is templated so each node can hold an arbitrary data type
+template &lt;typename T&gt; 
+class node {
+	// Our value paramter is of our template paramter "T"
+	// This is also implemented here, in the class definition
+	node(T v, node* n = NULL) {
+		value = v;
+		next = n;
+	}
+	// Don't need this to do anything
+	~node() {}
+
+	// The value this node holds should, of course, be of generic type "T"
+	T value;
+	node* next;
+
+	// Note that we must specify that LinkedList is templated
+	friend class LinkedList&lt;T&gt;;
+
+	// We can't implement a friend here, as it's not a member
+	// We also have to specify what kind of list we're outputting, so we do LinkedList&lt;type&gt;.
+	// Hence, the friend must also be templated. Note that the template declaration goes before
+	// "friend," and that we must use U as our argument, as T is already defined.
+	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
+};
+
+// Here our actual list is templated to accomodate the templated nodes and arbitrary data input/output
+template &lt;typename T&gt; 
+class LinkedList {
+public:
+	LinkedList() {
+		head = NULL;
+	}
+	// We need a copy constructor for later
+	LinkedList(const LinkedList&amp; src) {
+		head = NULL;
+		node&lt;T&gt;* temp = src.head;
+		while(temp) {
+			addValue(temp-&gt;value);
+			temp = temp-&gt;next;
+		}
+	}
+	// We need an assignment operator for later
+	LinkedList&amp; operator=(const LinkedList&amp; src) {
+		while(head) {
+			node&lt;T&gt;* temp = head-&gt;next;
+			delete head;
+			head = temp;
+		}
+		node&lt;T&gt;* temp = src.head;
+		while(temp) {
+			addValue(temp-&gt;value);
+			temp = temp-&gt;next;
+		}
+	}
+	~LinkedList() {
+		while(head) {
+			node&lt;T&gt;* temp = head-&gt;next;
+			delete head;
+			head = temp;
+		}
+	}
+
+	// Here we add a value of generic type T
+	void addValue(T value) {
+		head = new node&lt;T&gt;(value,head);
+	}
+	// Here we remove a value, returning generic type T
+	T removeValue() {
+		T result;
+		if(head) {
+			result = head-&gt;value;
+			node&lt;T&gt;* temp = head-&gt;next;
+			delete head;
+			head = temp;
+		}
+		return result;
+	}
+
+	// Again, we can't implement a friend here, and we must specify that the LinkedList uses type U
+	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
+
+private:
+	// Our node must use generic type T
+	node&lt;T&gt;* head;
+};
+
+// Here we actually implement our friend, note the use of another template
+template &lt;typename T&gt;
+ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;T&gt;&amp; src) {
+	node&lt;T&gt;* temp = src.head;
+	while(temp) {
+		// Output brackets for list-of-list clarity
+		// Later, we create a list of lists, so in that case "out &lt;&lt; temp-&gt;value"
+		// will actually recursively call this function 
+		out &lt;&lt; "[" &lt;&lt; temp-&gt;value &lt;&lt; "]";
+		if(temp-&gt;next) {
+			out &lt;&lt; " -&gt; ";
+		}
+
+		temp = temp-&gt;next;
+	}
+
+	return out;
+}
+
+int main() {
+	// Declare list using integers
+	LinkedList&lt;int&gt; intList;
+	// Declare list using floats
+	LinkedList&lt;float&gt; floatList;
+	// Delcare list using lists that use integers
+	// prior to c++11, you have to leave a space between two '&gt;' brackets in a
+	// nested template, otherwise the compiler thinks you're using the "&gt;&gt;" operator 
+	LinkedList&lt;LinkedList&lt;int&gt; &gt; listList;
+
+	// Output lists
+	cout &lt;&lt; "Int list: " &lt;&lt; intList &lt;&lt; endl;
+	cout &lt;&lt; "Float list: " &lt;&lt; floatList &lt;&lt; endl;
+	cout &lt;&lt; "List list: " &lt;&lt; listList &lt;&lt; endl;
+
+	// Add values to the int list
+	for(int index = 0; index &lt; 10; index++) {
+		intList.addValue(index);
+	}
+
+	// Add values to the float list
+	for(float index = 0.5; index &lt; 10; index++) {
+		floatList.addValue(index);
+	}
+
+	// Add values to list list
+	for(int index = 0; index &lt; 10; index++) {
+		LinkedList&lt;int&gt; value;
+		for(int index = 0; index &lt; 10; index++) {
+			value.addValue(index);
+		}
+		listList.addValue(value);
+	}
+
+	// Output lists
+	cout &lt;&lt; "Int list: " &lt;&lt; intList &lt;&lt; endl;
+	cout &lt;&lt; "Float list: " &lt;&lt; floatList &lt;&lt; endl;
+	cout &lt;&lt; "List list: " &lt;&lt; listList &lt;&lt; endl;
+
+	system("pause");
+	return 0;	
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
