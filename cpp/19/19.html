@@ -1,0 +1,391 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 19 - Inheritance and Polymorphism II</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\18\18.html" id="last">Last</a>
+		<a class="top_button" href="..\20\20.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 19 - Inheritance and Polymorphism II</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#type">Type Members, Enumerations, Casting</a></li> | 
+					<li><a href="#cast">dynamic_cast</a></li> | 
+					<li><a href="#pure">Pure Virtual Functions &amp; Abstract Classes</a></li> | 
+					<li><a href="#mult">Multiple Inheritance</a></li> | 
+					<li><a href="#virt">Virtual Inheritance</a></li> | 
+					<li><a href="#exercises">Exercises</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/8ItXqy" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+// A diamond inheritance pattern is demonstrated here using virtual inheritance
+// All the functions are implemented in the class definitions for conciseness
+
+// our base class
+class animal {
+public:
+	animal() {cout &lt;&lt; "animal constructor" &lt;&lt; endl;};
+	// You're usually going to want to make your destructor virtual so the specific one will be called before the general one
+	virtual ~animal() {cout &lt;&lt; "animal destructor" &lt;&lt; endl;};
+
+	// Speak is pure virtual so "animal" is an abstract class
+	virtual void speak() const = 0;
+
+protected:
+	// other data
+};
+
+// specific type of "animal," inherited
+class mammal : public virtual animal {
+public:
+	mammal() {cout &lt;&lt; "mammal constructor" &lt;&lt; endl;};
+	// the destructor here is also virtual, as this will be a base class
+	virtual ~mammal() {cout &lt;&lt; "mammal destructor" &lt;&lt; endl;};
+
+	// we do not implement "speak", so "mammal" is also abstract
+
+protected:
+	// other data
+};
+
+// specific type of "animal," inherited
+class flying : public virtual animal {
+public:
+	flying() {cout &lt;&lt; "flying constructor" &lt;&lt; endl;};
+	// the destructor here is also virtual, as this will be a base class
+	virtual ~flying() {cout &lt;&lt; "flying destructor" &lt;&lt; endl;};
+
+	// we do not implement "speak", so "flying" is also abstract
+
+protected:
+	// other data
+};
+
+// specific class that inherits from both "mammal" and "flying"
+class bat: public mammal, public flying {
+public:
+	bat() {cout &lt;&lt; "bat constructor" &lt;&lt; endl;};
+	// not virtual, this ends the chain
+	~bat() {cout &lt;&lt; "bat destructor" &lt;&lt; endl;};
+
+	// here we implement "speak," making bat a non-abstract class
+	void speak() const {cout &lt;&lt; "squeak!" &lt;&lt; endl;};
+
+private:
+	// other data
+};
+
+int main() {
+	// we can't create any of these, as they are abstract
+	// animal a;
+	// mammal m;
+	// flying f;
+
+	cout &lt;&lt; endl &lt;&lt; "constructing bat" &lt;&lt; endl &lt;&lt; endl;
+	
+	bat b;
+
+	cout &lt;&lt; endl &lt;&lt; "calling speak on general animal pointer" &lt;&lt; endl &lt;&lt; endl;
+
+	animal* someAnimal = &b;
+	someAnimal-&gt;speak();
+
+	cout &lt;&lt; endl &lt;&lt; "calling speak on general mammal pointer" &lt;&lt; endl &lt;&lt; endl;
+
+	mammal* someMammal = &b;
+	someMammal-&gt;speak();
+
+	cout &lt;&lt; endl &lt;&lt; "calling speak on general flying pointer" &lt;&lt; endl &lt;&lt; endl;
+
+	animal* someFlying = &b;
+	someFlying-&gt;speak();
+
+	cout &lt;&lt; endl &lt;&lt; "destructing bat" &lt;&lt; endl &lt;&lt; endl;
+	return 0;
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="type">Type Members, Enumerations, Casting</h2>
+			<p>
+				When using inheritance to store derived classes in a generalized data structure, it is often necessary to re-transform the elements into their derived states in order to access the data members specific to the derived class. One could technically achieve this through using only virtual functions, but that forces you to have at least a generalized concept of that function where it may not make sense.
+			</p>
+			<p>If you know exactly what type the object was originally, you can simply cast the pointer to the more specific type. </p>
+			<pre class="example_code prettyprint">dog newDog;
+animal* something = &amp;newDog;
+
+dog* someDog = (dog*)something;</pre>
+			<p>“someDog” will now point to “newDog,” as a “dog” instead of just an “animal.”</p>
+			<p>
+				However, you usually won’t know the original type of your object, so there are two common ways to get around this: specific “type” members and the dynamic_cast keyword. A “type” member is just what it sounds like—your base class defines a shared data member describing the specific type of the object, and each of your derived classes (in their constructor) sets that member to the specific type. 
+			</p>
+			<p>
+				Enumerations, or enums for short, are often used for this purpose, as they create a set of constant, related values. For example, you could create an enum called “class_types,” where each member signifies a specific derived type. 
+			</p>
+			<pre class="example_code prettyprint">enum animal_types 
+{
+	animal_generic,
+	animal_dog,
+	animal_cat,
+	animal_bird
+};</pre>
+			<p>
+				Allows you to use “animal_generic,” “animal_dog,” “animal_cat,” and “animal_bird,” as if they were constants of type “animal_types.” You can probably see why this is useful in creating “type” members, for example:
+			</p>
+			<pre class="example_code prettyprint">class animal {
+	animal();
+	// stuff
+	animal_types type;
+};
+
+animal::animal() {
+	type = animal_generic;
+}
+
+class dog : public animal {
+	dog();
+	// stuff
+};
+
+dog::dog() {
+	type = animal_dog;
+}</pre>
+			<p>
+				Your type member can be accessed through any animal, as you know that every animal contains the data. Hence, if you have a pointer to a general animal, you can automatically check what type it is. Once you have checked the type, you can then simply cast the pointer to the more specific type. 
+			</p>
+			<pre class="example_code prettyprint">animal* something;	// assume this points to a cat, a dog, or a general animal
+
+if(something->type == animal_dog) {
+	dog* someDog = (dog*)something;
+}
+else if(something->type == animal_cat) {
+	cat* someCat = (cat*)something;
+}
+// etc</pre>
+			<p>You can now use your full derived class functionality.</p>
+			<h2 id="cast">dynamic_cast</h2>
+			<p>
+				C++ provides a way to automatically cast a base class pointer into the original (most) derived type. This is with the dynamic_cast keyword. dynamic_cast takes two arguments; the type (template) argument of what you want to cast to, and the pointer (parameter) argument of what pointer you want to cast. For example, the code above could be written as:
+			</p>
+			<pre class="example_code prettyprint">dog* someDog = dynamic_cast&lt;dog*&gt;(something);</pre>
+			<p>
+				However, if you already know exactly what type you want to cast to, there’s not much point in using dynamic_cast. So, the useful thing about dynamic_cast is that if the cast fails, instead of giving you a pointer with invalid data, will simply return a null pointer. Hence, you can simply check if the cast worked or not.
+			</p>
+			<pre class="example_code prettyprint">dog* someDog = dynamic_cast&lt;dog*&gt;(something);
+
+if(someDog)
+{
+	// stuff
+}
+else 
+{
+	cat* someCat = dynamic_cast&lt;cat*&gt;(something);
+	if(someCat)
+	{
+		// stuff
+	}
+}</pre>
+			<h2 id="pure">Pure Virtual Functions &amp; Abstract Classes</h2>
+			<p>
+				Often, it doesn’t make sense to create an object of a base class type, or a generalized logic to exist. Even if it does make sense, you still might not want them to exist. In fact, you might only want the lowest level of derived classes to exist. For example, an inheritance tree of entities in a game might start with a generic “entity,” which is a base for “player” and “monster,” which are in turn base classes for “knight,” and “skeleton,” but you only want the final layer (knights and skeletons) to exist. 
+			</p>
+			<p>
+				You can restrict the creation of base class objects, but still have them describe shared functionality by the use of pure virtual functions. A class with one or more pure virtual functions is called an “abstract” class, as it specifies the interface of derived classes, but cannot be itself created. An abstract class cannot be instantiated; attempting to do so will generate a compiler error. However, pointers to abstract classes are completely valid: if they point to an actual object, that object just be of a non-abstract, derived type. The implementation of a pure virtual function is not defined in the base class, so there is no generalized logic—every derived class is forced to implement their own version. If the derived class does not implement the pure virtual function, it becomes an abstract class as well, and its children will have to then implement it or become abstract as well.
+			</p>
+			<p>The previous rules of virtual function calls still apply, except here there is no base or generic option. Defining a pure virtual function is extremely simple:</p>
+			<pre class="example_code prettyprint">class animal {
+	virtual void speak() = 0;	// see the ‘= 0’
+};</pre>
+			<p>When creating your derived classes (say “dog”), you must redefine and implement the pure virtual functions, as again, there is no generic “some animal sound,” or what have you.</p>
+			<pre class="example_code prettyprint">class dog {
+	speak();
+};
+
+dog::speak() {
+	cout << “bark!” << endl;
+}</pre>
+			<h2 id="mult">Multiple Inheritance</h2>
+			<p>
+				Unlike many other Object-Oriented languages (such as Java), C++ supports multiple inheritance, meaning a derived class can inherit from more than one base class. This works more or less how you’d expect: the derived class inherits the methods and data of both classes, and can be polymorphically abstracted to either base class type. 
+			</p>
+			<p>
+				Multiple inheritance is particularly useful to define classes by building up different sets of functionality, rather than extending the functionality of a more general class. For example, you could have a “car” class inherit from “controlledVehicle,” “usesFuel,” and “wheeledVehicle” base classes. This would mean that a “car” implements the interfaces from each of the component parts. In this paradigm, the components would likely be abstract classes that simply specify a set of functionality to be incorporated into another class.
+			</p>
+			<p>To specify multiple inheritance, simply add the other base classes delaminated by commas:</p>
+			<pre class="example_code prettyprint">class car : public wheeledVehicle, public controlledVehicle {
+	// override functions
+	// data, etc
+}</pre>
+			<h2 id="virt">Virtual Inheritance</h2>
+			<p>
+				Although not immediately obvious, there is a big problem with multiple inheritance described as of yet. This is called the “diamond” problem, because of what the problem inheritance tree looks like:
+			</p>
+			<div class="nocollapse">
+			<img src="diamond.png" style="float:left;padding-right:25px;padding-left:10px;">
+			<p>
+				In this situation, class ‘D’ inherits from both ‘B’ and ‘C,’ which in turn both inherit from ‘A.’ So, if you were to create an object of type ‘D,’ where would the ‘A’ part come from? Since an object of type ‘D’ contains an object of type ‘B’ and ‘C,’ both of those objects contain their own copy of ‘A.’ Hence, if you were to call a virtual function from ‘A,’ which path would the call take?
+			</p>
+			<p>
+				Well, these problems are solved by the use of “virtual” inheritance. In the example, if classes ‘B’ and ‘C’ are virtually inherited from ‘A,’ an instance of ‘D’ will have only one ‘A’ part, hence any calls will be unambiguous. You shouldn’t use virtual inheritance unless you have to, because it can cause significant performance overhead. However, “diamond” inheritance is often not a suitable design pattern, as even using virtual inheritance, problems can be created through ambiguous virtual functions and data access patterns. As with everything else, make sure what design you’re using actually fits your situation. 
+			</p>
+			</div>
+			<p>To specify a class as virtually inherited, simply add the keyword “virtual”:</p>
+			<pre class="example_code prettyprint">class A {
+	void foo();
+};
+
+class B : public virtual A {
+	// stuff
+}; 
+
+class C : public virtual A {
+	// stuff
+};
+
+class D : public B, public C {
+	// stuff
+}
+ 
+int main() {
+	D object;
+	object.foo();
+}</pre>
+		<p>If ‘B’ and ‘C’ did not inherit virtually, this would be ambiguous, as ‘object’ would contain two instances of ‘A.’</p>
+		</article>
+		<section class="exercises">
+			<h2 id="exercises">Programming Exercises</h2>
+			<ol>
+				<li>Play around with the example! (Again)</li>
+				<p>Test behavior if you change what is virtual (especially destructors), what inherits virtually, multiple inheritance, adding more classes, and generally complicating the inheritance tree. Then, test how casting behaves.</p>
+				<li>Similarly to last lesson's second exercise, create your own inheritance tree, but this time using a component-based model with multiple and virtual inheritance. For example, entities in a game, or vehicles, or employees, or more animals.</li>
+			</ol>
+		</section>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="http://ideone.com/8ItXqy" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
+//previous example programs, notes, or ask a question.
+
+#include &lt;iostream&gt;
+
+using namespace std;
+
+// A diamond inheritance pattern is demonstrated here using virtual inheritance
+// All the functions are implemented in the class definitions for conciseness
+
+// our base class
+class animal {
+public:
+	animal() {cout &lt;&lt; "animal constructor" &lt;&lt; endl;};
+	// You're usually going to want to make your destructor virtual so the specific one will be called before the general one
+	virtual ~animal() {cout &lt;&lt; "animal destructor" &lt;&lt; endl;};
+
+	// Speak is pure virtual so "animal" is an abstract class
+	virtual void speak() const = 0;
+
+protected:
+	// other data
+};
+
+// specific type of "animal," inherited
+class mammal : public virtual animal {
+public:
+	mammal() {cout &lt;&lt; "mammal constructor" &lt;&lt; endl;};
+	// the destructor here is also virtual, as this will be a base class
+	virtual ~mammal() {cout &lt;&lt; "mammal destructor" &lt;&lt; endl;};
+
+	// we do not implement "speak", so "mammal" is also abstract
+
+protected:
+	// other data
+};
+
+// specific type of "animal," inherited
+class flying : public virtual animal {
+public:
+	flying() {cout &lt;&lt; "flying constructor" &lt;&lt; endl;};
+	// the destructor here is also virtual, as this will be a base class
+	virtual ~flying() {cout &lt;&lt; "flying destructor" &lt;&lt; endl;};
+
+	// we do not implement "speak", so "flying" is also abstract
+
+protected:
+	// other data
+};
+
+// specific class that inherits from both "mammal" and "flying"
+class bat: public mammal, public flying {
+public:
+	bat() {cout &lt;&lt; "bat constructor" &lt;&lt; endl;};
+	// not virtual, this ends the chain
+	~bat() {cout &lt;&lt; "bat destructor" &lt;&lt; endl;};
+
+	// here we implement "speak," making bat a non-abstract class
+	void speak() const {cout &lt;&lt; "squeak!" &lt;&lt; endl;};
+
+private:
+	// other data
+};
+
+int main() {
+	// we can't create any of these, as they are abstract
+	// animal a;
+	// mammal m;
+	// flying f;
+
+	cout &lt;&lt; endl &lt;&lt; "constructing bat" &lt;&lt; endl &lt;&lt; endl;
+	
+	bat b;
+
+	cout &lt;&lt; endl &lt;&lt; "calling speak on general animal pointer" &lt;&lt; endl &lt;&lt; endl;
+
+	animal* someAnimal = &b;
+	someAnimal-&gt;speak();
+
+	cout &lt;&lt; endl &lt;&lt; "calling speak on general mammal pointer" &lt;&lt; endl &lt;&lt; endl;
+
+	mammal* someMammal = &b;
+	someMammal-&gt;speak();
+
+	cout &lt;&lt; endl &lt;&lt; "calling speak on general flying pointer" &lt;&lt; endl &lt;&lt; endl;
+
+	animal* someFlying = &b;
+	someFlying-&gt;speak();
+
+	cout &lt;&lt; endl &lt;&lt; "destructing bat" &lt;&lt; endl &lt;&lt; endl;
+	return 0;
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
