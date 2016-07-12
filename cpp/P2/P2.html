@@ -1,0 +1,66 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<title>Project 02 - Maze Game</title>
+	</head>
+	<body>
+	<div id="main">
+		<header role="banner">
+			<h1>Project 02 - Maze Game</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+		</header>
+		<main role="main" class="nocollapse">
+		<article role="article">
+			<h2>Instructions</h2>
+			<p>
+				This will be a short project (like the square roots program) will be an extension of the last couple bonus questions and should review your knowledge of multidimensional arrays, file IO, and functions.
+			</p>
+			<p>An example executable is available <a style="font-size:1.2em;" href="example.zip" download>here</a> for you to try out for yourself.</p>
+			<p>		
+				Write a simple game where the player, represented by a character, can input the characters w, a, s, or d to move around a grid to get to an objective, represented by another character, and can’t pass through other objects represented by another character. 
+			</p>
+			<p>
+				Example board – P = player, W = wall, G = goal: 
+			</p>
+			<pre>. . . . . . . . . .
+. G . . . . . . . .
+. . . . . . W . . .
+. . . . . . . . . .
+. . . . W . . . . .
+. . . . . . W . . .
+. . . . . . . . . P</pre>
+			<p>Once you have got that part, try adding these features:</p>
+			<ul>
+				<li>Inputting the user’s selection without them pressing enter (see bottom of this page)</li>
+				<li>Inputting the game board from a file</li>
+				<li>A menu system to select and play a file</li>
+				<li>Having multiple levels of board, and characters that represent stairs up and down</li>
+				<li>Multiple levels and a score</li>
+				<li>Randomly generated maps</li>
+				<li>A way to edit and save game boards</li>
+			</ul>
+			<p>Functions you will most likely want to use but might not know:</p>
+			<ul>
+				<li>system(“cls”);</li>
+				Clears the console screen (on windows).
+				<li>_getch();</li>
+				Returns a character from the console input without waiting for the user to press enter. Included in the library &lt;conio.h&gt;
+			</ul>
+
+			<a class="button" id="1" style="font-size:1.2em;">Toggle Answer</a><br>
+			<div id="a1" style="display:none;">
+				<p>You can download the example code <a style="font-size:1.2em;" href="example.cpp" download>here</a>.</p>
+			</div>
+		</article>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	<script src="..\buttons.js"></script>
+	</body>
+</html>

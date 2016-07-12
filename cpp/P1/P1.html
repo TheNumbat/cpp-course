@@ -1,0 +1,50 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<title>Project 01 - Roots</title>
+	</head>
+	<body>
+	<div id="main">
+		<header role="banner">
+			<h1>Project 01 - Roots</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+		</header>
+		<main role="main" class="nocollapse">
+		<article role="article">
+			<h2>Instructions</h2>
+			<p>
+				Write a program that will input a value, a number of roots, and the precision to which the roots should be calculated. Your program should then calculate the given number of roots (i.e. if you are calculating four roots, calculate the square, cube, fourth, and fifth roots) to the given precision and display the results on the screen. Your program should also be able to handle special cases such as negative input values, as well as any other cases you may encounter (there are a couple in particular).
+			</p>
+			<p>An example executable is available <a style="font-size:1.2em;" href="example.exe" download>here</a> for you to try out for yourself.</p>
+			<p>		
+				The catch is that your program must calculate those roots using only code that you have written—you can’t use any functions from the cmath library—in fact, the only library you can use is iostream. 
+			</p>
+			<p>
+				There are many ways to approach this problem, but there is a type of approach that is much better than the others. 
+			</p>
+			<a class="button" id="1" style="font-size:1.2em;">Toggle Answer</a><br>
+			<div id="a1" style="display:none;">
+				<h2>The Binary Search</h2>
+				<p>
+					There won’t be notes explaining every aspect of the project, as there are many ways to approach it. However, you can download the example code <a style="font-size:1.2em;" href="example.cpp" download>here</a>, and read these notes about the key concept: the binary search.
+				</p>
+				<p>
+					There are many types of searching and sorting things in programs, but divide-and-conquer algorithms tend to be some of the most efficient. On each repetition, these algorithms reduce the possible space they are looking in by a percentage, rather than a specific value. For example, a search algorithm that finds an integer between 0 and 100 would not divide and conquer if it simply looped from 0 to 100 and tested each number against what it is searching for. The most straightforward type of divide-and-conquer algorithm is the binary search, which simply cuts the search space in half each time it finds a value in the upper or lower half. You’ve probably encountered this algorithm before—for example, if you were guessing a number between 0 and 100, you can start with 50, and if the number is higher, you know it is between 50 and 100, so you can then guess 75, and so on. A binary search does just this. Of course, you need a way to test if your value is in the upper of lower half of the sample space, but if you have this information, you can easily find values—for example, you can find a number between 0 and 2048 in 11 or less repetitions of the search. Of course, there are many ways to implement this type of search in code.
+				</p>
+				<p>
+					How it is implemented in the example root program is pretty simple: the function first calculates the range of values the square root can be in—between 0 and the number (or 1 for values between 0 and 1)—and it tests the middle of the range against the correct value. To do this, it takes the middle (or test) value, and raises it to the power that would negate the root it is finding, and checks to see if it is closer to the perfect value than the maximum precision. Then, if the value is less than it should be, it makes the middle value the lower range, and restarts the process. Hence, it now will test the middle of the new range, and it will redefine the range to the top or bottom of that range, and so on and so on until it finally finds the root of the number. 
+				</p>
+			</div>
+		</article>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	<script src="..\buttons.js"></script>
+	</body>
+</html>
