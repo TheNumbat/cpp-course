@@ -1,0 +1,20 @@
+
+.answer {
+	display:none;
+}
+
+ol {
+	padding-left: 75px;
+	list-style-position: inside;
+	list-style: decimal-leading-zero;
+	font-size: 1.2em;
+}
+ol > li {
+	font-size: 3em;
+}
+
+div.answer {
+	border: 1px solid black;
+	padding: 0 10px 10px 10px;
+	margin-top: 10px;
+}

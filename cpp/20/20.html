@@ -1,0 +1,252 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 20 - Review</title>
+	</head>
+	<body>
+	<header id="top">
+		<a class="top_button" href="..\19\19.html" id="last">Last</a>
+		<a class="top_button" href="#top" id="next">Top</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 20 - Review</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#01">01</a></li> | 
+					<li><a href="#02">02</a></li> | 
+					<li><a href="#03">03</a></li> | 
+					<li><a href="#04">04</a></li> | 
+					<li><a href="#05">05</a></li> | 
+					<li><a href="#06">06</a></li> | 
+					<li><a href="#07">07</a></li> | 
+					<li><a href="#08">08</a></li> | 
+					<li><a href="#09">09</a></li> | 
+					<li><a href="#10">10</a></li> | 
+					<li><a href="#11">11</a></li> | 
+					<li><a href="#12">12</a></li> | 
+					<li><a href="#13">13</a></li> | 
+					<li><a href="#14">14</a></li> | 
+					<li><a href="#15">15</a></li> | 
+					<li><a href="#16">16</a></li> | 
+					<li><a href="#17">17</a></li> | 
+					<li><a href="#18">18</a></li> | 
+					<li><a href="#19">19</a></li> | 
+					<li><a href="#20">20</a></li> | 
+					<li><a href="#21">21</a></li> | 
+					<li><a href="#22">22</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+		<article role="article">
+		<ol>
+			<li id="01"></li>
+				<p class="q">How would you convert a char (representing an int) to an int?</p>
+				<a class="button" id="1">Toggle Answer</a><br>
+				<div class="answer" id="a1">
+					<p>Subtract the zero <strong>character</strong> from it.</p>
+					<pre class="example_code prettyprint">int num = character – ‘0’;</pre>
+					<a href="..\03\03.html">See lesson 03</a>
+				</div>
+			<li id="02"></li>
+				<p class="q">Where is dynamic memory allocated? Where is static memory allocated?</p>
+				<a class="button" id="2">Toggle Answer</a><br>
+				<div class="answer" id="a2">
+					<p>Dynamic memory is allocated on the heap, whereas static memory is allocated on the stack.</p>
+					<a href="..\11\11.html">See lesson 11</a>
+				</div>
+			<li id="03"></li>
+				<p class="q">Is the size parameter allocated statically or dynamically? How about the integer pointer? How about the actual array of integers?</p>
+				<pre class="example_code prettyprint">void function(int size) {
+	int* arr = new int[size];
+}</pre>
+				<a class="button" id="3">Toggle Answer</a><br>
+				<div class="answer" id="a3">
+					<p>The size parameter is static, the pointer (“arr” itself) is static, and the actual array of integers pointed to by “arr” is dynamic.</p>
+					<a href="..\11\11.html">See lesson 11</a>
+				</div>
+			<li id="04"></li>
+				<p class="q">In the above example, which of the three allocations are freed from memory and where?</p>
+				<a class="button" id="4">Toggle Answer</a><br>
+				<div class="answer" id="a4">
+					<p>The two statically allocated variables are freed at the closing bracket (end of the scope). In this example, the dynamic array is not actually freed at all. To prevent a memory leak, it should be freed before you lose access to it at the end of the function.</p>
+					<a href="..\11\11.html">See lesson 11</a>
+				</div>
+			<li id="05"></li>
+				<p class="q">What are the three instances in which the copy constructor is called?</p>
+				<a class="button" id="5">Toggle Answer</a><br>
+				<div class="answer" id="a5">
+					<p>Creating an object and specifying the copy constructor, passing by value, and returning by value.</p>
+					<pre class="example_code prettyprint">MyClass a(b);				//Call the copy constructor explicitly
+void func(MyClass c) {		//Called to copy in parameter
+	Return d;				//Called to return value
+}</pre>
+					<a href="..\14\14.html">See lesson 14</a>
+				</div>
+			<li id="06"></li>
+				<p class="q">Why is the parameter of the copy constructor passed by reference and not by value?</p>
+				<a class="button" id="6">Toggle Answer</a><br>
+				<div class="answer" id="a6">
+					<p>If the parameter to the copy constructor is passed by value, it will call the copy constructor, which will then call the copy constructor…etc. You must pass the parameter by reference to prevent an infinite loop.</p>
+					<a href="..\14\14.html">See lesson 14</a>
+				</div>
+			<li id="07"></li>
+				<p class="q">What are the three types of constructors?</p>
+				<a class="button" id="7">Toggle Answer</a><br>
+				<div class="answer" id="a7">
+					<p>Default, parameterized, and copy.</p>
+					<a href="..\13\13.html">See lesson 13</a> | 
+					<a href="..\14\14.html">See lesson 14</a>
+				</div>
+			<li id="08"></li>
+				<p class="q">What are the two types of default constructors?</p>
+				<a class="button" id="8">Toggle Answer</a><br>
+				<div class="answer" id="a8">
+					<p>One with no parameters at all, and one with all default parameters.</p>
+					<a href="..\13\13.html">See lesson 13</a>
+				</div>
+			<li id="09"></li>
+				<p class="q">What are the three ways to call the following default constructor?</p>
+				<pre class="example_code prettyprint">student(int = 5, int = 10);</pre>
+				<a class="button" id="9">Toggle Answer</a><br>
+				<div class="answer" id="a9">
+					<pre class="example_code prettyprint">student();
+student(100);			//Uses only the 1st default parameter
+student(100,50);</pre>
+					<a href="..\13\13.html">See lesson 13</a>
+				</div>
+			<li id="10"></li>
+				<p class="q">What’s the difference between a class member function and a friend function? What does the friend keyword do?</p>
+				<pre class="example_code prettyprint">student(int = 5, int = 10);</pre>
+				<a class="button" id="10">Toggle Answer</a><br>
+				<div class="answer" id="a10">
+					<p>A friend function is not actually a part of a class, but has access to the private members of that class. This means that it does not have a calling object, as it is essentially a normal function with special access, so you must pass an instance of your class as a parameter. A member function is actually part of a class, and automatically has access to the data members of that class. Member functions also always have a calling object, so they automatically know which instance in particular you are talking about.</p>
+					<pre class="example_code prettyprint">object.function(); 		//Member function
+function(object);		//Friend function</pre>
+					<a href="..\14\14.html">See lesson 14</a>
+				</div>
+			<li id="11"></li>
+				<p class="q">How many times can a constructor be called for a single object? How many times can a destructor be called for single object? Can both a copy constructor and default constructor be called for the same object?</p>
+				<a class="button" id="11">Toggle Answer</a><br>
+				<div class="answer" id="a11">
+					<p>Only one type of constructor can be called once for any single object, and it is called when that object is created, or instantiated to be exact. The destructor is also called only once, when the object is either deleted (if dynamic), or goes out of scope.</p>
+					<a href="..\13\13.html">See lesson 13</a>
+				</div>
+			<li id="12"></li>
+				<p class="q">If you do not write a constructor or destructor, what happens?</p>
+				<a class="button" id="12">Toggle Answer</a><br>
+				<div class="answer" id="a12">
+					<p>The compiler automatically generates one for you, but it will probably not do what you want—it will not default values and will not delete your memory.</p>
+					<a href="..\13\13.html">See lesson 13</a>
+				</div>
+			<li id="13"></li>
+				<p class="q">Given the previous answer, when should you write your own copy constructor?</p>
+				<a class="button" id="13">Toggle Answer</a><br>
+				<div class="answer" id="a13">
+					<p>The default copy constructor does what’s called a “shallow” copy, meaning it essentially sets each data member equal to the source with the assignment operator. However, if you have a pointer as a data member, it will cause both pointers to point to the same data. This may be what you want, but you usually want to actually make a copy of that data, and have the new pointer point to the copy. To do this, you must implement your own copy constructor.</p>
+					<a href="..\13\13.html">See lesson 13</a>
+				</div>
+			<li id="14"></li>
+				<p class="q">What is a memory leak and how does it occur? What is a dangling pointer and how does it occur?</p>
+				<a class="button" id="14">Toggle Answer</a><br>
+				<div class="answer" id="a14">
+					<p>A memory leak occurs when you lose access to dynamically allocated memory, which means it can never be freed. This is especially an issue when the code that leaks memory is called more than once, say in a function or a loop, as every time that code is run the program will leak more memory, until it eventually runs out of memory and crashes. A dangling pointer is a pointer that does not point to valid data, for example a garbage pointer. Always avoid dangling pointers by setting them to NULL when you delete dynamically allocated memory.</p>
+					<a href="..\11\11.html">See lesson 11</a>
+				</div>
+			<li id="15"></li>
+				<p class="q">Structs and classes are both examples of what?</p>
+				<a class="button" id="15">Toggle Answer</a><br>
+				<div class="answer" id="a15">
+					<p>Abstract Data Types (ADTs).</p>
+					<a href="..\12\12.html">See lesson 12</a>
+				</div>
+			<li id="16"></li>
+				<p class="q">How many times is the destructor called for the student class in the following code?</p>
+				<pre class="example_code prettyprint">student* s = new student[100];
+delete[] s;</pre>
+				<a class="button" id="16">Toggle Answer</a><br>
+				<div class="answer" id="a16">
+					<p>100, once for each “student” in the array.</p>
+					<a href="..\11\11.html">See lesson 11</a>
+				</div>
+			<li id="17"></li>
+				<p class="q">How would you delete the following?</p>
+				<pre class="example_code prettyprint">student *s1 = new student;</pre>
+				<a class="button" id="17">Toggle Answer</a><br>
+				<div class="answer" id="a17">
+					<pre class="example_code prettyprint">delete student;</pre>
+					<p>Note no brackets, as we allocated a single object rather than an array.</p>
+					<a href="..\11\11.html">See lesson 11</a>
+				</div>
+			<li id="18"></li>
+				<p class="q">Do all character arrays require a null character at the end of the significant characters? When is it necessary?</p>
+				<a class="button" id="18">Toggle Answer</a><br>
+				<div class="answer" id="a18">
+					<p>Arrays of characters in general do not need to end with the null character, but this is the defining feature of C-Style strings, which must always end with the null character.</p>
+					<a href="..\07\07.html">See lesson 07</a>
+				</div>
+			<li id="19"></li>
+				<p class="q">What is the difference between public and private keywords in a class?</p>
+				<a class="button" id="19">Toggle Answer</a><br>
+				<div class="answer" id="a19">
+					<p>Private makes data members only accessible from within member functions of the class, whereas public allow them to be accessed from anywhere.</p>
+					<pre class="example_code prettyprint">class MyClass {
+public:
+	int x;
+private:
+	int y;
+};
+
+int main() {
+	MyClass o;
+	o.x = 5;			// Valid, x is public
+	o.y = 5;			// Invalid, y is private
+}</pre>
+					<a href="..\13\13.html">See lesson 13</a>
+				</div>
+			<li id="20"></li>
+				<p class="q">When should you make a variable constant? When should you make a class member function constant? Would you ever need to make a non-member function constant?</p>
+				<a class="button" id="20">Toggle Answer</a><br>
+				<div class="answer" id="a20">
+					<p>You make a variable constant when you know that the value should never change, as making it constant will assure that. You make a member function constant when it will never modify the data members of that class. Finally, you can’t make non-member functions constant, as they have no associated object and that doesn’t make sense.</p>
+					<a href="..\14\14.html">See lesson 14</a>
+				</div>
+			<li id="21"></li>
+				<p class="q">Can a constant object always call all member functions for its corresponding class? If not, which member functions can it call?</p>
+				<a class="button" id="21">Toggle Answer</a><br>
+				<div class="answer" id="a21">
+					<p>A constant object can only call member functions if they are constant themselves, as explained in question 20.</p>
+					<pre class="example_code prettyprint">const MyClass c;
+c.function();		// Function must be a constant member function</pre>
+					<a href="..\14\14.html">See lesson 14</a>
+				</div>
+			<li id="22"></li>
+				<p class="q">What do the following operators do?</p>
+				<pre class="example_code prettyprint"> *ptr, &amp;, ptr->, ptr[]</pre>
+				<a class="button" id="22">Toggle Answer</a><br>
+				<div class="answer" id="a22">
+					<p>The star dereferences a pointer, the ampersand takes the address of a variable, the arrow dereferences a pointer and then uses the dot operator, and the brackets offset from a pointer and then dereference it.</p>
+					<pre class="example_code prettyprint">*pointer = 5;
+pointer = &amp;variable;
+classPointer->function();
+arrayPointer[3] = 5;</pre>
+					<a href="..\10\10.html">See lesson 10</a> | 
+					<a href="..\12\12.html">See lesson 12</a>
+				</div>
+		</ol>
+		</article>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	<script src="buttons.js"></script>
+	</body>
+</html>
