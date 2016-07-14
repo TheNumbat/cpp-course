@@ -38,30 +38,30 @@
 			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
 //previous example programs, or email a question.
 
-// This heatder file allows the use of the string data type.
+// This header file allows the use of the string data type.
 #include &lt;string&gt;
 
 using namespace std;
 
 int main() {
    
-   // This declares an integer variable with the indentifier "userAge"
+   // This declares an integer variable with the identifier "userAge"
    int userAge;
    
    // This line sets userAge to contain the integer value 34
    userAge = 34;
    
-   // This line sets userAge to contain the interger value 23, overwritting 
+   // This line sets userAge to contain the integer value 23, overwriting 
    // the previous value, 34
    userAge = 23;
    
    // This line declares a character value with the identifier letterInput
-   // and intializes it to hold the value 'c'
+   // and initializes it to hold the value 'c'
    char letterInput = 'c';
    
-   // Finally, this line decalres a string value with the identifier address.
+   // Finally, this line declares a string value with the identifier address.
    // Note that "string" is not highlighted. Only the fundamental data types
-   // are highlighted in your editor. Additionally, the value is intialized
+   // are highlighted in your editor. Additionally, the value is initialized
    // with a string literal.
    string address = "1234 Nowhere St. Reno, NV";
    
@@ -71,29 +71,33 @@ int main() {
 		<article role="article">
 			<h2 id="intro">Introduction</h2>
 			<p>
-				Data abstraction is essentially how data is held in a program, and how you, the programmer, can use it. The process itself is pretty simple, but there are some complicating factors. In computers, all data is held in a series of 0’s and 1’s, that is, binary, and humans are not too great at manipulating large quantities of numbers. For example, a computer might hold the data value 19 as 00000000 00010011. Thankfully, most high level programming languages, such as C++, will do this low-level data management for you, and all you have to deal with are variables (that’s not to say you can’t do low-level memory management – we’ll talk about that later). The "covering up" process is called abstraction—the process of using one thing that represents another. Your programming language abstracts the concept of low-level data, allowing you to not worry about the finer details of it, and use much simpler, human-understandable data.
+				The concept of data abstraction deals with how data is held in a program, and how you, the programmer, can use it. The overall process itself is pretty simple, but there are some complicating factors. In all computers, data is held in a series of 0’s and 1’s, that is, binary. For example, a computer might hold the data value 19 as 00000000 00010011. Because humans are not too great at manipulating large quantities of numbers, most high level programming languages, such as C++, will manage low-level data for you. Therefore, all the programmer must deal with are variables. This "covering up" process is called abstraction—using a simpler concept to represent and interface with another. Your programming language abstracts the concept of low-level data, freeing you from worry about the finer details and giving you much simpler, human-understandable data.
 			</p>
 			<h2 id="identifiers">Identifiers</h2>
 			<p>
-				Now, to use this data, your programming language allows you to store data in variables, which are essentially containers that hold your values – see section 3 for more detail. Variables are a type of identifier, which is any uninterrupted (i.e., no spaces) combination of characters and digits. Identifiers are used to represent various parts of a program, including variables, functions, and more. It is standard for identifiers to follow the format camelCase, which means that the first word is not capitalized, and each following one is.<br>
-				Examples:
+				All high-level programming languages support the use of variables, which are essentially little containers that contain the data of your program. Variables are accessed through identifiers, which are any uninterrupted (i.e., no spaces) combination of characters and digits. Identifiers are used to represent each part of a C++ program, including variables, functions, and much more. It is conventional for identifiers to follow the camelCase format, which means that the first word is not capitalized, and each following one is.
 			</p>
 			<pre class="example_code prettyprint">payRate
 userAge
 findMaxValue
 calcDiscriminant</pre>
 			<p>
-				They must start with either a normal character or an underscore, and can be as long as you want. You can use any identifier you want, as long as it is not reserved by the C++ language (for a list of these, look at the end of this document). In general, you want to use noun identifiers for “things,” which would be variables or other objects that contain actual information, and verb identifiers for other functions which do things, rather than hold values. 
+				Identifiers must start with either a normal character or an underscore, and can be as long as is practical. All strings of characters and digits are valid identifiers, as long as it is not <a href="#keywords">specifically reserved by the C++ language</a>. In general, you want to use noun identifiers for “things,” variables or other objects that contain information, and verb identifiers for functions, which perform actions rather than hold values. 
 			</p>
 			<h2 id="literals">Literals</h2>
 			<p>
-				While a variable is an identifier that holds a value, a literal is the value itself. You won’t be using too many literals in your programming, but keep in mind that they are things like a number, a letter, or a sequence of words. For example, <pre class="inline_code prettyprint">"Hello!”</pre>, <pre class="inline_code prettyprint">5</pre>, <pre class="inline_code prettyprint">345.7</pre>, and <pre class="inline_code prettyprint">'A'</pre> are all literals.
+				While a variable is an identifier that holds a value, a literal is the value itself. You won’t be using too many literals in your programming, but keep in mind that they are specific pieces of information, such as a number, a letter, or a sequence of words. For example...
+				<pre class="example_code prettyprint">"Hello!”
+5
+345.7
+'A'</pre> 
+			<p>...are all literals.</p>
 			</p>
 			<h2 id="types">Data Types</h2>
 			<p>
-				In C++, there are four fundamental data types. What is a fundamental data type, you may ask? Well, fundamental types represent physically different types of data which are stored in computer memory. Everything other than these four types are built out of them, and are called derived data types. The four fundamental types are:
+				In C++, there are four fundamental data types. Fundamental types represent the types of data which are stored in technically different formats within memory. All other types are simply built out of the four fundamental types; hence are called derived data types. The four fundamental types are...
 			</p>
-			<table id="table_types">
+			<table>
 				<tr>
 					<td>Name</td>
 					<td>C++ Type</td>
@@ -102,7 +106,7 @@ calcDiscriminant</pre>
 				<tr>
 					<td>Integer</td>
 					<td><pre class="inline_code prettyprint">int</pre></td>
-					<td>Any positive or negative integer. Usually, an “int” holds 32 bits of data; a number between negative 2^31 and 2^31 - 1.</td>
+					<td>Any positive or negative integer. Usually, an “int” holds 32 bits of data; a number between -2^31 and 2^31 - 1.</td>
 				</tr>
 					<td>Character</td>
 					<td><pre class="inline_code prettyprint">char</pre></td>
@@ -111,7 +115,7 @@ calcDiscriminant</pre>
 				<tr>
 					<td>Floating Point Value</td>
 					<td><pre class="inline_code prettyprint">float, double</pre></td>
-					<td>Any positive or negative quantity (can be fractional). These values are held in memory in the form of scientific notation. <pre class="inline_code prettyprint">double</pre> is 64 bits, and contains a more precise value than <pre class="inline_code prettyprint">float</pre>.</td>
+					<td>Any positive or negative quantity (can be fractional). These values are held in memory in the form of scientific notation. <pre class="inline_code prettyprint">double</pre> is 64 bits, and can contain a more precise value than <pre class="inline_code prettyprint">float</pre>.</td>
 				</tr>
 				<tr>
 					<td>Boolean</td>
@@ -121,15 +125,15 @@ calcDiscriminant</pre>
 			</table>
 			<h2 id="variables">Variables</h2>
 			<p>
-				Now, you must be wondering how to actually use these variables that I’ve talked of for so long. In C++, all variables must be explicitly declared, which is to say you must tell the computer your variables data type when you create it.
-				To declare a variable, the syntax is simple: simply type the name of the data type you are using, and then your variable identifier, and end the line with a semicolon. Get used to that—almost every line in C++ is ended with a semicolon. Finally, remember it is conventional to declare all variables at the start of a function. For example,
+				Now, you must be wondering how to actually use variables. In C++, all variables are explicitly declared and strongly typed, which is to say to create a variable, you must declare its name and what data type it can hold.
+				The syntax is simple: type the name of the data type you are using, then your variable identifier, then end the line with a semicolon. Get used to that—almost every line in C++ is ended with a semicolon. Finally, it is often conventional, but not required, to declare all variables at the start of a function.
 			</p>
 			<pre class="example_code prettyprint">int myAge;</pre>
 			<p>Declares a variable named myAge with the type integer.</p>
 			<pre class="example_code prettyprint">double payRate;</pre>
 			<p>Declares a variable named payRate with the type double.</p>
 			<p>
-				To use your new variables, you use the assignment operator (‘=’) to assign a value to them. The assignment operator always takes what is on the right and assigns it to the identifier on the left. This can also be combined with the declaration. When assigning an integer or double value, you can simply type your number. However, when assigning a character value, wrap your character in single quotes, and when assigning a string, wrap your phrase in double quotes. Examples:
+				The assignment operator (‘=’) is used to assign a value to a variable. The assignment operator always takes the value on the right and assigns it to the identifier on the left. When assigning a literal integer or double value, you can simply type your number. However, when assigning a character value, wrap your character in single quotes, and when assigning a string, wrap your phrase in double quotes. Assignment can also be combined with the declaration.
 			</p>
 			<pre class="example_code prettyprint">myAge = 24;</pre>
 			<p>The variable myAge now holds the value 24.</p>
@@ -137,22 +141,20 @@ calcDiscriminant</pre>
 			<p>This creates the variable payRate, and makes it hold the value 23.5.</p>
 			<pre class="example_code prettyprint">char letter = ‘U’;</pre>
 			<p>The variable letter now holds the letter ‘U’.</p>
-			<pre class="example_code prettyprint">string username = "pizza";</pre>
-			<p>The variable username now holds the phrase "pizza."</p>
 			<p>
-				Now, whenever you use your variable, your program will use the value held within your variable.
+				Now, later in your program, whenever you use your variable, the computer will retrieve and use the value held within.
 			</p>
 			<h2 id="scope">Scope</h2>
 			<p>
-				Finally, there is the topic of scope. The scope of a variable is the area in which it can be used, or to put it simply, the area between the opening and closing curly braces in which your variable was first declared. Keep this in mind when declaring variables, as they will not be useable except in the scope you declared them in. This is because when a scope ends, all variables declared within it will be destroyed. For example:
+				Finally, there is the topic of scope. The scope of a variable is the "arena" in which it can be used, or to put it simply, the area between the opening and closing curly braces in which your variable was first declared. Keep this in mind when declaring variables, as they can only be used within their scope, and any scopes there within. This is because when a scope ends, all variables declared within it will be destroyed.
 			</p>
-			<pre class="example_code prettyprint">{ – Begins the scope
+			<pre class="example_code prettyprint">{ // – Begins the scope
 	int myVar;
-	Here, myVar can be used.
-} – Ends the scope
-Here, it can’t.</pre>
+	// Here, myVar can be used.
+} // – Ends the scope
+// Here, it can’t.</pre>
 			<p>
-				Now, you may wonder what happens if the variable is not declared in any scope. This is called a global variable, as it can be accessed from anywhere in the program. In general, don’t use these (except in specific situations), as global variables can lead to very hard-to-find bugs in your program.
+				Now, you may wonder what happens if a variable is not declared in any scope. This is called a global variable, and can be accessed from anywhere in your program. In general, don’t use these (except in specific situations), as global variables can lead to very hard-to-find bugs in your program.
 			</p>
 			<h2 id="keywords">Reserved Words in C++</h2>
 			<p>You can’t use these as identifiers.</p>
@@ -191,30 +193,30 @@ Here, it can’t.</pre>
 			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
 //previous example programs, or email a question.
 
-// This heatder file allows the use of the string data type.
+// This header file allows the use of the string data type.
 #include &lt;string&gt;
 
 using namespace std;
 
 int main() {
    
-   // This declares an integer variable with the indentifier "userAge"
+   // This declares an integer variable with the identifier "userAge"
    int userAge;
    
    // This line sets userAge to contain the integer value 34
    userAge = 34;
    
-   // This line sets userAge to contain the interger value 23, overwritting 
+   // This line sets userAge to contain the integer value 23, overwriting 
    // the previous value, 34
    userAge = 23;
    
    // This line declares a character value with the identifier letterInput
-   // and intializes it to hold the value 'c'
+   // and initializes it to hold the value 'c'
    char letterInput = 'c';
    
-   // Finally, this line decalres a string value with the identifier address.
+   // Finally, this line declares a string value with the identifier address.
    // Note that "string" is not highlighted. Only the fundamental data types
-   // are highlighted in your editor. Additionally, the value is intialized
+   // are highlighted in your editor. Additionally, the value is initialized
    // with a string literal.
    string address = "1234 Nowhere St. Reno, NV";
    
