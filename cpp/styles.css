@@ -109,13 +109,10 @@ aside.example_program > div.example_links {
 	padding-bottom: 1em;
 }
 
-pre.inline_code, pre.example_code, pre.example_program {
+pre.example_code, pre.example_program {
 	white-space: pre-wrap;
 	font-family: "Oxygen-Mono",sans-serif;
 	border: 0px;
-}
-pre.inline_code {
-	display: inline;
 }
 pre.example_code {
 	overflow: hidden;

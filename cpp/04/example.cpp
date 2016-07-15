@@ -1,7 +1,7 @@
 // If you are not sure what some lines of code do, try looking back at
 // previous example programs, notes, or email a question.
 
-#include <iostream>;
+#include <iostream>
 
 using namespace std;
 
@@ -11,8 +11,7 @@ int calc(int one, double two);
 // A function that will not return anything, and takes two doubles as parameters
 void displayDbls(double disp1, double disp2);
 
-int main() 
-{	
+int main() {	
 	int value_one = 60;
 	double value_two = 0.89;
 	
@@ -33,8 +32,7 @@ int main()
 }
 
 // Implementation of calc
-int calc(int one, double two) 
-{
+int calc(int one, double two) {
 	// Do some sort of calculation
 	int result = -(one / two) * (one - two) / (-5648 / (one += two));
 	
@@ -43,8 +41,7 @@ int calc(int one, double two)
 }
 
 // Implementation of displayDbls
-void displayDbls(double disp1, double disp2) 
-{
+void displayDbls(double disp1, double disp2) {
 	// Output the two parameters to the console
 	cout << "Double value 1: " << disp1 << endl
 		 << "Double value 2: " << disp2 << endl;
