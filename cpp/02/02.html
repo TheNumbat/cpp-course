@@ -81,49 +81,50 @@ int main&#40;&#41;
 		<article role="article">
 			<h2 id="intro">Introduction</h2>
 			<p>
-				Now that you’ve had a quick introduction to data and variables, let’s quickly go over how the basic input and output of your programs will work, so you will be able to experiment with the next few concepts you learn. Console input and output is very simple to use in C++, and we’ll be using it for quite a while.
+				Now that you’ve had a quick introduction to data and variables, we'll go over how the basic input and output of your programs will work, so that you'll be able to experiment with the next few concepts you learn. Console input and output is very simple to use in C++, and we’ll be using it for quite a while.
 			</p>
 			<h2 id="datastreams">Data Streams</h2>
 			<p>
- 				A &ldquo;data stream&rdquo; metaphor is used to both manage and understand the flow of data into and out of a program. The data stream is considered to be one path within the computer to which various devices can be connected. You can think of a data stream like, well, a stream: data flows along this data stream, and your program can put data into it, and it will end up somewhere else, or your program can take data from the stream that came from somewhere else. 
+ 				The abstraction of "data streams" is used to understand the flow of data into and out of a program. A data stream is considered to be one path data can take within your computer and peripheral devices. You can think of a data stream as, well, a stream: data flows along this data stream; your program can put data into it, or take data out of it.
 			</p>
 			<img src="data stream.png" id="datastream">
 			<p>
-				The two devices you will use at first are considered to be the default I/O or input and output devices. That is to say, they are the ones to be used if no other options are chosen. You will use the keyboard, which is considered to be the &ldquo;Console In&rdquo; device, and you will use the monitor, which is considered to be the &ldquo;Console Out&rdquo; device. These terms are actually integrated into the code: the keyboard input device will be represented by a programming object called cin, and the monitor output device will be represented by a programming object called cout.
+				The two streams you will use at first are considered to be the default I/O or input and output streams. That is to say, they are the ones to be used if no other options are chosen. You will use the keyboard, which is considered to be the "Console In" device, and you will use the monitor (as a text-based console), which is considered to be the "Console Out" device. These terms are actually integrated into C++: the keyboard input device is represented by an object called cin ("console-in"), and the console output device will be represented by an object called cout ("console-out").
 			</p>
 			<h2 id="operators">Operators</h2>
 			<p>
-				The input and output process also uses operators to indicate the flow of the data. Using these operators assumes that your metaphorical data stream is on the left side of your program code. The insertion operator, used for output from the program, will point to the left side of your screen as if it is inserting data into the data stream, and the extraction operator, used for input to the program, will point inward toward your program and data as if it is extracting data from the data stream. Again, we will learn how to use these in more complex ways later.
+				The input and output process uses operators to indicate the flow of data. Using these operators assumes that your metaphorical data stream is on the left side of your screen, and the data source or destination is to the right. The insertion operator, used for output, hence points to the left side of your screen, as if it is inserting data into the data stream. The extraction operator, used for input, points to the left, as if it is extracting data from the data stream. We will learn how to use operators in more complex ways in future lessons.
 			</p>
 			<h2 id="coutcin">Cout and Cin</h2>
 			<p>
-				First of all, to use these data streams, you will need to include these two lines of code at the top of your program, as explained in the hello world program:
+				To use these two data streams, you will need to include the header "iostream" in your program. "iostream" is a part of the C++ standard library, and provides the "cout" and "cin" objects, as well as some other useful features. You can also include the line "using namespace std;" which tells your program to automatically pull "cout" and "cin" from the "std" (standard) namespace. If you omit this line, you must always type "std::cout" and "std::cin."
 			</p>
 			<pre class="example_code prettyprint">#include &lt;iostream&gt;
 using namespace std;</pre>
 			<p>
-				To use console output, you will use the data stream with the identifier &ldquo;cout,&rdquo; or, also unsurprisingly, console out. As mentioned previously, you can then write the insertion operator, &lt;&lt;, followed by the data you want to send to the console output. You can then add another insertion operator followed by more data, and so on. Finally, you can also send &ldquo;endl&rdquo; to the console, which will simulate pressing enter, ending the current line and creating a new one. Examples:
+				For console output, you will use the data stream with the identifier "cout." As mentioned previously, you then write the insertion operator, "&lt;&lt;," followed by the data you want to send to the console. You can then add another insertion operator followed by more data, and so on. Finally, you can also send "endl" to the console, which will simulate pressing enter, ending the current line and creating a new one.
 			</p>
-			<pre class="example_code prettyprint">cout &lt;&lt; &ldquo;Hello World&rdquo; &lt;&lt; endl;
-cout &lt;&lt; &ldquo;This demonstrates&rdquo; &lt;&lt; &ldquo; sending text to the console.&rdquo;;</pre>
+			<pre class="example_code prettyprint">cout &lt;&lt; "Hello World" &lt;&lt; endl;
+cout &lt;&lt; "This demonstrates" &lt;&lt; " sending text to the console.";</pre>
 			<p>
-				Now, to use cin, it is mostly the same as cout, except you use the extraction operator, &gt;&gt;. On the right of your extraction operator, you would have the variable you want to input into. Examples:
+				Using console input it is much the same as output, except you use the extraction operator, "&gt;&gt;." On the right of your extraction operator, you place the variable you want to capture the input.
 			</p>
 			<pre class="example_code prettyprint">cin &gt;&gt; userAge;
 cin &gt;&gt; character;</pre>
 			<h2 id="chars">Escape Characters</h2>
 			<p>
-				Quick note—if you want to include a character like a double quote in a string, which would normally end the string, first type a backslash, and then the character. For example, 
+				Quick note: if you want to include a reserved character (such as a double quote) in a string, first type a backslash, and then the character.
 			</p>
-			<pre class="example_code prettyprint">&ldquo;The person said \&ldquo;hello\&rdquo; to me&rdquo;</pre>
+			<pre class="example_code prettyprint">"The person said \"hello\" to me"</pre>
 			<p>
 				This tells the compiler to include that character in the string, and the slash won’t show up. You also have to use this for backslashes themselves (i.e. “\\” to output one slash).
 			</p>
 			<h2 id="pause">Holding the Screen</h2>
 			<p>
-				As mentioned with the hello world program, if you run your program with no way to hold the screen open, it will open and immediately close, not allowing the user to see your output. To display the message “Press any key to continue…” and wait for the user to press a key before continuing, use the line
+				If you run your program with no way to hold the screen, it will open and immediately close, not allowing the user to see your output. To display the message “Press any key to continue...” and wait for the user to press a key before continuing, use the line
 			</p>
-			<pre class="example_code prettyprint">system&#40;&ldquo;pause&rdquo;&#41;;</pre>
+			<pre class="example_code prettyprint">system&#40;"pause"&#41;;</pre>
+			<p>Note that this only works on Windows operating systems.</p>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
