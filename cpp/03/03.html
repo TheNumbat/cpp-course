@@ -47,52 +47,52 @@ using namespace std;
 
 int main&#40;&#41; {
    
-   //These will all work as you expect
+   // These will all work as you expect
    int int1 = 5 + 7;
    int int2 = 5 - 7;
    int int3 = 5 * 7;
    
-   //This will evaluate to 0, as 5 / 7 is between 0 and 1
+   // This will evaluate to 0, as 5 / 7 is between 0 and 1
    int int4 = 5 / 7;
 
-   //This will evaluate to 2, as that is the remainder of
-   //7 / 5
+   // This will evaluate to 2, as that is the remainder of
+   // 7 / 5
    int mod1 = 7 % 5;
    
-   //This will evaluate to 5, as 5 does not go into 7 at all,
-   //so the remainder is just the entire number.
+   // This will evaluate to 5, as 5 does not go into 7 at all,
+   // so the remainder is just the entire number.
    int mod2 = 5 % 7;
 
-   //This will evaluate to 30, as the multiplication is evaluated
-   //before the subraction.
+   // This will evaluate to 30, as the multiplication is evaluated
+   // before the subtraction.
    int order1 = 5 * 7 - 5;
 
-   //This will evaluate to 3, as first the parenthasis is evaluated,
-   //givint 2, which is then multiplied by 5, giving 10, and finally
-   //modded with 7, giving a remainder of 3.
+   // This will evaluate to 3, as first the parenthesis is evaluated,
+   // giving 2, which is then multiplied by 5, giving 10, and finally
+   // modded with 7, giving a remainder of 3.
    int order2 = &#40;7 - 5&#41; * 5 % 7;
    
-   //After these two lines, the variable will hold the value 12, as it
-   //starts with 5, and 7 is added to itself.
+   // After these two lines, the variable will hold the value 12, as it
+   // starts with 5, and 7 is added to itself.
    int combine1 = 5;
    combine1 += 7;
    
-   //After these two lines, the variable will hold 14, as it starts with
-   //7, and is multipled by 7 - 5, or two.
+   // After these two lines, the variable will hold 14, as it starts with
+   // 7, and is multiplied by 7 - 5, or two.
    int combine2 = 7;
    combine2 *= 7 - 5;
    
-   //After tehse two lines, the character will have been transformed to
-   //a 'g', as it was moved down 5 places.
+   // After these two lines, the character will have been transformed to
+   // a 'g', as it was moved down 5 places.
    char char1 = 'b';
    char1 += 5;
    
-   //After these two lines, the character will have been transformed from
-   //a lowercase e to an upercase E, as mentioned in the notes.
+   // After these two lines, the character will have been transformed from
+   // a lowercase e to an uppercase E, as mentioned in the notes.
    char char2 = 'e';
    char2 = char2 - 'a' + 'A';
    
-   //Output results
+   // Output results
    cout &lt;&lt; endl &lt;&lt; "Integers:" &lt;&lt; endl;
    cout &lt;&lt; "5 + 7 = " &lt;&lt; int1 &lt;&lt; endl;
    cout &lt;&lt; "5 - 7 = " &lt;&lt; int2 &lt;&lt; endl;
@@ -115,7 +115,7 @@ int main&#40;&#41; {
    cout &lt;&lt; "b + 5 = " &lt;&lt; char1 &lt;&lt; endl;
    cout &lt;&lt; "e - a + A = " &lt;&lt; char2 &lt;&lt; endl;
    
-   //Hold the screen for the user
+   // Hold the screen for the user
    cout << endl;
    system&#40;"pause"&#41;;
    
@@ -129,14 +129,14 @@ int main&#40;&#41; {
 			</p>
 			<h2 id="integers">Integers</h2>
 			<p>
-				Well, integer math is pretty much exactly the same as what you’re familiar with. Adding two integers adds them, subtracting two integers subtracts them, and multiplying two integers multiplies them. To add two values, put a plus sign between them, to subtract two values put a dash between them, and to multiply two values put an asterisk between them. You can chain as many operations together as you want. However, do remember that your math operation will not do anything itself—you must assign the result to another variable. 
+				Integer math is pretty much exactly the same as what you’re familiar with. Adding two integers adds them, subtracting two integers subtracts them, and multiplying two integers multiplies them. To add two values, put a plus sign between them, to subtract two values put a dash between them, and to multiply two values put an asterisk between them. You can chain as many operations together as you want. However, do remember that your math operation will not do anything itself—you must assign the result to another variable.	
 			</p>
 			<pre class="example_code prettyprint">addResult = valueOne + 15;
 multiply = x * y * z;
 result = 5 - numSets + 23;</pre>
 			<h2 id="int_div">Integer Division</h2>
 			<p>
-				Now, this is where programming math starts to vary from the way you’ve learned it in your math classes. You’ll remember that integers cannot store any fractional values, so what happens if you divide two integers that don’t divide evenly? Well, the short answer is the fractional part is chopped off, or truncated. If you think of the answer you should get, you’ll just get the part before the decimal point. To be clear, this doesn’t round your value—it just truncates it. This doesn’t only apply to division with integers—this will happen any time you try to assign a non-integer value to an integer. Examples:
+				This is where programming math starts to vary a bit from the way you’ve learned it in your math classes. You’ll remember that integers cannot store any fractional values, so what happens if you divide two integers that don’t divide evenly? Well, the short answer is the fractional part is chopped off, or truncated. If you think of the answer you should get, you’ll just get the part before the decimal point. To be clear, this doesn’t round your value—it just truncates it. This doesn’t only apply to division with integers—this will happen any time you try to assign a non-integer value to an integer. Examples:
 			</p>
 			<pre class="example_code prettyprint">result = 10 / 7;</pre>
 			<p>This will make result hold the value 1, since 10 divided by 7 is about 1.43.</p>
@@ -146,21 +146,21 @@ result = 5 - numSets + 23;</pre>
 			<p>This will make value hold the value -1, since it cannot hold the .5 part.</p>
 			<h2 id="fpt">Floating Point</h2>
 			<p>
-				Here’s a quick foray back into the realm of normal: floating point math works exactly as you’d expect it. However, know that the larger values a floating point variable holds, the less precise those values are.
+				Here’s a quick foray back into the realm of normal: floating point math works exactly as you’d expect it. However, know that the larger value a floating point variable holds, the less precise the value is. This is because the value is stored in scientific notation&mdash;the larger the exponent, the less room there is for the precise value.
 			</p>
 			<h2 id="mod">Modulo</h2>
 			<p>
-				There is another basic mathematical operation that you may not have used before—the modulo. The modulo operation can only be used between two integers, and it gives you the remainder of dividing the left value into the right one. To use it, it is the same as the other basic operations of addition and the like, except you use the operator ‘%’. 
+				There is another basic mathematical operation that you may not have used before&mdash;the modulo. The modulo operation can only be used between two integers, giving you the remainder of dividing the left value into the right one. It is used in the same way as the other basic operators, except you use the symbol ‘%’. 
 			</p>
 			<pre class="example_code prettyprint">modResult = 12 % 13;</pre>
-			<p>This evaluates to 12, as it is the remainder from dividing 12 into 13.</p>
+			<p>This evaluates to 12, as it is the remainder from dividing 13 into 12.</p>
 			<pre class="example_code prettyprint">anotherMod = 15 % 5;</pre>
 			<p>This evaluates to zero, as five divides cleanly into 15.</p>
 			<pre class="example_code prettyprint">finalMod = 7 % 3;</pre>
 			<p>This evaluates to one, as it is the remainder from dividing 3 into 7.</p>
 			<h2 id="ops">Order of Operations</h2>
 			<p>
-				The order of operations, more commonly referred to as operator precedence, in C++ is mostly the same as it is in “normal” math, with a few exceptions. Additionally, just as in normal math, you can force anything to become top priority by wrapping it in parenthesis. If you’re not sure of the order of a statement, just use parenthesis.
+				The order of operations in C++ (more commonly referred to as operator precedence) is mostly the same as it is in formal math, with a few exceptions. Additionally, just as in formal math, you can force anything to become top priority by wrapping it in parenthesis. If you’re not sure if a statement will evaluate the way you want it to, don't be afraid to make liberal use of parenthesis. For a more detailed listing, look <a href="http://en.cppreference.com/w/cpp/language/operator_precedence">here</a>.
 			</p>
 			<table class="table">
 				<tbody>
@@ -173,30 +173,30 @@ result = 5 - numSets + 23;</pre>
 			</table>
 			<h2 id="math_assign">Combining Math and Assignment</h2>
 			<p>
-				There will often be times when you want to do something to a variable itself, and not assign the new value to a different variable. With the previous information, you could write statements like:
+				There will often be times when you want to do something to a variable itself, and not assign the new value to a different variable. With the previous information, you could write statements such as...
 			</p>
 			<pre class="example_code prettyprint">var = var + 5;</pre>
 			<p>
-				but there is a much easier and quicker way to do this. This is with combined math and assignment operators. These include ‘+=’, ‘-=’, ‘/=’, ‘*=’, and ‘%=’. (There are also some more, but we’ll learn them later.) These new operators are simply contractions of longer statements.
+				...but there is a much easier and quicker way to do this. This is with combined math and assignment operators. These include ‘+=’, ‘-=’, ‘/=’, ‘*=’, and ‘%=’. These new operators are simply contractions of longer statements.
 			</p>
-			<pre class="example_code prettyprint">var += 5    is equivalent to writing    var = var + 5
-result *= value + 1    is equivalent to writing    result = result * (value + 1)</pre>
+			<pre class="example_code prettyprint">var += 5    /*is equivalent to writing*/    var = var + 5
+result *= value + 1    /*is equivalent to writing*/    result = result * (value + 1)</pre>
 			<p>
 				And so on. Finally, there is an even quicker way to add or subtract one from a variable: the increment and decrement operators. These are ‘++’ and ‘--‘ respectively.
 			</p>
-			<pre class="example_code prettyprint">value++    is equivalent to writing    value += 1    which is also equivalent to writing    value = value + 1
-var--    is equivalent to writing    var -= 1    which is also equivalent to writing    var = var - 1</pre>
+			<pre class="example_code prettyprint">value++    /*is equivalent to writing*/    value += 1    /*which is also equivalent to writing*/    value = value + 1
+var--    /*is equivalent to writing*/    var -= 1    /*which is also equivalent to writing*/    var = var - 1</pre>
 			<h2 id="chars">Character Math</h2>
 			<p>
-				There is one more short topic that you might not expect. Remember that characters are technically a form of integer? Well, you can use them with all of these mathematical operators if you’d like. While you don’t need to know every number that corresponds to each character, you should know that the alphabet is a range of 26 integers. This means that if you were to increment the character ‘b’, you would get the character ‘c’. The same rule holds true for capital letters as well, but there isn’t a super simple relationship between the lowercase and capital letters. However, as an example of character math, you can transform a lowercased letter to a capital letter with the following statement:
+				There is one more short topic that you might not expect. Remember that characters are technically a form of integer? Well, you can use characters with all of these mathematical operators. While you don’t need to know the number that corresponds to each character, you should know that the alphabet is a range of 26 consecutive integers. This means that if you were to increment the character ‘b’, you would get the character ‘c’. The same rule holds true for capital letters as well, but there isn’t a super simple relationship between the lowercase and capital letters. However, as an example of character math, you can transform a lowercased letter to a capital letter with the following statement...
 			</p>
 			<pre class="example_code prettyprint">capital = lowercase – ‘a’ + ‘A’;</pre>
 			<p>
-				By subtracting ‘a’ from the variable lowercase, you get the offset from ‘a’, meaning if the lowercase letter was a ‘c’, you would get two, because it is two away from ‘a’. Then, the offset is added to ‘A’, producing the same letter as before, but as a capital. For example, if the offset was two, you would go two letters from ‘A’, and get ‘C’.
+				By subtracting ‘a’ from the variable "lowercase", you get the offset from ‘a’, meaning if the lowercase letter was a ‘c’, you would get two, because it is two letters away from ‘a’. Then, the offset is added to ‘A’, producing the same letter as before, but as a capital. For example, if the offset was two, you would go two letters over from ‘A’, and get ‘C’.
 			</p>
 			<h2 id="cmath">cmath</h2>
 			<p>
-				Finally, you may have noticed that I haven’t mentioned anything about ways to do other operations like take a number to a power, or take the sine of a number, or round a number, or the like. That’s because these functions aren’t actually part of the C++ language. However, that doesn’t mean you have to program them yourself. There is a library (just like iostream) called “cmath” that includes pretty much all general math functions you could need. Here’s a list of some of the ones you might use: 
+				Finally, you may have noticed that I haven’t mentioned anything about ways to do other operations like take a number to a power, or take the sine of a number, or round a number, etc. That’s because these functions aren’t actually part of the C++ language. However, that doesn’t mean you have to program them yourself. There is a library (just like "iostream") called "cmath" that includes many general math functions. Here’s a list of some of the most useful...
 			</p>
 			<table class="table">
 				<tbody>
@@ -242,52 +242,52 @@ using namespace std;
 
 int main&#40;&#41; {
    
-   //These will all work as you expect
+   // These will all work as you expect
    int int1 = 5 + 7;
    int int2 = 5 - 7;
    int int3 = 5 * 7;
    
-   //This will evaluate to 0, as 5 / 7 is between 0 and 1
+   // This will evaluate to 0, as 5 / 7 is between 0 and 1
    int int4 = 5 / 7;
 
-   //This will evaluate to 2, as that is the remainder of
-   //7 / 5
+   // This will evaluate to 2, as that is the remainder of
+   // 7 / 5
    int mod1 = 7 % 5;
    
-   //This will evaluate to 5, as 5 does not go into 7 at all,
-   //so the remainder is just the entire number.
+   // This will evaluate to 5, as 5 does not go into 7 at all,
+   // so the remainder is just the entire number.
    int mod2 = 5 % 7;
 
-   //This will evaluate to 30, as the multiplication is evaluated
-   //before the subraction.
+   // This will evaluate to 30, as the multiplication is evaluated
+   // before the subtraction.
    int order1 = 5 * 7 - 5;
 
-   //This will evaluate to 3, as first the parenthasis is evaluated,
-   //givint 2, which is then multiplied by 5, giving 10, and finally
-   //modded with 7, giving a remainder of 3.
+   // This will evaluate to 3, as first the parenthesis is evaluated,
+   // givint 2, which is then multiplied by 5, giving 10, and finally
+   // modded with 7, giving a remainder of 3.
    int order2 = &#40;7 - 5&#41; * 5 % 7;
    
-   //After these two lines, the variable will hold the value 12, as it
-   //starts with 5, and 7 is added to itself.
+   // After these two lines, the variable will hold the value 12, as it
+   // starts with 5, and 7 is added to itself.
    int combine1 = 5;
    combine1 += 7;
    
-   //After these two lines, the variable will hold 14, as it starts with
-   //7, and is multipled by 7 - 5, or two.
+   // After these two lines, the variable will hold 14, as it starts with
+   // 7, and is multiplied by 7 - 5, or two.
    int combine2 = 7;
    combine2 *= 7 - 5;
    
-   //After tehse two lines, the character will have been transformed to
-   //a 'g', as it was moved down 5 places.
+   // After these two lines, the character will have been transformed to
+   // a 'g', as it was moved down 5 places.
    char char1 = 'b';
    char1 += 5;
    
-   //After these two lines, the character will have been transformed from
-   //a lowercase e to an upercase E, as mentioned in the notes.
+   // After these two lines, the character will have been transformed from
+   // a lowercase e to an uppercase E, as mentioned in the notes.
    char char2 = 'e';
    char2 = char2 - 'a' + 'A';
    
-   //Output results
+   // Output results
    cout &lt;&lt; endl &lt;&lt; "Integers:" &lt;&lt; endl;
    cout &lt;&lt; "5 + 7 = " &lt;&lt; int1 &lt;&lt; endl;
    cout &lt;&lt; "5 - 7 = " &lt;&lt; int2 &lt;&lt; endl;
@@ -310,7 +310,7 @@ int main&#40;&#41; {
    cout &lt;&lt; "b + 5 = " &lt;&lt; char1 &lt;&lt; endl;
    cout &lt;&lt; "e - a + A = " &lt;&lt; char2 &lt;&lt; endl;
    
-   //Hold the screen for the user
+   // Hold the screen for the user
    cout << endl;
    system&#40;"pause"&#41;;
    
@@ -319,7 +319,7 @@ int main&#40;&#41; {
 		</aside>
 		</main>
 		<footer role="contentinfo">
-			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https:// github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
 		</footer>
 	</div>
 	</body>
