@@ -8,3 +8,9 @@
 	padding: 5px;
 	line-height: 1em;
 }
+td.tdr {
+	border-right: 1px solid black;
+}
+td.tdb {
+	border-bottom: 1px solid black;
+}

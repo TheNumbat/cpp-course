@@ -37,14 +37,14 @@
 				<a href="example.cpp" download>Download</a> | 
 				<a href="https://ideone.com/2JcgAK" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 
 using namespace std;
 
-//Used for an if statement
+// Used for an if statement
 bool isNumGreat(int num);
 
 int main() {
@@ -56,8 +56,8 @@ int main() {
 	
 	cin &gt;&gt; number;
 	
-	//This chain of if/else staements discovers if your number causes the isNumGreat function to return true,
-	//or if your number is between 0 and 100, negative, or greather than 100
+	// This chain of if/else statements discovers if your number causes the isNumGreat function to return true,
+	// or if your number is between 0 and 100, negative, or greater than 100
 	if(isNumGreat(number)) {
 		
 		cout &lt;&lt; "Your favorite number is the answer to life, the universe, and everything!" &lt;&lt; endl;
@@ -80,9 +80,9 @@ int main() {
 	
 	cin &gt;&gt; character;
 	
-	//This switch statement detects if the letter is an a, or a b, c, or d, or an e - note that if you enter an
-	//e you will get the result from e and f, or an f. Finally, it can also default to a statement if you did
-	//not enter any of those letters.
+	// This switch statement detects if the letter is an 'a;' or a 'b,' 'c,' or 'd;' or an 'e;' or an 'f.' If you enter an
+	// 'e' you will get the result from 'e' and 'f.' Finally, it can also default to a statement if you did
+	// not enter any of those letters.
 	switch(character) {
 		case 'a':
 			cout &lt;&lt; "The next letter is 'b'" &lt;&lt; endl;
@@ -107,99 +107,120 @@ int main() {
 }
 
 bool isNumGreat(int num) {
-	//Num == 42 is a boolean statement, so the function can return the result of it.
+	// num == 42 is a boolean statement, so the function can return the result of it.
 	return num == 42;
 }</pre>
 		</aside>
 		<article role="article">
 			<h2 id="branch">Branching</h2>
 			<p>
-				The basic concept of control flow is branching, or making your code follow different paths -depending on what happens within the program. This is an essential part of programming, and you’ll be using it for more or less everything in the future. For example, in a simple if statement:
+				The basic concept of control flow is branching; making your code follow different paths based on the logic of your program. This is an essential part of programming, and you’ll be using it constantly in the future.
 			</p>
 			<img src="branch.png" style="width:30%;">
 			<h2 id="if">If Statements</h2>
 			<p>
-				The basic form of branching is an “if” statement, which simply evaluates an expression, and if that expression turns out to be true, it allows a branch of code to run. They’re very simple to use: you type the keyword “if,” followed by a Boolean expression in parenthesis, and finally the brackets defining the branch (or scope) of code that will be run. However, if there will only be one line of code under the “if,” the brackets can be omitted. A Boolean expression, or statement, is anything that will evaluate to true or false. This can include simply “true” or “false,” Boolean variables, functions that return Boolean values, and most commonly comparisons between values. The most basic comparison is equals to, which is performed by the comparison operator, ==. As you may have guessed, there are several other operators for other types of comparison:
+				The basic form of branching is an "if" statement, which simply evaluates an expression. If that expression evaluates to true, it allows a branch of code to run. They’re very simple to use: you type the keyword "if," followed by a Boolean expression in parenthesis, and finally the brackets defining the branch (scope) of code to be run. If there is only one line of code in your "if" branch, the brackets can be omitted.
+			</p>
+			<p>
+				A Boolean expression or statement is any combination of objects, and operators that will evaluate to true or false. This can include simply "true" or "false," Boolean variables, functions that return Boolean values, and comparisons between values. The most basic comparison is equals to, which is performed by the comparison operator, "==." Note that this has a very different meaning than the assignment operator ("="). As you may have guessed, there are several other operators for other types of comparison...
 			</p>
 			<table class="table">
 				<tbody>
-				<tr><td style="border-right: 1px solid black; border-bottom: 1px solid black;">Operator</td><td style="border-bottom: 1px solid black;">Use</td></tr>
-				<tr><td style="border-right: 1px solid black;">==</td><td>Equal to</td></tr>
-				<tr><td style="border-right: 1px solid black;">!=</td><td>Not equal to</td></tr>
-				<tr><td style="border-right: 1px solid black;">&gt;</td><td>Greater than</td></tr>
-				<tr><td style="border-right: 1px solid black;">&lt;</td><td>Less than</td></tr>
-				<tr><td style="border-right: 1px solid black;">&gt;=</td><td>Greather than or equal to</td></tr>
-				<tr><td style="border-right: 1px solid black;">=&lt;</td><td>Less than or equal to</td></tr>
+				<tr><td class="tdr tdb">Operator</td><td class="tdb">Use</td></tr>
+				<tr><td class="tdr">==</td><td>Equal to</td></tr>
+				<tr><td class="tdr">!=</td><td>Not equal to</td></tr>
+				<tr><td class="tdr">&gt;</td><td>Greater than</td></tr>
+				<tr><td class="tdr">&lt;</td><td>Less than</td></tr>
+				<tr><td class="tdr">&gt;=</td><td>Greather than or equal to</td></tr>
+				<tr><td class="tdr">=&lt;</td><td>Less than or equal to</td></tr>
 				</tbody>
 			</table>
 			<h2 id="andornot">And, Or, and Not</h2>
 			<p>
-				Of course, you’re not limited to one test per if statement. You can chain Boolean statements together us the “and” (&amp;&amp;) and “or” (||) operators. You’ve probably heard of this before—the “and” operator will evaluate to true if both sides of the operator evaluate to true, and the “or” operator will evaluate to true if any of the sides evaluate to true. To use them, you must have a complete Boolean statement on each side, meaning you can’t just add another comparison operator to test if your variable is between a value (i.e. you must do var >= 5 &amp;&amp; var <=10 rather than var >= 5 &amp;&amp; <= 10). The ‘not’ (!) operator, on the other hand, is added to a single Boolean statement, and it simply, once the statement has been evaluated, flips the value from true to false or vice versa. Furthermore, while there is not a technically defined order of operators for these statements, you can remember that functionally, the not operator is evaluated first, then and, and finally or. Finally, you can add more Boolean expressions to test by simply adding more ‘and’s or ‘or’s. 
+				Of course, you’re not limited to one comparison or test per "if" statement. You can chain Boolean statements together with the "and" (&amp;&amp;) and "or" (||) operators. You’ve probably heard of this before&mdash;the "and" operator will evaluate to true if both sides of the operator evaluate to true, whereas the "or" operator will evaluate to true if either side evaluates to true. 
+			</p>
+			<p>
+				To use these operators, you must have a complete Boolean statement on each side. Hence, you can’t just add another comparison operator to test, for example, if a variable is between a value (i.e. you must do "var >= 5 &amp;&amp; var <=10" rather than "var >= 5 &amp;&amp; <= 10"). 
+			</p>
+			<p>
+				The "not" (!) operator, on the other hand, is added to a single Boolean statement, and it simply flips the evaluation from true to false or vice versa. 
+			</p>
+			<p>
+				Furthermore, there is a technically defined <a href="http://en.cppreference.com/w/cpp/language/operator_precedence">order of operators for these statements</a>, but if you don't want to memorize that long list, you can remember that regardless of specific precedence, logically, the "not" operator is evaluated first, then "and," and finally "or."
+			</p>
+			<p>
+				Finally, you can chain still more Boolean expressions to test by simply adding more of these operators in sequence.
 			</p>
 			<pre class="example_code prettyprint">5 == 5 &amp;&amp; 0 <= 12</pre>
-			<p>Will evaluate to true, as both 5 == 5 and 0 <= 12 are true</p>
+			<p>Will evaluate to true, as both 5 == 5 and 0 <= 12 are true.</p>
 			<pre class="example_code prettyprint">(10 / 2) <= 5 || 3 % 2 == 0</pre>
-			<p>Will also evaluate to true, even though 3 % 2 does not equal 0</p>
+			<p>Will also evaluate to true, even though 3 % 2 does not equal 0.</p>
 			<pre class="example_code prettyprint">8 != 8 &amp;&amp; 7 * 2 == 14</pre>
-			<p>Will evaluate to false, as one of the expressions is not true</p>
+			<p>Will evaluate to false, as 8 != 8 is false.</p>
 			<pre class="example_code prettyprint">5 == 5 &amp;&amp; 2 – 4 <= 0 || 1 > 5</pre>
-			<p>This will evaluate to true: first, the AND is evaluated, and both statements are true, so it evaluates to true. Then, the OR is evaluated, and since the left expression was true, the statement evaluates to true even though 1 is not greater than 5.</p>
+			<p>This will evaluate to true: first, the "and" is evaluated, and both statements are true, so that portion evaluates to true. Then, the "or" is evaluated, and since the left expression was true, the statement evaluates to true even though 1 is not greater than 5.</p>
 			<h2 id="ifelse">If and Else</h2>
 			<p>
-				When you use an “if” statement, it will test the Boolean expression you give it, and if it is true, it will execute the code in its branch. However, if the expression is false, nothing will happen at all—your program will simply skip the if statement. Now, most of the time you’re probably going to want something to happen on true, and something else to happen on false. This can be achieved through the use of if and else statements. An else statement simply runs its block of code if the “if” statement above it did not trigger. To use it, simply add the keyword “else” after an “if” statement and curly brackets (again, if there is only one statement in the block, these can be omitted). Additionally, you can add another “if” statement right onto the else block by adding the keyword “if” and another Boolean expression. This is called an else/if statement, and it will do the following: the first if statement will test, and if it fails, it will go to the second statement, and test that one instead. If the second statement also does not trigger, it will go on to the third, and so on, until it either runs out of statements or gets to an else block.
+				When you use an "if" statement, it will test the Boolean expression you give it, and if it is true, it will execute the code in the specified branch. However, if the expression is false, nothing will happen at all&mdash;your program will simply skip the if block. 
+			</p>
+			<p>
+				Most of the time, you’re probably going to want some logic to happen on "true," and something else to happen on "false." This decision can be achieved through the combination of "if" and "else" statements. An "else" statement simply runs its block of code when the "if" statement above it does not trigger. To use an "else" block, simply add the keyword "else" after the end of an "if" block, and curly brackets to define the "else" block. (again, if there is only one statement in the block, these can be omitted). 
+			</p>
+			<p>
+				Additionally, you can add another "if" statement right onto the else block by adding the keyword "if" and another Boolean expression. This is called an else/if statement (often shortened to "elif"). The logic is as follows: the original "if" statement performs its test, and if it does not trigger (evaluates to "false"), your program will go to the second statement (the first "elif" statement), and evaluate that next. If the second statement also does not trigger, it will go on to the third, and so on, until it either runs out of statements or gets to a catch-all "else" block.
 			</p>
 			<pre class="example_code prettyprint">if(5 == 9) {
-	//this will not trigger
+	// this will not trigger
 } else {
-	//this will trigger
+	// this will trigger
 }</pre>
 			<pre class="example_code prettyprint">if(variable == thing) {
-	//this may or may not trigger
+	// this may or may not trigger
 }
 else if(variable == otherThing) {
-	//this may trigger if the first one does not trigger
+	// this may trigger if the first one does not trigger
 }
 else {
-	//this will trigger if neither of the first two do
+	// this will trigger if neither of the first two do
 }</pre>
 			<h2 id="nesting">Nesting Conditionals</h2>
 			<p>
-				You will often want to test multiple conditions, and execute some things for everything, or some things from other things, or a variety of other relatively complicated logic paths. You can do this by nesting conditional statements, meaning adding more if statements within other ones. This is very self-explanatory—you can just add another statement in another’s code block.
+				You will often want to test multiple conditions, executing some paths for all cases, some paths from other cases, or a variety of other less straightforward logic paths. You achieve this logic by nesting conditional statements&mdash;simply adding more if/else statements within parent ones. This is very self-explanatory&mdash;you can just nest more statements within another's code block.
 			</p>
 			<pre class="example_code prettyprint">if(thisValue) {
-	//do something
+	// do something
    
 	if(otherThing == 5) {
-		//do another thing
+		// do another thing
 	}
 }</pre>
 			<h2 id="switch">Switch Statements</h2>
 			<p>
-				With your current knowledge, to choose a code path from several different options, you’d have to write a long chain of if/else statements—but wait! There’s a better way: the switch statement. The switch statement will take a character or integer value, and quite easily run a block of code corresponding with the value of the variable given to it.
+				With your current knowledge, to choose a code path from several different options, you’d have to write a long chain of if/else statements. There’s a better way: the switch statement. The switch statement takes a character or integer value and quite easily chooses a block of code corresponding to its value.
+			</p>
+			<p>
+				To declare a switch statement, type the keyword "switch" and the variable you want to switch on in parenthesis. Then define a block of code where you define your "cases." Each "case" statement defines a possible value that the switch statement will consider, as well as the block of code that will be run if that case is chosen. To add a case, simply type the keyword "case," the integer or character value you want to test for, and a colon (brackets optional). Next, add the code you want to run in that case, and end it with the keyword "break." "Break" tells the program that you are done with that case, and break out of the switch statement entirely.
 			</p>
 			<pre class="example_code prettyprint">switch(charVar) {
 	case ‘a’:
-   		//do things
+   		// do things
 	break;
 	case ‘b’:
-   		//do other things
+   		// do other things
 	break;
 }</pre>
 			<p>
-				So, to start, type the keyword “switch,” and the variable you want to switch on in parenthesis. Then define a block of code, which is where you will put your cases. Each “case” statement defines a value that the switch statement will test for and the block of code that will be run if that case is chosen. To add a case, simply type the keyword “case,” the integer or character value you want to test for, and a colon (note you don’t need brackets here). Then, add the code you want to process, and end it with the keyword “break.” “Break” tells the program that you are done with that case, and to be finished with the switch statement.
-			</p>
-			<p>
-				However, you don’t technically have to include a break statement—if you don’t, your code will simply continue down the switch statement, which you may or may not want. Here’s an example that uses this feature to run the same code if a few different things are true (of course, if you actually use this you would have more than one possible path):
+				However, you don’t technically have to include a break statement&mdash;if you don’t, your program will simply continue executing down the switch statement, which you may or may not intend. Here’s an example that uses this feature to run the same code if a few different possibilities are true...
 			</p>
 			<pre class="example_code prettyprint">switch(charVar) {
 	case ‘1’:
 	case ‘a’:
 	case ‘A’:
-		//do something if character holds the characters 1, a, or A
+		// do something if charVar holds the characters '1,' 'a,' or 'A.'
 	break;
 }</pre>
 			<p>
-				This can also be used to do something like this, which will increment “count” different numbers of times based on which case is chosen. Basically, if case 3 is chosen, if will run all three blocks of code, whereas if one is chosen, it will only run one:
+				This process can also be used to implement logic like this, which will increment "count" different amounts based on which case is chosen. If case 3 is chosen, if will run all three cases, whereas if one is chosen, it will only run one...
 			</p>
 			<pre class="example_code prettyprint">switch(intVar) {
 	case 3:
@@ -211,19 +232,19 @@ else {
 	break;
 }</pre>
 			<p>
-				The last thing you need to know about switch statements is how to have a section run if no cases are chosen, like how an else statement would run if no if/else statements are chosen. To do this, simply add another case, but instead of using the keyword “case,” use the keyword “default.” 
+				The last thing you need to know about switch statements is how to create a catch-all case, like a basic "else" clause. To do this, simply add another case, but instead of using the keyword "case," use the keyword "default." Just like "else" statements, a "default" case is not required.
 			</p>
 			<pre class="example_code prettyprint">switch(intVar) {
 	case 1:
-		//do stuff
+		// do stuff
 	break;
 	default:
-		//this will run if none of the other cases are chosen
+		// this will run if none of the other cases are chosen
 	break;
 }</pre>
 			<h2 id="boolfunc">Boolean Functions</h2>
 			<p>
-				Finally, the last little subtopic is Boolean functions. Boolean functions are just like any other functions you’ve seen, except they have the return type “bool.” This makes them very useful, as they can be used in Boolean expressions (such as in “if” statements) and will act as the value that is returned from it. 
+				Boolean functions are just like any other functions you’ve seen, except they specifically have the return type "bool." This makes them very useful, as they can be used as Boolean expressions, acting as the returned value.
 			</p>
 			<pre class="example_code prettyprint">bool testEqual(int a, int b) {
 	return a == b;
@@ -243,17 +264,17 @@ int main() {
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
 			<ol>
-				<li>Write a logic chain to detect if a number is even or odd.</li>
-				<li>Write a function to test if user-entered values are within several different ranges, for example calculate a movie ticket price based on age.</li>
-				<li>Make a simple menu system where the user can enter a number or character to select an item (use a switch for this). For example:
+				<li>Write logic to detect if a number is even or odd.</li>
+				<li>Write a function to test if user-entered values are within several different ranges. For example, calculate a movie ticket price based on age.</li>
+				<li>Make a simple menu system where the user can enter a number or character to select an item. Use a switch statement. For example:
 <pre>Menu Program
 =========
 1: (O)utput some text
 2: (S)ay hello world
 3: (Q)uit</pre>
 				</li>
-				<li>Finally, write a Boolean function to detect if a given year is a leap year – this is a bit more complicated than you’d think, as you must obey the following rules:
-				<p>Every fourth year is a leap year, unless the year is a century, but it is still a leap year if it is a fourth century.For example, year 4 is a leap year, year 100 is not, and year 400 is.</p></li>
+				<li>Write a Boolean function to detect if a given year is a leap year. You must obey the following rules:
+				<p>Every fourth year is a leap year, unless the year is a century, but it is still a leap year if it is a fourth century. For example, year 4 is a leap year, year 100 is not, and year 400 is.</p></li>
 			</ol>
 		</section>
 			<aside role="complementary" class="example_program bot">
@@ -262,14 +283,14 @@ int main() {
 				<a href="example.cpp" download>Download</a> | 
 				<a href="https://ideone.com/2JcgAK" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 
 using namespace std;
 
-//Used for an if statement
+// Used for an if statement
 bool isNumGreat(int num);
 
 int main() {
@@ -281,8 +302,8 @@ int main() {
 	
 	cin &gt;&gt; number;
 	
-	//This chain of if/else staements discovers if your number causes the isNumGreat function to return true,
-	//or if your number is between 0 and 100, negative, or greather than 100
+	// This chain of if/else statements discovers if your number causes the isNumGreat function to return true,
+	// or if your number is between 0 and 100, negative, or greater than 100
 	if(isNumGreat(number)) {
 		
 		cout &lt;&lt; "Your favorite number is the answer to life, the universe, and everything!" &lt;&lt; endl;
@@ -305,9 +326,9 @@ int main() {
 	
 	cin &gt;&gt; character;
 	
-	//This switch statement detects if the letter is an a, or a b, c, or d, or an e - note that if you enter an
-	//e you will get the result from e and f, or an f. Finally, it can also default to a statement if you did
-	//not enter any of those letters.
+	// This switch statement detects if the letter is an 'a;' or a 'b,' 'c,' or 'd;' or an 'e;' or an 'f.' If you enter an
+	// 'e' you will get the result from 'e' and 'f.' Finally, it can also default to a statement if you did
+	// not enter any of those letters.
 	switch(character) {
 		case 'a':
 			cout &lt;&lt; "The next letter is 'b'" &lt;&lt; endl;
@@ -332,7 +353,7 @@ int main() {
 }
 
 bool isNumGreat(int num) {
-	//Num == 42 is a boolean statement, so the function can return the result of it.
+	// num == 42 is a boolean statement, so the function can return the result of it.
 	return num == 42;
 }</pre>
 		</aside>
