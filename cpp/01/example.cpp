@@ -1,5 +1,5 @@
-//If you are not sure what some lines of code do, try looking back at
-//previous example programs, or email a question.
+// If you are not sure what some lines of code do, try looking back at
+// previous example programs, or email a question.
 
 // This header file allows the use of the string data type.
 #include <string>
@@ -26,7 +26,7 @@ int main() {
    // Note that "string" is not highlighted. Only the fundamental data types
    // are highlighted in your editor. Additionally, the value is initialized
    // with a string literal.
-   string address = "1234 Nowhere St. Reno, NV";
+   string address = "1234 Nowhere St. Las Vegas, NV";
    
 	return 0;
 }

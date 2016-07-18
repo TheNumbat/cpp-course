@@ -5,7 +5,7 @@
 
 using namespace std;
 
-int addFrom(int);
+int addFrom(int x);
 
 int main() {
 	

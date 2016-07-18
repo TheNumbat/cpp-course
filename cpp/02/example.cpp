@@ -4,12 +4,11 @@
 // Remember to include iostream when using console IO
 #include <iostream>
 
-// Also remember to include this line
+// Also remember to include this line (or type std:: each time)
 using namespace std;
 
-int main() 
-{
-   
+int main() {
+
    int input;
    
    // This line outputs the text "Basic IO Examples" to the screen,
