@@ -1,0 +1,11 @@
+
+.content_list {
+	list-style-type: none;
+	width: 90%;
+}
+.left {
+	float: none;
+}
+.right {
+	float: none;
+}

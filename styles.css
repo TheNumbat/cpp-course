@@ -6,10 +6,9 @@
 .content_list > li {
 	font-size: 1.5em;
 }
-#left {
+.left {
 	float: left;
 }
-#right {
+.right {
 	float: right;
 }
-
