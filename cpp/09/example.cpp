@@ -1,5 +1,5 @@
-//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include <iostream>
 #include <cstdlib>
@@ -7,41 +7,41 @@
 
 using namespace std;
 
-//Sorting funciton prototypes
+// Sorting function prototypes
 void bubbleSort(int[],int);
 void selectionSort(int[],int);
 void quickSort(int[],int,int);
 
-//Will put random values between 10 and to into an array
+// Will put random values between 10 and to into an array
 void randomize(int[],int);
 
-//Shows how to pass a two dimensional array to a function
+// Shows how to pass a two dimensional array to a function
 void func(int[][10]);
 
 int main() {
 
 	srand(time(NULL));
 
-	//MULTIDIMENTIONAL ARRAYS	
+	// MULTIDIMENTIONAL ARRAYS	
 
-	//Declares a two dimensional array of integers of sizes 10 and 10, so it
-	//can store up to 100 integers in total.
+	// Declares a two dimensional array of integers of sizes 10 and 10, so it
+	// can store up to 100 integers in total.
 	int array2D[10][10];
 
-	//Declares a tree dimensional array of integers of sizes 10, 10, and 10, so it
-	//can store up to 1000 integers in total.
+	// Declares a tree dimensional array of integers of sizes 10, 10, and 10, so it
+	// can store up to 1000 integers in total.
 	int array3D[10][10][10];
 
-	//Passing a multidimensional array is the same as a one dimensional array
+	// Passing a multidimensional array is the same as a one dimensional array
 	func(array2D);
 
-	//Loop though all three dimentions of the 3D array using three nested loops
+	// Loop though all three dimensions of the 3D array using three nested loops
 	for(int i = 0; i < 10; i++)
 		for(int j = 0; j < 10; j++)
 			for(int k = 0; k < 10; k++)
 				array3D[i][j][k] = 0;
 
-	//Output each value in the 3D Array
+	// Output each value in the 3D Array
 	cout << "3D Array: " << endl;
 	for(int i = 0; i < 10; i++) {
 		for(int j = 0; j < 10; j++) {
@@ -54,12 +54,12 @@ int main() {
 	cout << endl;
 
 
-	//SORTING
+	// SORTING
 
 	int sortArray[10];
 
 
-	//Demonstrate Bubble Sort
+	// Demonstrate Bubble Sort
 	randomize(sortArray,10);
 
 	cout << "Array: ";
@@ -74,7 +74,7 @@ int main() {
 	cout << endl << endl;
 
 
-	//Demonstrate selection sort
+	// Demonstrate selection sort
 	randomize(sortArray,10);
 
 	cout << "Array: ";
@@ -89,7 +89,7 @@ int main() {
 	cout << endl << endl;
 
 
-	//Demonstrate quick sort
+	// Demonstrate quick sort
 	randomize(sortArray,10);
 
 	cout << "Array: ";
@@ -104,7 +104,7 @@ int main() {
 	cout << endl << endl;
 
 
-	//End program
+	// End program
 	cout << endl;
 	system("pause");
 	
@@ -112,14 +112,14 @@ int main() {
 }
 
 void func(int array[][10]) {
-	//Do stuff with array
+	// Do stuff with array
 }
 
 void bubbleSort(int array[], int size) {
 
 	int temp;
 
-	//See notes
+	// See notes
 	for(int i = 0; i < size; i++)
 		for(int j = 0; j < size - 1; j++)
 			if(array[j] > array[j+1]) {
@@ -133,7 +133,7 @@ void selectionSort(int array[], int size) {
 
 	int temp, lowest;
 
-	//See notes
+	// See notes
 	for(int i = 0; i < size - 1; i++) {
 		lowest = i;
 		for(int j = i; j < size; j++)
@@ -151,7 +151,7 @@ void quickSort(int arr[], int left, int right) {
 	int tmp;
 	int pivot = arr[(left + right) / 2];
  
- 	//See notes
+ 	// See notes
 	while (i <= j) {
 		while (arr[i] < pivot)
 			i++;
