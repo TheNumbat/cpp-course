@@ -24,6 +24,7 @@
 					<li><a href="#leaks">Memory Leaks</a></li> | 
 					<li><a href="#cstr">C-Strings</a></li> | 
 					<li><a href="#funcs">Functions</a></li> | 
+					<li><a href="#dim">Multidimensional Arrays</a></li> | 
 					<li><a href="#exercises">Exercises</a></li>
 				</ul>
 			</nav>
@@ -35,8 +36,8 @@
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/nxEwkD" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 
@@ -48,57 +49,57 @@ char* getNewStr(int size);
 
 int main() {
 
-	//Declaring an array on the stack vs. on the heap
+	// Declaring an array on the stack vs. on the heap
 	char stackStr[50];
 	char* heapStr = new char[50];
 
-	//Both arrays can be used in the same ways
+	// Both arrays can be used in the same ways
 	for(int i = 0; i &lt; 50; i++) {
 		stackStr[i] = 'a';
 		heapStr[i] = 'a';
 	}
 
-	//However, the string on the heap must be deleted when
-	//you are done with it--if you never deleted it is considered
-	//leaked memory.
+	// However, the string on the heap must be deleted when
+	// you are done with it--if you never deleted it is considered
+	// leaked memory.
 	delete[] heapStr;
 	heapStr = NULL;
 
-	//Here, you can see how important is to delete your memory
-	//before you lose access to it, or else this loop would
-	//leak a ton of memoroy.
+	// Here, you can see how important is to delete your memory
+	// before you lose access to it, or else this loop would
+	// leak a ton of memory.
 	for(int i = 0; i &lt; 50; i++) {
 		heapStr = new char[100];
 
-		//If the memory was not deleted, a new set of memory
-		//would be assigned to "heapStr," and the previous
-		//memory would be leaked.
+		// If the memory was not deleted, a new set of memory
+		// would be assigned to "heapStr," and the previous
+		// memory would be leaked.
 		delete[] heapStr;
 		heapStr = NULL;
 	}
 
-	//Input a buffered string
+	// Input a buffered string
 	char buffer[100];
 	cout &lt;&lt; endl &lt;&lt; "Enter a string: ";
 	cin &gt;&gt; buffer;
 
-	//Allocate the exact number of characters neccesary.
+	// Allocate the exact number of characters necessary.
 	heapStr = new char[strlen(buffer) + 1];
 
-	//Copy the string
+	// Copy the string
 	strcpy(heapStr,buffer);
 
 	cout &lt;&lt; endl &lt;&lt; "Exactly sized word: " &lt;&lt; heapStr &lt;&lt; endl &lt;&lt; endl;
 
-	//Delete the string
+	// Delete the string
 	delete[] heapStr;
 	heapStr = NULL;
 
-	//Finally, here is a function that will return dynamic meory.
+	// Finally, here is a function that will return dynamic memory.
 	char* newStr = getNewStr(10);
 
-	//the memory origionally created in the funciton can be deleted
-	//here, at the end of main
+	// the memory originally created in the function can be deleted
+	// here, at the end of main
 	delete[] newStr;
 
 
@@ -108,17 +109,17 @@ int main() {
 
 char* getNewStr(int size) {
 
-	//Create a new dynamically allocated character array and return it.
-	//The calling funciton will still have access to the memory, so it
-	//does not need to be deleted here.
+	// Create a new dynamically allocated character array and return it.
+	// The calling function will still have access to the memory, so it
+	// does not need to be deleted here.
 	return new char[size];
 }
-
+`
 int strlen(const char* str) {
 	int counter = 0;
 
-	//Loop until you find a value that equals 0, the null char
-	//(which marks the end of the string)
+	// Loop until you find a value that equals 0, the null char
+	// (which marks the end of the string)
 	while(str[counter])
 		counter++;
 
@@ -129,55 +130,75 @@ int strcpy(char* dest, const char* src) {
 
 	int counter;
 
-	//Loop along the length of the source string,
-	//and copy each character
+	// Loop along the length of the source string,
+	// and copy each character
 	for(counter = 0; counter &lt; strlen(src); counter++)
 		dest[counter] = src[counter];
 
-	//Remember to add a null character at the end
-	//of the destination string
+	// Remember to add a null character at the end
+	// of the destination string
 	dest[counter] = '\0';
 }</pre>
 		</aside>
 		<article role="article">
 			<h2 id="heap">The Stack vs. the Heap</h2>
 			<p>
-				So far, all the data you’ve used in your programs is stored in the stack, which is the default storage area for program data. However, the stack is rather small and won’t allow you to hold much data. Using dynamic memory, you can take advantage of the heap, which is a much, much larger portion of your computer’s memory. Essentially, the heap can store as much data as there is memory in your computer, although how the operating system manages it is somewhat more complicated. To use the heap, you can’t directly store values in it, so you must access it only through pointers, as seen in the diagram below.
+				So far, all the variables you've used are stored in the stack, the default storage area for program data. The stack is extremely small compared to main memory, and won’t allow you to hold very much data. In fact, if you use too much of it, your program will crash from "stack overflow."
+			</p>
+			<p>
+				Through dynamic memory allocation, you can take advantage of the heap, which is a much, much larger portion of your computer’s memory. The heap can store about as much data as there is available memory in your computer. (Again, how your operating system manages memory between the software and hardware layers is somewhat more complicated.) You can’t directly store values in the heap. Instead, you access it through pointers, as seen in the diagram below.
 			</p>
 			<img src="heap.png">
 			<h2 id="dyn">Dynamic Memory</h2>
 			<p>
-				So, as suggested by the previous diagram, you use dynamic memory through the reserved word “new.” “New” will essentially look through your computer’s memory to find a place which enough space to hold whatever data you specify, will specify that your program can use it, and will finally return a pointer to that memory. This is called memory allocation. To specify the amount of memory you want to allocate, you specify a datatype after the keyword new. This tells your program how many bytes of memory it needs to allocate, and also tells it what kind of pointer it should return. Assuming your computer has not run out of memory, you will always get back a valid pointer, but as usual, the actual value your pointer points to will be garbage. 
+				As suggested by the diagram, you allocate dynamic memory (in C++) using the reserved keyword "new." "New" basically looks through your computer’s memory for a place with enough space to hold whatever amount data you specify, specifies that your program is using it, and finally returns a pointer to that memory. This is called memory allocation. To denote the amount of memory you want to allocate, you specify a data type after the keyword new. This type tells "new" how many bytes of memory it needs to allocate, as well as what kind of pointer to return. 
+			</p>
+			<p>
+				Assuming your computer has not run out of memory, you will always get back a valid pointer. The pointer is your only point of access to your newly allocated memory&mdash;there is no statically allocated (i.e. on the stack) variable that contains the "original" value. Remember that while the allocated memory is valid, its actual value will be garbage.
 			</p>
 			<pre class="example_code prettyprint">int* dynamInt = new int;</pre>
-			<p>Creates an integer on the heap, which dynamInt points to.</p>
+			<p>This allocates an integer on the heap, which dynamInt points to.</p>
 			<pre class="example_code prettyprint">char* dynamChar = new char;</pre>
-			<p>Creates a character on the heap, which dynamChar points to.</p>			
+			<p>This allocates a character on the heap, which dynamChar points to.</p>			
 			<p>
-				Now, if you could only allocate single values, the heap wouldn’t be very useful (at least under what we’ve learned so far)—you can allocate an array of the specified datatype simply by adding brackets with the size of the array after the datatype. This will give you a pointer to the start of the array. Remember how pointers can work in almost exactly the same way as arrays? This is where that is so useful, as your pointer is the array, you have no other way to access it. This makes it particularly important for you to mind how you move the pointer around. For example, if you iterate through the array by moving your pointer, you must have some way to get back to the beginning, for reasons discussed in the next section. 
+				If you could only allocate single values, the heap wouldn’t be particularly useful (until later). However, you can use "new" to allocate an array by adding brackets after the data type. This allocation will give you a pointer to the first element of the array. Remember how pointers can work in almost exactly the same way as arrays? This is why that is so useful&mdash;your pointer is the array, you have no other way to access the memory. Hence, it is particularly important to keep in mind how you move the pointer around. For example, if you iterate through the array by moving your pointer, you must have some way to get back to the beginning, for reasons discussed in the next section. 
 			</p>
 			<pre class="example_code prettyprint">char* dynamString = new char[50];</pre>
-			<p>Creates a c-string of length 50 (50 chars) on the heap, which dynamString points to.</p>			
+			<p>This allocates a c-string of length 50 (50 chars) on the heap, which dynamString points to.</p>			
 			<h2 id="leaks">Memory Leaks</h2>
 			<p>
-				As mentioned previously, if you move a pointer to dynamic memory away from the memory, you have no way of getting back to it. And if you do this, the memory doesn’t simply go away—it’s still out there, somewhere in memory, but you have no way to get to it. This is called a memory leak, and is a bug. Memory leaks are especially bad if you are allocating leaked memory multiple times, as the amount of memory leaked goes up and up until either your program is shut down or your computer runs out of memory and freezes until you can shut down the program manually. 
+				If you were to move a pointer to dynamic memory elsewhere, you would have no way of getting back to the memory. If you do this, the memory doesn’t simply go away&mdash;it’s still out there, taking up space, but you have no way to get to it. This is called a memory leak, and is a bug. Memory leaks are especially bad if you are leaking memory in a loop, as the amount of memory leaked goes up and up until either your program is shut down or your computer runs out of memory and kills the program.
 			</p>
 			<p>
-				To make sure you don’t leak memory, you must always be wary of what you’re doing with your pointers as not to lose any dynamic memory, and always delete your memory when you are done using it. One of the most common sources of memory leakage is if you allocate some in a function, but never delete it. Because the pointer to the memory only exists in the function, the pointer will be deleted when the function ends, and the memory will be lost. Then, if the function is called again, it will create more memory and lose that, and on and on. However, there is a solution! To delete dynamically allocated memory, you simply use the keyword “delete.” “Delete” will deallocate the memory that your pointer points to, making it available to other programs on your computer. However, there are several caveats you must keep in mind when deleting memory. First, if you call delete on a pointer that does not point to dynamic memory, you will get a segmentation fault. Second, once you delete the memory, it does not actually change where the pointer points—but now it will be pointing to some random place in memory and will also cause a segmentation fault if you use it. Because of this, you should always set the pointer to “NULL” (or zero) after you delete it. This is useful because later in your program, you can test if it is valid or not simply by checking that it is not Finally, to delete dynamically allocated arrays, you simply add empty brackets directly onto the end of the delete keyword (“delete[]”). This give the third caveat—the pointer must be pointing at the beginning of the array, or else your program will only delete a portion of the memory and the part not deleted will be leaked. 
+				In order to not leak memory, you must always be wary of how you are manipulating pointers, as not to lose access to any dynamic memory. One of the most common sources of leakage is to allocate in a function, but never delete. Because the pointer to the memory only exists within a function, the pointer will be deleted when the function ends, and the memory will be lost. If the function is called again, it will create more memory and lose that, and on and on. 
 			</p>
+			<p>
+				However, there is a solution! Always delete your memory <strong>before</strong> you lose access to it. To delete dynamically allocated memory, use the keyword "delete." "Delete" deallocates the memory at an address, releasing it back to the operating system and making it available to the rest of your computer. However, there are several caveats you must keep in mind when deleting memory.
+			</p>
+			<p>First, if you call delete on a pointer that does not point to dynamic memory, you will get a segmentation fault.</p>
+			<p>Second, once you delete memory from a pointer, nothing changes about the pointer itself&mdash;but now it will be pointing to some random place in memory and will also cause a segmentation fault if you use it. As the pointer is now invalid, you should always set the pointer to "NULL" (or zero) after you delete it. Again, this is useful because you can later test if a pointer is valid or not by checking that it is not NULL.</p>
+			<p>Third, to delete dynamically allocated arrays, you must add empty brackets onto the end of the delete keyword (“delete[]”). The pointer to delete must be pointing at the first element of the array, or else your program will only delete a portion of the memory. The part not deleted is leaked.</p>
 			<pre class="example_code prettyprint">void func() {
 	char* dynamStr = new char[50];
 
-	//Do processing
+	// Do processing
 
-	//Without this line, the string memory would be leaked
+	// Without this line, the string memory would be leaked
 	delete[] dynamStr;
-	//While this is technically not necessary, as the pointer will be gone when the function ends, but is a good habit to get into
+	// This is not necessary, as the pointer will be gone when the function ends, but is a good habit to get into
 	dynamStr = NULL;
 }</pre>
+			<p>In this example, a 50 character array is dynamically allocated at the start of a function. As the pointer will be deleted, inaccessible, when the function ends, this memory must be deleted within the same function.</p>
 			<h2 id="cstr">C-Strings</h2>
+			<p>You may be wondering why this is lesson called “dynamic” memory, as there doesn't seem to be anything "dynamic" about it.</p>
 			<p>
-				You may be wondering why this memory is called “dynamic” memory, as there isn’t really anything dynamic about it. Well, it’s because, unlike arrays, in which you must specify a constant size for them at compile time (before your program is run), dynamic memory can be allocated with variable values. This means that you can make arrays of some size that’s specified at runtime, or when your program is run. For example, you could ask the user how many values they want to create, and create exactly that many, rather than having to allocate some array of a maximum size and likely wasting a ton of memory that simply isn’t needed. Another example is using exactly sized c-strings (meaning you only allocate the exact number of characters in the string). Of course, if you’re inputting a c-string, you don’t know beforehand how many characters you will be receiving, so you still have to first input the text into a maximum sized buffer, and then copy it into an exactly sized dynamic string. To do this, you need a string length function, which will take in a character pointer (to a string) and return the length of the string. However, the length should not include the null character that marks the end of the string. Finally, you also need a string copy function which will copy each character from one c-string to another. 
+				Unlike arrays, in which you must specify a constant size for them at compile time, dynamic memory can be allocated in arbitrary, variable sizes. This means that you can make arrays of any specified size at runtime. For example, you could ask the user how many values they want to create, and create exactly that many, rather than having to allocate an array of a maximum size and wasting a ton of memory.
+			</p>
+			<p>
+				Another example is creating exactly sized c-strings&mdash;only allocating the exact number of characters necessary. If you’re inputting a c-string from the user, you don’t know beforehand how many characters you will receive, so you still have to first input the text into a statically allocated, maximum sized "buffer." Then, create and copy the data to an exactly sized dynamic c-string.
+			</p>
+			<p>
+				This process requires a string length function, which takes a character pointer (to a string) and returns the length of the string. It is conventional that the length should not include the null terminator. You also need a string copy function which copies each character from one c-string to another. 
 			</p>
 			<pre class="example_code prettyprint">cout << “How many numbers will you input: “;
 cin >> numVals;
@@ -186,36 +207,89 @@ int* values = new int[numVals];
 
 for(int i = 0; i < numVals; i++)
 	cin >> values[i];</pre>
-			<p>VS.</p>
+			<p>In this example, we prompt the user to specify how many numbers to input, allocating a perfectly sized array.</p>
 			<pre class="example_code prettyprint">cout << “Enter a word: “;
 cin >> buffer;
 
 char* exactStr = new char[strlen(buffer) + 1];
 strcpy(exactStr,buffer);
 
-cout << “Exactly sized word: “ << exactStr << endl;</pre>			
+cout << “Exactly sized word: “ << exactStr << endl;</pre>
+			<p>In this example, we input a string into a buffer and create an exactly sized string based on the input length.</p>
 			<h2 id="funcs">Functions</h2>
 			<p>
-				Finally, I’ve previously mentioned allocating dynamic memory in functions, and said you must always remember to delete your memory before the end of the function. Well, that’s not strictly true. The golden rule of preventing memory leaks is to always to delete your memory before you lose access to it, and not everything in a function is lost when it ends. I’m speaking, of course, of returned values and reference parameters. A function can return a pointer to dynamic memory just like any other pointer, and in that case it would not make sense to delete the memory within the function, as the returned value would be useless. Reference parameters, which would be pointers passed by reference, can work the same way—if you are setting a reference parameter to point to a new bit of dynamic memory, it can still be accessed elsewhere and most likely should not be deleted within the function. However, again, always be wary of moving around dynamic memory pointers—if a pointer to dynamic memory is passed to a function, that function can delete the memory, and if it does not set it to some other memory (which means the pointer must be passed by reference), the pointer will no longer be valid in main, and you might end up with a segmentation fault. 
+				I said you must always remember to delete your memory before the end of a function. That’s not strictly true. The golden rule of preventing memory leaks is to simply to delete your memory before you lose access to it. Not everything in a function is necessarily lost when it ends. 
+			</p>
+			<p>
+				I’m speaking, of course, of returned values and reference parameters. A function can return a pointer to dynamic memory just like any other pointer. In which case it does not make sense to delete the memory within the function, as then the returned value would be useless. Reference parameters&mdash;pointers passed by reference&mdash;can work the same way. For example, if you set a reference parameter to point to newly allocated dynamic memory, it can still be accessed elsewhere. Chances are, the memory should not be deleted within the function.
+			</p>
+			<p>
+				Again, always be wary of invalidating your pointers. For example, if a pointer to dynamic memory is passed to a function, that function can globally delete the memory, and if the function does not <em>globally</em> set the pointer to some other location, the pointer may no longer be valid, and you might end up with a segmentation fault. In this situation, the pointer must be passed by reference, as its value must be updated in the calling function as well as called function.
 			</p>
 			<pre class="example_code prettyprint">char* allocateString(int size) {
 	char* str = new char[size];
 	return str;
 }</pre>
-			<p>The dynamic memory should not be deallocated within this function, as it is returned, preserving a way to access it so it can be deleted elsewhere.</p>
+			<p>Here, memory should not be deallocated within the function, as it is returned, preserving a way to access it. It should be deleted elsewhere, when it is no longer needed.</p>
 			<pre class="example_code prettyprint">void resizeStr(char*&amp; dest, int size) {
 	delete[] dest;
 	dest = new char[size];
 }</pre>
-			<p>This function will delete the memory pointed to by “dest,” and reallocates it with the new size. It should not be deleted because as it is a reference parameter, it will be pointing to the new memory in main, and can be deleted later.</p>
+			<p>This function will delete the memory pointed to by "dest" and reallocate it with a new size. It should not be deleted because, as "dest" is a reference parameter, the actual parameter will be pointing to the new memory in main, and can be deleted later. Note that if "dest" was not a reference parameter, this function would leak memory. The reference allows the newly found address to be passed back to the calling function.</p>
+			<h2 id="dim">Multidimensional Arrays</h2>
+			<p>
+				As seen in <a href="..\10\10.html#ptrptr">lesson 10</a>, statically and dynamically allocated multidimensional arrays are structured in fundamentally different ways. In dynamically allocated multidimensional array, each dimension is represented by a layer of pointers to arrays. For a 2D array, the first level is a dynamically array of pointers, which all point into the second level; the actual arrays of integers. In this design, only arrays at the "bottom" dimension are actually stored as values.
+			</p>
+			<p>Before we get into actually allocating and deleting these structures, let's talk about accessing them.</p>
+			<p>
+				In statically allocated multidimensional arrays, to find a value your program must find a linear offset based on the indices of your value. This depends on the size of your dimensions. For example, to find the linear offset for position [1][2][3] within a 3x3x3 array, we take 3 spaces from the 3rd index, 2 times the size of the third dimension from the second index, and 1 times the size of the second times the size of the third dimension from the first index. This gives us 3 + 2*3 + 1*3*3, or 18. Hence, the item at [1][2][3] is actually at [18] from a linear perspective.
+			</p>
+			<table>
+				<tbody>
+				<tr><td></td><td>0</td><td>1</td><td>2</td></tr>
+				<tr><td>0</td><td>array[0][0]</td><td>array[1][0]</td><td>array[2][0]</td></tr>
+				<tr><td>1</td><td>array[0][1]</td><td>array[1][1]</td><td>array[2][1]</td></tr>
+				<tr><td>2</td><td>array[0][2]</td><td>array[1][2]</td><td>array[2][2]</td></tr>
+				</tbody>
+			</table>
+			<p></p>
+			<table>
+				<tbody>
+				</td><td>array[0][0]</td><td>array[0][1]</td><td>array[0][2]</td><td>array[1][0]</td><td>array[1][1]</td><td>array[1][2]</td><td>array[2][0]</td><td>array[2][1]</td><td>array[2][2]</td></tr>
+				</tbody>
+			</table>
+			<p>Here, you can see how the 2D indices translate into 1D ones. For example, [1][2] maps to [5] (2 + 1*3).</p>
+			<p>
+				In dynamically allocated multidimensional arrays, this process is rather more straightforward. Instead of deducing a linear offset from the specified indices, your program simply chains offset operators together. For example, in a 2D array, the first operator retrieves a pointer from the top-level array and the second operator retrieves a piece of data from the second-level array. 
+			</p>
+			<img src="layerarray.png" style="width:35%;">
+			<p>
+				Unfortunately, allocating multidimensional arrays is not as simple as adding more brackets to the "new" operator. That said, it's still pretty simple; you just have to build out the layers of pointers yourself. For example, to allocate a 2D array, you would first allocate an array of pointers to a double pointer (representing the top dimension), then loop through each top-level element, allocating a second-level array for each. For a 3D array, this second level would again be full of pointers which then point to the final dimension.
+			</p>
+			<pre class="example_code prettyprint">int** 2Darr;
+
+2Darr = new int*[10];
+
+for(int i = 0; i < 10; i++)
+	2Darr[i] = new int[10];</pre>
+			<p>Here we dynamically allocate a 10x10 array. Note that when we do the first allocation (int*[10]), we are creating a dynamic array of integer <em>pointers</em>. The return from this "new" will be a double integer pointer.</p>
+			<p>
+				Given the allocation, deletion is just as you'd expect. Start by deleting the "lowest" dimension and work your way up.
+			</p>
+			<pre class="example_code prettyprint">for(int i = 0; i < 10; i++)
+	delete[] 2Darr[i];
+
+delete[] 2Darr;
+2Darr = NULL;</pre>
+			<p>Here we delete all allocated memory. Note that brackets are used with "delete" in both statements. Each element in 2Darr is a pointer to an array, so each must be deleted likewise. The final deletion deletes the top level array of integer pointers. Finally, remember to set deleted pointers to NULL.</p>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
 			<ol>
 				<li>Create a program to input and display a number of values from a file (specified in the file), and only store as much data as you need to.</li>
-				<li>Implement a sorting function that will sort the array into a new, dynamically allocated array.</li>
-				<li>Try making a multidimensional, dynamically allocated array.</li>
-				<li>Try creating these same c-style string functions that will work with dynamically allocated, exactly sized strings:</li>
+				<li>Implement a sorting function that will sort an array into a new, dynamically allocated array.</li>
+				<li>Try making and using a multidimensional, dynamically allocated array.</li>
+				<li>Try creating these same c-style string functions, but with with dynamically allocated, exactly sized strings. Consider how this affects your functions. Do you need to resize strings? When do you need to allocate new memory? When do you need to pass pointers by reference?</li>
 				<ul>
 					<li>String copy: copies one c-string into another</li>
 					<li>String concat: adds one string onto the end of another</li>
@@ -234,8 +308,8 @@ cout << “Exactly sized word: “ << exactStr << endl;</pre>
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/nxEwkD" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 
@@ -247,57 +321,57 @@ char* getNewStr(int size);
 
 int main() {
 
-	//Declaring an array on the stack vs. on the heap
+	// Declaring an array on the stack vs. on the heap
 	char stackStr[50];
 	char* heapStr = new char[50];
 
-	//Both arrays can be used in the same ways
+	// Both arrays can be used in the same ways
 	for(int i = 0; i &lt; 50; i++) {
 		stackStr[i] = 'a';
 		heapStr[i] = 'a';
 	}
 
-	//However, the string on the heap must be deleted when
-	//you are done with it--if you never deleted it is considered
-	//leaked memory.
+	// However, the string on the heap must be deleted when
+	// you are done with it--if you never deleted it is considered
+	// leaked memory.
 	delete[] heapStr;
 	heapStr = NULL;
 
-	//Here, you can see how important is to delete your memory
-	//before you lose access to it, or else this loop would
-	//leak a ton of memoroy.
+	// Here, you can see how important is to delete your memory
+	// before you lose access to it, or else this loop would
+	// leak a ton of memory.
 	for(int i = 0; i &lt; 50; i++) {
 		heapStr = new char[100];
 
-		//If the memory was not deleted, a new set of memory
-		//would be assigned to "heapStr," and the previous
-		//memory would be leaked.
+		// If the memory was not deleted, a new set of memory
+		// would be assigned to "heapStr," and the previous
+		// memory would be leaked.
 		delete[] heapStr;
 		heapStr = NULL;
 	}
 
-	//Input a buffered string
+	// Input a buffered string
 	char buffer[100];
 	cout &lt;&lt; endl &lt;&lt; "Enter a string: ";
 	cin &gt;&gt; buffer;
 
-	//Allocate the exact number of characters neccesary.
+	// Allocate the exact number of characters necessary.
 	heapStr = new char[strlen(buffer) + 1];
 
-	//Copy the string
+	// Copy the string
 	strcpy(heapStr,buffer);
 
 	cout &lt;&lt; endl &lt;&lt; "Exactly sized word: " &lt;&lt; heapStr &lt;&lt; endl &lt;&lt; endl;
 
-	//Delete the string
+	// Delete the string
 	delete[] heapStr;
 	heapStr = NULL;
 
-	//Finally, here is a function that will return dynamic meory.
+	// Finally, here is a function that will return dynamic memory.
 	char* newStr = getNewStr(10);
 
-	//the memory origionally created in the funciton can be deleted
-	//here, at the end of main
+	// the memory originally created in the function can be deleted
+	// here, at the end of main
 	delete[] newStr;
 
 
@@ -307,17 +381,17 @@ int main() {
 
 char* getNewStr(int size) {
 
-	//Create a new dynamically allocated character array and return it.
-	//The calling funciton will still have access to the memory, so it
-	//does not need to be deleted here.
+	// Create a new dynamically allocated character array and return it.
+	// The calling function will still have access to the memory, so it
+	// does not need to be deleted here.
 	return new char[size];
 }
 
 int strlen(const char* str) {
 	int counter = 0;
 
-	//Loop until you find a value that equals 0, the null char
-	//(which marks the end of the string)
+	// Loop until you find a value that equals 0, the null char
+	// (which marks the end of the string)
 	while(str[counter])
 		counter++;
 
@@ -328,13 +402,13 @@ int strcpy(char* dest, const char* src) {
 
 	int counter;
 
-	//Loop along the length of the source string,
-	//and copy each character
+	// Loop along the length of the source string,
+	// and copy each character
 	for(counter = 0; counter &lt; strlen(src); counter++)
 		dest[counter] = src[counter];
 
-	//Remember to add a null character at the end
-	//of the destination string
+	// Remember to add a null character at the end
+	// of the destination string
 	dest[counter] = '\0';
 }</pre>
 		</aside>

@@ -1,0 +1,12 @@
+
+table {
+	border: 1px solid black;	
+	background-color: #E5E5FF;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table > tbody > tr > td {
+	padding: 5px;
+	line-height: 1em;
+	border: 1px solid black;
+}

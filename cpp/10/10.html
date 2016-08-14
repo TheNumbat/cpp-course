@@ -25,6 +25,7 @@
 					<li><a href="#mov">Moving Pointers</a></li> | 
 					<li><a href="#params">Pointer Parameters</a></li> | 
 					<li><a href="#ptrptr">Pointer Pointers</a></li> | 
+					<li><a href="#dim">Multidimensional Arrays</a></li> | 
 					<li><a href="#cast">Casting</a></li> | 
 					<li><a href="#void">Void Pointers</a></li> | 
 					<li><a href="#exercises">Exercises</a></li>
@@ -264,6 +265,7 @@ int** nope = &amp;&amp;val; // This does not work.</pre>
 cout &lt;&lt; valPtr* &lt;&lt; endl;
 cout &lt;&lt; valPtrPtr** &lt;&lt; endl;</pre>
 			<p>All of these lines will output the value 5.</p>
+			<h2 id="dim">Multidimensional Arrays</h2>
 			<p>
 				The astute might also consider how this relates to multidimensional arrays. Intuitively, a two-dimensional array would be represented by a two-dimensional pointer. However, this is not the case. As I alluded to in <a href="..\09\09.html">lesson 09</a>, static multidimensional arrays are stored in one dimension. What I mean by this is that they are literally an array of arrays, not an array of pointers to other arrays. If you have a 3 by 3 array, you can visualize it as...
 			</p>
@@ -281,8 +283,8 @@ cout &lt;&lt; valPtrPtr** &lt;&lt; endl;</pre>
 				</td><td>array[0][0]</td><td>array[0][1]</td><td>array[0][2]</td><td>array[1][0]</td><td>array[1][1]</td><td>array[1][2]</td><td>array[2][0]</td><td>array[2][1]</td><td>array[2][2]</td></tr>
 				</tbody>
 			</table>
-			<p>This is the reason why you must specify dimension sizes after the first&mdash;the program must know when it has reached the end of a dimension in the linear storage.</p>
-			<p>However, layered pointers are still relevant when considering multidimensional arrays. This is because you must use them to create dynamically allocated multidimensional arrays (see <a href="..\11\11.html">lesson 11</a>). When using a layered pointer to represent a multidimensional array, the dimension "levels" are represented by arrays of pointers. For example, a 2D array is an array of pointers to arrays. A 3D array is an array of double pointers to 2D arrays, etc. Hence, unlike with static multidimensional arrays, specific dimension sizes are not needed&mdash;to pass a 2D array of this style, simply pass a double pointer. While the usage of layered pointer vs. static multidimensional arrays is the same, they are stored in fundamentally different formats.</p>
+			<p>This is the reason why you must specify dimension sizes after the first&mdash;the program must know when it has reached the end of a dimension in the linear storage. For more information on accessing static multidimensional arrays, see <a href="..\11\11.html#dim">lesson 11</a>.</p>
+			<p>However, layered pointers are still relevant when considering multidimensional arrays. This is because you must use them to create dynamically allocated multidimensional arrays (see <a href="..\11\11.html#dim">lesson 11</a>). When using a layered pointer to represent a multidimensional array, the dimension "levels" are represented by arrays of pointers. For example, a 2D array is an array of pointers to arrays. A 3D array is an array of double pointers to 2D arrays, etc. Hence, unlike with static multidimensional arrays, specific dimension sizes are not needed&mdash;to pass a 2D array of this style, simply pass a double pointer. While the usage of layered pointer vs. static multidimensional arrays is the same, they are stored in fundamentally different formats.</p>
 			<div class="nocollapse">
 			<img src="layerarray.png" style="width:35%;float:left;">
 			<p>This shows the layout of a multidimensional array using a double pointer.</p>
@@ -320,16 +322,16 @@ voidPtr = &value;</pre>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
 			<ol>
-				<li>Try using pointers instead of arrays in one of your previous functions, and don’t use offset notation! Instead find each value by incrementing or decrementing your pointers.</li>
+				<li>Try using pointers instead of arrays in one of your previous functions&mdash;and don’t use offset notation! Instead, find each value by incrementing or decrementing your pointers.</li>
 				<li>Use a void pointer.</li>
 				<li>Use a double or triple pointer.</li>
-				<li>Create some c-string functions using only character pointers and no offset notation. Try these:</li>
+				<li>Create some c-string functions without offset notation, and only character pointers. Try these:</li>
 				<ul>
-					<li>String copy: copies one c-string into another</li>
-					<li>String concat: adds one string onto the end of another</li>
-					<li>String length: returns the length of a string</li>
-					<li>Substring: returns the position of a substring within a string</li>
-					<li>String insert: inserts a string into another string</li>
+					<li>String copy: copies one c-string into another.</li>
+					<li>String concat: adds one string onto the end of another.</li>
+					<li>String length: returns the length of a string.</li>
+					<li>Substring: returns the position of a substring within a string.</li>
+					<li>String insert: inserts a string into another string.</li>
 					<li>String replace: inserts a string into another string but doesn’t push back the following characters.</li>
 					<li>String fill: fills a string with a character from a starting position to an ending position.</li>
 					<li>String reverse: flips a string backwards.</li>
