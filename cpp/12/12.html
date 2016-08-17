@@ -65,10 +65,9 @@ int main() {
 
 	displayStudents(students);
 
-	// Remember to delete allocated memory
-	// Remember that this memory was allocated within the
-	// students, whithin the input function.
-	for(int i = 0; i &lt; 5; i++) {
+	// Remember that this memory was allocated in inputStudents(),
+	// and is still accessible through the student instances.
+	for(int i = 0; i < 5; i++) {
 		delete[] students[i].firstName;
 		delete[] students[i].lastName;
 	}
@@ -242,10 +241,9 @@ int main() {
 
 	displayStudents(students);
 
-	// Remember to delete allocated memory
-	// Remember that this memory was allocated within the
-	// students, whithin the input function.
-	for(int i = 0; i &lt; 5; i++) {
+	// Remember that this memory was allocated in inputStudents(),
+	// and is still accessible through the student instances.
+	for(int i = 0; i < 5; i++) {
 		delete[] students[i].firstName;
 		delete[] students[i].lastName;
 	}
