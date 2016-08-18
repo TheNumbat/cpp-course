@@ -37,8 +37,8 @@
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/RE4pN1" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 #include &lt;cstring&gt;
@@ -49,78 +49,78 @@ class deck {};
 class card {
 public:
 	card();
-	card(const char* r); //Constant char pointer paramter means that the pointer
-						 //cannot be moved. Also, it allows you to pass string
-						 //literals ("literal")
-	card(const card&amp; src); //Copy constructor
+	card(const char* r); // Constant char pointer parameter means that the pointer
+						 // cannot be moved. Also, it allows you to pass string
+						 // literals ("literal")
+	card(const card&amp; src); // Copy constructor
 	
-	char* getRank() const; //Constant because it will not change the rank member
-	void setRank(const char* r); //Not constant because it will change the rank member
+	char* getRank() const; // Constant because it will not change the rank member
+	void setRank(const char* r); // Not constant because it will change the rank member
 
 private:
-	//Private data member
+	// Private data member
 	char rank[10];
 
-	//The print function will be able to access the private rank member of a card
+	// The print function will be able to access the private rank member of a card
 	friend void print(const card&amp; c);
-	//The deck class will be able to access private members of cards
+	// The deck class will be able to access private members of cards
 	friend class deck;
 };
 
 card::card() {
-	//Clear rank
+	// Clear rank
 	strcpy(rank,"");
 }
 
 card::card(const char* r) {
-	//Copy rank
+	// Copy rank
 	strcpy(rank,r);
 }
 
-//Passed by const reference in copy constructor to prevent infinite call
-//loop
+// Passed by const reference in copy constructor to prevent infinite call
+// loop
 card::card(const card&amp; src) {
-	//Copy the rank member from the source card
+	// Copy the rank member from the source card
 	strcpy(rank,src.rank);
 }
 
 char* card::getRank() const {
-	//This function cannot change rank
+	// This function cannot change rank
 	return (char*)rank;
 }
 
 void card::setRank(const char* r) {
-	//Copy rank
+	// Copy rank
 	strcpy(rank,r);
 }
 
-//Note that if this was a member function (it is NOT), this could also be constant
-//because it does not change any data in the card. However, normal functions
-//(as in not member functions) cannot be constant.
+// Note that if this was a member function (it is NOT), this could also be constant
+// because it does not change any data in the card. However, normal functions
+// (as in not member functions) cannot be constant.
 void print(const card&amp; c) {
-	//Output card. This function can access "c.rank" even though it's a private
-	//data member because this is a friend function to the card class
+	// Output card. This function can access "c.rank" even though it's a private
+	// data member because this is a friend function to the card class
 	cout &lt;&lt; "Card rank: " &lt;&lt; c.rank &lt;&lt; endl;
 }
 
 int main() {
 
 	card c1;
-	const card c2("king"); //You must give the rank here, because you cannot call
-						   //setRank on a const card
+	const card c2("king"); // You must give the rank here, because you cannot call
+						   // setRank on a const card
 
 	c1.setRank("queen");
-	//c2.setRank("jack"); This would give an error
+	// c2.setRank("jack"); This would give an error
 
-	card c3(c1); //Create a copy of card one using the copy constructor
+	card c3(c1); // Create a copy of card one using the copy constructor
 
-	//Note that the print function is not called from an instance of the class,
-	//as it is not a member function.
+	// Note that the print function is not called from an instance of the class,
+	// as it is not a member function.
 	print(c1);
 	print(c2);
 	print(c3);
 
-	//getRank is allowed on c2 because it is a constant member
+	// getRank is allowed on c2 because it is a constant member
 	char* r1 = c1.getRank();
 	char* r2 = c2.getRank();
 	char* r3 = c3.getRank();
@@ -136,36 +136,53 @@ int main() {
 		<article role="article">
 			<h2 id="copy">Copy Constructors</h2>
 			<p>
-				The first topic we’re covering today is the 3rd and final type of constructor. We’ve talked about default and parameterized constructors, but this is neither. As the name implies, the copy constructor will only take another object of the same class type to copy data from. There are four instances where a copy constructor is called, but you only have to worry about three of them: using another instance of your class as an initialization parameter, when you pass an object to a function by value, and when you return an object from a function by value. 
+				The copy constructor is the third and final type of constructor. As the name implies, the copy constructor takes another instance of the same class type to copy data from. There are three primary situations where the copy constructor is called: using another instance of the class as an initialization parameter, when an object is passed to a function by value (not by reference), and when an object is returned from a function by value. 
 			</p>
 			<pre class="example_code prettyprint">myClass c;
+// Calls the copy constructor with c as the source.
 myClass x(c);</pre>
-			<p>Calls the copy constructor, using ‘c’ as the parameter</p>
-			<pre class="example_code prettyprint">//Because ‘p’ is passed by value, the copy constructor of myClass will be called to copy your actual parameter into ‘p’
+			<pre class="example_code prettyprint">// Because ‘p’ is passed by value, the copy constructor of myClass will be called to copy your 
+// actual parameter into ‘p’
 void func(myClass p) { 
-	//The copy constructor will be called again here, as the compiler creates a copy of ‘p’ to return to the calling fuction.
+	// The copy constructor will be called again here, as the program creates a copy of ‘p’ 
+	// to return to the calling fuction.
 	return p; 
 }</pre>
 			<p>
-				Because the copy constructor is called when you pass an object by value, and the copy constructor takes a parameter of your class type, if you pass the parameter by value, you’ll create an infinite loop of calling the copy constructor. Hence, you must pass the parameter by reference, and because your copy constructor shouldn’t change anything in the parameter object, a constant reference. Remember that the copy constructor is still a constructor, so you will want to initialize all of your data members, do memory allocation, and all that, as well as copying the values from your “source” object. 
+				So, why is the copy constructor useful? The compiler automatically generates a copy constructor if you don't make your own, so why should you be worried? Well, auto-generated copy constructors perform what is called a shallow copy. This is equivalent to simply assigning each member from the source to the copy. For example, if one of those members is a pointer to dynamic memory, the copy will also point to that same memory. This shared memory might be what you want, but more likely not: the copy should have allocated its own memory. Copying that memory, or in general logically copying each set of data is called a deep copy, and requires you to implement your own copy constructor.
 			</p>
-			<pre class="example_code prettyprint">class card {
+			<p>
+				Because the copy constructor is called when you pass an object by value, and the copy constructor takes a parameter of your class type, if you pass that parameter by value, you’ll create an infinite loop of calling the copy constructor. Hence, you must pass the parameter by reference. And because your copy constructor shouldn’t change anything about the source object, a constant reference. (This is little out of order, see section <a href="#constp">constant parameters</a>.)
+			</p>
+			<p>
+				Finally, remember that the copy constructor is still a constructor. You still want to do necessary initialization of your data members, memory allocation, etc...then copy the values from your “source” object. 
+			</p>
+			<pre class="example_code prettyprint">class myClass {
 public:
-	card::card(const card&amp; source);
+	myClass();
+	// Copy constructor
+	myClass(const myClass&amp; src);
+
 private:
-	int value;
+	char* str;
+};
+
+myClass::myClass() {
+	str = new char[50];	
 }
 
-card::card(const card&amp; source) {
-	value = source.value;
+myClass::myClass(const myClass&amp; src) {
+	// Here, we must allocate our own string and copy
+	str = new char[50];
+	strcpy(str,src.str);	
 }</pre>
 			<h2 id="const">Constants</h2>
 			<p>
-				You’ve probably seen the keyword “const,” written before a variable or parameter definition. As one would expect, it stands for ‘constant,’ and marks some value or some code in your program that cannot be changed. As you may have seen, constants are commonly used to define global values, but there are actually four cases in which it can be useful to mark code as constant.
+				You’ve probably seen the keyword “const” written before a variable or parameter definition. As one would expect, it stands for "constant," and marks some value or some code in your program as immutable, unchangeable. There are four other cases in which "const" can be useful.
 			</p>
 			<h2 id="constv">Constant Variables</h2>
 			<p>
-				The most obvious use of the constant keyword is to define variables whose values cannot change. While it is often not incredibly useful to have constant values within your code, they can still be used to make sure a value that should not change doesn’t change (you will get an error), and can be used to define “global constants,” which are global values that can be used by your entire program, but cannot be changed. These global constants are usually named in all caps, and are acceptable, while global variables are not. Additionally, you can make any variable constant, no matter the type. Hence, you can have a constant integer, character, student, or card, or whatever you want. 
+				The most obvious use of the constant keyword is to define variables whose values cannot change. It is often not incredibly useful to have constant variables in your main code, but a constant can be used to make sure a value that should not change doesn’t change&mdash;an error is thrown at an attempt. Additionally, constants can be used to define “global constants.” These are simply global values that can be used by your entire program, but cannot be changed. Hence, they do not suffer the same issues as global (mutable) variables. Global constants are usually named in all caps. You can make any variable constant, no matter the type. You can have a constant integer, character, student, card, or whatever you want. 
 			</p>
 			<pre class="example_code prettyprint">const int NUM_CARDS = 52;</pre>
 			<p>Global constant defining the size of a deck.</p>
@@ -173,15 +190,28 @@ card::card(const card&amp; source) {
 			<p>Creates a welcome text string that cannot be changed. If you try to change it later in your program, you will get an error.</p>
 			<h2 id="constp">Constant Parameters</h2>
 			<p>
-				The other case in which you have seen the constant keyword is in the definition of a function’s parameters. This use case is very similar to creating constant variables, as it tells your function that the value of the parameter cannot be changed within the function. This means that if you passed a constant integer, your function would not be able to change the value of the integer. Using constant parameters is more useful if you take into account passing parameters by reference, and passing pointers to functions. If you pass a constant reference to a function (the keyword “const” as well as the ampersand), you will have the speed benefit of passing by reference, but because your function will not be able to change the value of the parameter, you don’t have to worry about your function messing with the parameters you pass in. Hence, you should always do this when passing a class (not a pointer to a class) to a function. Second, when you pass a constant pointer to a function, it means that the function cannot change where the pointer <em>points</em>, but it can still change the data that the parameter points to. Hence, you must be wary of this. 
+				Another case in which you've seen the constant keyword is in the definition of a function’s parameters. This use case is very similar to creating constant variables: it denotes that the value of the parameter cannot be changed within the function. However, if you pass a variable by value, the function is working with a copy anyway, so this isn't super useful. However, suppose you pass a reference to a function. Now, changing the parameter in the function may have other side effects. Instead, by passing the parameter as a constant reference, you can have the speed benefit of passing by reference, but because your function will not be able to change the value of the parameter, you don’t have to worry about your function creating side effects. 
 			</p>
-			<pre class="example_code prettyprint">void func(const string&amp; str);</pre>
-			<p>This function takes a constant reference to a string class. It will not be able to change the value of the string.</p>
+			<p>
+				Hence, you should almost always pass classes (if not a pointer to a class) by constant reference. Additionally, this allows other code to pass a constant variable as the actual parameter. A constant variable can always be passed by value&mdash;there's no way it can be changed in the calling function&mdash;but it cannot be passed by reference. This makes sense; the function should not be able to change an elsewhere constant value. However, by passing by constant reference, constant variables are allowed again.
+			</p>
+			<pre class="example_code prettyprint">// This function takes a constant reference to a string class. It will not be able to change the value of the string.
+void func(const string&amp; str);
+
+int main() {
+	string h = "hello";
+	const string w = "world";
+
+	// Both of these calls work
+	func(h);
+	func(w);
+}</pre>
+			<p>Lastly, remember that when you pass a constant pointer, the function cannot change where the pointer <em>points</em>, but it can still change the data that the parameter points to. Be wary of this.</p>
 			<pre class="example_code prettyprint">void func2(const char* str);</pre>
-			<p>This function takes a constant character pointer. This means the function will not change where the pointer points, but it can still change the data. Additionally, you must use “const” to pass a string literal (i.e. “hello”) without generating a warning.</p>
+			<p>This function takes a constant character pointer. This means the function will not change where the pointer points, but it can still change the actual data. Additionally, you must use a constant character pointer to pass a string literal (i.e. “hello”) without generating a compiler warning.</p>
 			<h2 id="constr">Constant Returns</h2>
 			<p>
-				There are two more places in which you can use constants, which you probably haven’t encountered before. The first is a constant return type. You will probably never use constant returns, as they are essentially obsolete and were never incredibly useful anyhow. Basically, marking a returned value as constant prevents the function from being called on a temporary object, for example the result of an addition before it is captured elsewhere. It doesn’t do anything like cause the value to become constant in the calling function, so you will most likely never see it do anything at all. If you’re not exactly sure how this works, that’s fine, we’ll talk about this more later. 
+				You will probably never use constant returns, as they are essentially obsolete and were never incredibly useful anyhow. Basically, marking a returned value as constant prevents the function from being called on a temporary object. For example, the result of an addition before it is captured elsewhere. A constant return does not cause the value to become constant in the calling function, so you will most likely never see it do anything at all.
 			</p>
 			<pre class="example_code prettyprint">const card deck::shuffle() {
 	return x;
@@ -189,54 +219,84 @@ card::card(const card&amp; source) {
 			<p>This function returns a constant card.</p>
 			<h2 id="constm">Constant Member Functions</h2>
 			<p>
-				Finally, we have the most important use of constant, and why this lesson relates to classes. Essentially, member functions of classes can be marked as constant, and it means that they will never change any of the data members of the class. For example, a print function should simply print out all the values of an object, and not change any of them. Hence, the print function should be constant. So, why is this useful? Two reasons: first, it is useful simply as a documentation feature, as others will know the function will not change any data. Second, if you create a constant variable of a class type, you’ll notice you get an error if you try to call any of the member functions. You can only call constant member functions from a constant instance of your object, because you know that they will not change the data of the object. Finally, the syntax for this is simply to add the “const” keyword after your member function prototype, but before the semicolon. 
+				You're probably wondering why we've gone on a "const" tangent while learning about classes. This is because member functions of classes can be marked as constant. This means that the function will never change any of the data members of the class. For example, a print function likely should print out values of an object, not changing any of them. Hence, the print function should be constant. 
+			</p>
+			<p>
+				So, why is this useful? Two reasons: first, it is useful simply as a documentation feature, as it marks the function as not changing any data. Second, if you create a constant variable of a class type, you’ll notice you get an error if you try to call any of the member functions. You can only call constant member functions from a constant instance of your object. Of course, this is because the program knows that the function will not change the data of the object. The syntax to mark a member function as constant is simply to add the “const” keyword after your member function prototype, but before the semicolon. In the implementation, add "const" before your opening curly bracket.
 			</p>
 			<pre class="example_code prettyprint">class card {
 public:
-	void setRank(string r);             // Not a constant member
-	void print() const;                     // Constant member
+	void setRank(const string&amp; r);		//  Not a constant member, will change "rank"
+	void print() const;				//  Constant member
 private:
 	string rank;
 };</pre>
-			<p>So later in your program, if you declare a constant card...</p>
+			<p>Given this class, later in your program, if you declare a constant card...</p>
 			<pre class="example_code prettyprint">const card c;</pre>
 			<p>You can <strong>not</strong> call the set function.</p>			
-			<pre class="example_code prettyprint">c.setRank(“king”);</pre>
+			<pre class="example_code prettyprint">c.setRank(“king”); // Error</pre>
 			<p>But you can still call the print function.</p>
-			<pre class="example_code prettyprint">c.print();</pre>
+			<pre class="example_code prettyprint">c.print(); // Good</pre>
 			<h2 id="friend">Friendship</h2>
 			<p>
-				Moving on from the uses of constants, we have our second mini-lesson, friendship. Friendship is extremely simple: it allows non-member functions and classes to have access to the private data members of a specific class type. You have to specifically specify what functions or classes can access the private data in your class definition. To do this, simply add the keyword “friend” before either the prototype of the friend function, or the name of the friend class. This allows the function or class to access private data members of objects of the specified type, but note that they are not member functions of that class. This means that, for example, if a friend function is passed a class object of your type, it can access the private members of that parameter. Additionally, because friend functions are not member functions, they are not called using an instance of the object and the dot operator, but instead are called just like any other normal function you’ve used in the past. Granted, if your function does not take a parameter of your type, it’s not very useful for it to be a friend. 
+				Friendship is extremely simple: it allows non-member functions and classes to have access to private data members. You can selectively specify what functions or classes can access private data within your class definition. To do this, simply add the keyword “friend” before either a function prototype or class name. This allows that function or class to access private data members of instances of the specified type&mdash;without being members of that class. 
 			</p>
+			<p>
+				For example, if a function is passed a friend class object, it can access the private members of that instance. And because friend functions are not member functions, they are not called using an instance of the object and the dot operator. Instead, they are called just like any other function you’ve used in the past. Hence, there is no calling object, and to access data from an instance, that instance must be passed as a parameter.
+			</p>
+			<p>Friendship is particularly useful when you are forced to implement a function as a non-member that needs private access, or when you want to make a class only accessible by another, or a specific function.</p>
 			<pre class="example_code prettyprint">class card {
 public:
-	//functions
+	// Member functions
+	void setRank(const char* r);
+	char* getRank() const;
 private:
+	// Data members
 	char* rank;
 	
+	// Friends
 	friend void print(const card&amp; c);
 	friend class deck;
 };</pre>
 			<p>Here, friendship allows the print function and the deck class access to the normally private rank data member.</p>
-			<pre class="example_code prettyprint">void print(const char&amp; c) {
+			<pre class="example_code prettyprint">void print(const card&amp; c) {
 	cout << “rank: “ << c.rank;
 }</pre>
-			<p>This function can access the private rank member of the card.</p>
+			<p>print() can access the rank member of the card.</p>
 			<pre class="example_code prettyprint">int main() {
 	card c;
 	print(c);
 }</pre>
-			<p>Calling the friend function is no different than calling any other funciton.</p>
+			<p>Finally, you can see that calling the friend function is no different than calling any other function.</p>
 			<p>
-				Finally, an interesting feature of friendship is that it gives you the option to only allow a specific class or function the ability to create objects of another class. Remember when I said your constructors should always be public? Well, if you make all your constructors private, and give another class friendship, that class can create instances of your private class, as it can access private members, but no one else can.	
+				Another interesting feature of friendship is that it gives you the option to allow only a specific class or function the ability to create instances of another class. Remember when I said your constructors should always be public? Well, if you make all constructors private&mdash;and give friendship&mdash;a friend class can create instances of your private class, as it can access private members, but no where else can.	
 			</p>
+			<pre class="example_code prettyprint">class card {
+// Default access modifier is private
+	card();
+	int value;
+	friend class deck;
+};
+
+class deck {
+public:
+	deck();
+
+	card* makeCard() const;
+};
+
+card* deck::makeCard() const {
+	// This calls card's private constructor. 
+	// Only deck can do this, as it has friendship
+	return new card;
+}</pre>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
 			<p>Most all your data in these classes should be private! Member functions should mostly be public.</p>
 			<ol>
-				<li>Create a “card” class, representing a playing card. Implement all three types of constructors, functions to input the card, set data members, retrieve data members, and print the card. Use constant parameters and member functions as needed.</li>
-				<li>Create a deck class that is a friend of the card class, containing a dynamically allocated array of cards. Make the card constructors private, so only the deck class can create cards. The deck should have at least a default and copy constructor, contain member functions to input the deck, output the deck, shuffle the deck, and deal cards from the deck.</li>
+				<li>[Yet again] Create a card class, representing a playing card. Implement all three types of constructors, functions to input the card, set data members, retrieve data members, and print the card. Use constant parameters, constant member functions, and friends as needed.</li>
+				<li>Create a deck class, a friend of the card class, containing a dynamically allocated array of cards. Make all card constructors private, so only the deck class can create cards. The deck should implement least a default and copy constructor, member functions to input the deck, output the deck, shuffle the deck, and deal cards from the deck.</li>
 			</ol>
 		</section>
 			<aside role="complementary" class="example_program bot">
@@ -245,8 +305,8 @@ private:
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/RE4pN1" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 #include &lt;cstring&gt;
@@ -256,80 +316,80 @@ using namespace std;
 class deck {};
 class card {
 public:
-	//Constructors cannot be constant
+	// Constructors cannot be constant
 	card();
-	card(const char* r); //Constant char pointer paramter means that the pointer
-						 //cannot be moved. Also, it allows you to pass string
-						 //literals ("literal")
-	card(const card&amp; src); //Copy constructor
+	card(const char* r); // Constant char pointer parameter means that the pointer
+						 // cannot be moved. Also, it allows you to pass string
+						 // literals ("literal")
+	card(const card&amp; src); // Copy constructor
 	
-	char* getRank() const; //Constant because it will not change the rank member
-	void setRank(const char* r); //Not constant because it will change the rank member
+	char* getRank() const; // Constant because it will not change the rank member
+	void setRank(const char* r); // Not constant because it will change the rank member
 
 private:
-	//Private data member
+	// Private data member
 	char rank[10];
 
-	//The print function will be able to access the private rank member of a card
+	// The print function will be able to access the private rank member of a card
 	friend void print(const card&amp; c);
-	//The deck class will be able to access private members of cards
+	// The deck class will be able to access private members of cards
 	friend class deck;
 };
 
 card::card() {
-	//Clear rank
+	// Clear rank
 	strcpy(rank,"");
 }
 
 card::card(const char* r) {
-	//Copy rank
+	// Copy rank
 	strcpy(rank,r);
 }
 
-//Passed by const reference in copy constructor to prevent infinite call
-//loop
+// Passed by const reference in copy constructor to prevent infinite call
+// loop
 card::card(const card&amp; src) {
-	//Copy the rank member from the source card
+	// Copy the rank member from the source card
 	strcpy(rank,src.rank);
 }
 
 char* card::getRank() const {
-	//This function cannot change rank
+	// This function cannot change rank
 	return (char*)rank;
 }
 
 void card::setRank(const char* r) {
-	//Copy rank
+	// Copy rank
 	strcpy(rank,r);
 }
 
-//Note that if this was a member function (it is NOT), this could also be constant
-//because it does not change any data in the card. However, normal functions
-//(as in not member functions) cannot be constant.
+// Note that if this was a member function (it is NOT), this could also be constant
+// because it does not change any data in the card. However, normal functions
+// (as in not member functions) cannot be constant.
 void print(const card&amp; c) {
-	//Output card. This function can access "c.rank" even though it's a private
-	//data member because this is a friend function to the card class
+	// Output card. This function can access "c.rank" even though it's a private
+	// data member because this is a friend function to the card class
 	cout &lt;&lt; "Card rank: " &lt;&lt; c.rank &lt;&lt; endl;
 }
 
 int main() {
 
 	card c1;
-	const card c2("king"); //You must give the rank here, because you cannot call
-						   //setRank on a const card
+	const card c2("king"); // You must give the rank here, because you cannot call
+						   // setRank on a const card
 
 	c1.setRank("queen");
-	//c2.setRank("jack"); This would give an error
+	// c2.setRank("jack"); This would give an error
 
-	card c3(c1); //Create a copy of card one using the copy constructor
+	card c3(c1); // Create a copy of card one using the copy constructor
 
-	//Note that the print function is not called from an instance of the class,
-	//as it is not a member function.
+	// Note that the print function is not called from an instance of the class,
+	// as it is not a member function.
 	print(c1);
 	print(c2);
 	print(c3);
 
-	//getRank is allowed on c2 because it is a constant member
+	// getRank is allowed on c2 because it is a constant member
 	char* r1 = c1.getRank();
 	char* r2 = c2.getRank();
 	char* r3 = c3.getRank();

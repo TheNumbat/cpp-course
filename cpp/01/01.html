@@ -105,24 +105,25 @@ calcDiscriminant</pre>
 				</tr>
 				<tr>
 					<td>Integer</td>
-					<td><pre class="inline_code prettyprint">int</pre></td>
+					<td>int</td>
 					<td>Any positive or negative integer. Usually, an “int” holds 32 bits of data; a number between -2^31 and 2^31 - 1.</td>
 				</tr>
 					<td>Character</td>
-					<td><pre class="inline_code prettyprint">char</pre></td>
+					<td>char</td>
 					<td>Technically, a character is just an eight-bit integer that can only hold values between -128 and 127. The value corresponds to a character (a single letter or something like a bracket) using a standard convention. For example, the letter ‘G’ is represented by the value 71.</td>
 				</tr>
 				<tr>
 					<td>Floating Point Value</td>
-					<td><pre class="inline_code prettyprint">float, double</pre></td>
-					<td>Any positive or negative quantity (can be fractional). These values are held in memory in the form of scientific notation. <pre class="inline_code prettyprint">double</pre> is 64 bits, and can contain a more precise value than <pre class="inline_code prettyprint">float</pre>.</td>
+					<td>float, double</pre></td>
+					<td>Any positive or negative quantity (can be fractional). These values are held in memory in the form of scientific notation. double is 64 bits, and can contain a more precise value than float.</td>
 				</tr>
 				<tr>
 					<td>Boolean</td>
-					<td><pre class="inline_code prettyprint">bool</pre></td>
-					<td>Only the values ‘true’ or ‘false,’ but how they are actually stored in memory is more complicated.</td>
+					<td>bool</td>
+					<td>Only the values ‘true’ or ‘false,’ but how bools are actually stored in memory varies.</td>
 				</tr>
 			</table>
+			<p>Granted, there are more fundamental types, but these are the four major classes. Other types are simply smaller/larger/unsigned versions.</p>
 			<h2 id="variables">Variables</h2>
 			<p>
 				Now, you must be wondering how to actually use variables. In C++, all variables are explicitly declared and strongly typed, which is to say to create a variable, you must declare its name and what data type it can hold.

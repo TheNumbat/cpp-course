@@ -237,7 +237,7 @@ while(*strPtr) {
 				Remember leaning about how to pass normal parameters by reference? You can do the same with pointers. However, this means that the function can not only globally change the data pointed to by the pointer, but it can actually change where the pointer <em>points to</em> in the calling function. This concept is pretty useless right now, but it will come into play next lesson when we go over dynamic memory. 
 			</p>
 			<p>
-				You can also pass pointers as constant. This prohibits your function from moving the pointer (you can’t set it to somewhere else, increment it, etc.). However, the function can still change the data pointed to. Furthermore, constant pointers are required to pass literal c-strings without a warning from the compiler. Remember that passing a constant parameter does not change the constant status of the variable in the calling function.
+				You can also pass pointers as constant. This prohibits your function from moving the pointer (you can’t set it to somewhere else, increment it, etc.). However, the function can still change the data pointed to. Furthermore, constant pointers are required to pass literal c-strings without a warning from the compiler. Remember that passing a constant parameter does not change the constant status of the variable in the calling function. For more information on constants, see <a href="..\14\14.html">lesson 14</a>.
 			</p>
 			<pre class="example_code prettyprint">void func1(char* value);</pre>
 			<p>This will take a pointer to a character value (or array), can move the pointer around within the function (<strong>not</strong> effecting the calling function), and can change the pointed to data globally.</p>
