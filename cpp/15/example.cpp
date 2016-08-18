@@ -1,5 +1,5 @@
-//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include <iostream>
 
@@ -10,7 +10,7 @@ class Vector2 {
 public:
 	// Default constructor
 	Vector2();
-	// Paramterized constructor
+	// Parametrized constructor
 	Vector2(int _x, int _y);
 	// Copy constructor
 	Vector2(const Vector2& src);
@@ -72,7 +72,7 @@ Vector2& Vector2::operator=(const Vector2& src) {
 }
 
 Vector2 Vector2::operator+(const Vector2& src) {
-	// Use the paramterized constructor to return a new Vector2
+	// Use the parametrized constructor to return a new Vector2
 	// with the added data
 	return Vector2(x + src.x, y + src.y);
 }

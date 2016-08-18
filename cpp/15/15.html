@@ -37,8 +37,8 @@
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/iy2HBv" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 
@@ -50,7 +50,7 @@ class Vector2
 public:
 	// Default constructor
 	Vector2();
-	// Paramterized constructor
+	// Parametrized constructor
 	Vector2(int _x, int _y);
 	// Copy constructor
 	Vector2(const Vector2&amp; src);
@@ -119,7 +119,7 @@ Vector2&amp; Vector2::operator=(const Vector2&amp; src)
 
 Vector2 Vector2::operator+(const Vector2&amp; src)
 {
-	// Use the paramterized constructor to return a new Vector2
+	// Use the parametrized constructor to return a new Vector2
 	// with the added data
 	return Vector2(x + src.x, y + src.y);
 }
@@ -199,34 +199,35 @@ int main()
 		<article role="article">
 			<h2 id="ops">Operators</h2>
 			<p>
-				First off, what exactly is an operator? You’ve probably heard me mention them before, what with the “assignment operator” or the “insertion operator” or whatever else. Well, an operator is basically a certain character (or two) that the language uses to describe an operation on one or more pieces of data. For example, some of the operators in C++ are:
+				What exactly is an operator? We've used some before; the “assignment operator," the “insertion operator," etc. An operator is basically a certain character (or two) that C++ uses to describe an operation on one or more pieces of data. For example, some of the operators in C++ are:
 			</p>
-			<pre class="example_code prettyprint">+, -, *, /, %, ++, --, ==, !=, >, <, >=, <=, &amp;&amp;, ||, !, &amp;, |, ^, ~, >>, <<, =, +=, -=, *=, /=</pre>
+			<pre class="example_code prettyprint">+, -, *, /, %, ++, --, ==, !=, >, <, >=, <=, &amp;&amp;, ||, !, &amp;, |, ^, ~, >>, <<, =, +=, -=, *=, /=, ., ->, (), []</pre>
 			<p>
-				Most of these operators you’ve seen before: for example “+” will add two values, “=” will assign a value to another value, and “>” will test if one value is greater than another. All these operators are automatically defined for some types, usually the primitive types (int, float, char, etc). However, if you were to try to use one on an ADT that you have created, you’ll notice you can’t: you’ll get compiler errors. Operator overloading is a way to use these operators on your own data types.
+				Most of these operators you’ve seen before: “+” will add two values, “=” will assign a value to a variable, and “>” will test if one value is greater than another. Many of these operators have already been defined for many types. However, if you were to try to use one of these operators with an ADT of your own, you can't: you’ll get compiler errors. Operator overloading allows you to implement these operators with your own types.
 			</p>
 			<p>
-				Why do you want to do this, you may ask? Well, technically operator overloading does nothing more than what you can do with normal member functions, but using them will very often make your code cleaner, easier to understand, and easier to create.
+				Technically, everything you can do with operator overloading you can also do with member functions, but using operators will very often make your code cleaner, easier to understand, and easier to create.
 			</p>
 			<h2 id="overload">Operator Overloading</h2>
 			<p>
-				So, how does one go about overloading an operator? It’s probably more straightforward than you think: an operator overload is prototyped in much the same way a member function is. The basic syntax is:
+				So, how does one go about overloading an operator? It’s straightforward: an operator overload is prototyped in almost the same way a member function is. 
 			</p>
 			<pre class="example_code prettyprint">&lt;return type&gt; operator&lt;operator&gt;(&lt;parameters&gt;);</pre>
-			<p>for example</p>
+			<p>...for example...</p>
 			<pre class="example_code prettyprint">bool operator==(const type&amp; comp);</pre>
 			<p>
-				However, calling an overloaded operator is much simpler than calling a member function: you simply use the operator. There are a few things to remember here: first, the left hand object is the calling object, meaning that it contains the operator function that will be called, and the right hand object is the parameter. 
+				Calling an overloaded operator is even simpler than calling a member function&mdash;simply use the operator. When an operator regarding two objects is invoked, the object left of the operator is the calling object. Hence, that object's operator function will be called. The object on the right of the operator will be passed as a parameter. This rule can be bent a bit; see <a href="fvm">friend operators</a>.
 			</p>
+			<p>Hence...</p>
 			<pre class="example_code prettyprint">result = obj1 == obj2;</pre>
-			<p>is equivalent to</p>
+			<p>...is equivalent to...</p>
 			<pre class="example_code prettyprint">result = obj1.operator==(obj2);</pre>
-			<p>Implementing an overloaded operator is also not much different than any other member function, for example a simple equality compare operator...</p>
+			<p>Implementing an overloaded operator is also not much different than a member function, for example a simple comparison operator...</p>
 			<pre class="example_code prettyprint">bool type::operator==(const type&amp; comp) {
 	return x == comp.x &amp;&amp; y = comp.y;
 }
 </pre>
-			<p>Which tests if the data members “x” and “y” are the same in both the calling object and the comparison object passed to the function. Pretty simple, right? You can apply this same logic to most of the other operators. For example, a “+” operator...</p>
+			<p>This example tests if the data members “x” and “y” are the same in both the calling object and the comparison parameter. You can apply this same logic to most of the other operators. For example, a “+” operator...</p>
 			<pre class="example_code prettyprint">class type {
 	type(int _x, int _y);
 
@@ -238,23 +239,27 @@ int main()
 type type::operator+(const type&amp; add) {
 	return type(x + add.x, y + add.y);
 }</pre>
-			<p>Which returns a new object of type “type” using the “x” and “y” values of the calling object and parameter added together. Note that this uses a parametrized constructor to create the object to return, so that would have to exist as well.</p>
+			<p>This example returns a new object of type “type” using the combined “x” and “y” values of the calling object and parameter. Note that this uses a parametrized constructor to create the object to return.</p>
 			<h2 id="ret">Return Types &amp; Chaining</h2>
 			<p>
-				Before we get into the details of how to use operators, you should know what return types are used with overloaded operators. Technically, the return type is no different than any other function. However, overloaded operators almost always return the type, or a reference to the type it uses. For example, the assignment operator, used to copy values from one object to another of the same type, is almost always prototyped as...
+				Technically, return types for operators are no different than for other functions. However, overloaded operators almost always return a reference to or a copy of the type it applies to. For example, the assignment operator is almost always prototyped as...
 			</p>
 			<pre class="example_code prettyprint">type&amp; operator=(const type&amp; src);</pre>
 			<p>
-				First, we return by reference because we are returning an object that already exists, the calling object. When you create a new object, for example in the “+” operator, you cannot return by reference. The reason we don’t just return “void” is for “chaining,” which means using multiple operators in a row, as in...
+				The operator returns by reference because it is returning an object that already exists&mdash;the calling object. Do this when possible, as it is more efficient than returning by value (and hence calling the copy constructor). You don't need to worry about other parts of your program accessing the reference, as the only way to capture the value is to copy it elsewhere. 
+			</p>
+			<p>
+				The reason we don’t just return “void” is for chaining&mdash;using multiple operators in a row, as in...
 			</p>
 			<pre class="example_code prettyprint">obj1 = obj2 = obj3;</pre>
 			<p>Because the assignment operator is right-associative, this statement is equivalent to...</p>
 			<pre class="example_code prettyprint">obj1.operator=(obj2.operator=(obj3));</pre>
 			<p>
-				Here you can see why the operator has to return the same type as the object it’s using: the inner assignment returns another object of the same type so that the object 1’s assignment operator can use that. This works the same way with operators such as “+,” “-,” “++,” and many others.
+				Here, you can see why the assignment operator has to return the same type as the object it’s using: the inner assignment returns another object of the same type so that obj1's assignment operator can then use that. This works the same way with operators such as “+,” “-,” “++,” and many others.
 			</p>
 			<p>
-				It’s very straightforward to return your result in operators such as “+” and “-,” as you are creating a new object that contains your values added together. However, in operators that modify the calling object (for example the assignment operator or “+=”), you must somehow return the calling object. The keyword “this” gives you a pointer to the calling object, but you must return an actual object (or reference), so you can dereference “this” to get your actual calling object. 
+				In operators such as “+” and “-,” you don't want to modify either instance, but you need a way to return a result. Simply create and return a new instance representing the combined values.<br>
+				However, in operators that modify the calling object (the assignment operator, “+=”, etc.), you want to return the calling object. How do you access the calling object? The keyword “this” gives you a pointer to it. However, you need to return the actual object&mdash;not its address. Therefore, dereference “this” to return the calling object. 
 			</p>
 			<pre class="example_code prettyprint">type&amp; type::operator=(const type&amp; src) {
 	x = src.x;
@@ -262,69 +267,101 @@ type type::operator+(const type&amp; add) {
 }</pre>
 			<h2 id="fvm">Friend vs. Member Operators</h2>
 			<p>
-				As of yet, I’ve only talked about overloading operators as member functions. However, you can also implement them as free functions, if you make them a friend of the class(es) you want them to manipulate. The syntax of a friend operator is very similar, except that because the operator is technically a normal, free, function, there will be no calling object, and hence you must pass both objects in as parameters. 
+				So far, you've only seen operators overloaded as member functions. You can also implement operators as free functions, and can use them with classes through friendship. The syntax of a friend operator is very similar to that of a member, except that because the operator is free function, there is no calling object. Hence, you must pass both objects as parameters. 
 			</p>
-			<pre class="example_code prettyprint">friend ostream&amp; operator<<(ostream&amp; out, const type&amp; source);</pre>
-			<p>As with all other friend functions, the operator is implemented like a free function, and like operator members, the name is still “operator” plus the actual operator.</p>
-			<pre class="example_code prettyprint">ostream&amp; operator<<(ostream&amp; out, const type&amp; source) {
-	out << source.x << source.y << endl;
+			<pre class="example_code prettyprint">class type {
+public:
+	type(int _x, int _y);
+
+private:
+	int x, y;
+
+	friend type operator+(const type&amp; left, const type&amp; right);
+};</pre>
+			<p>The only difference in implementation is that there is no calling object.</p>
+			<pre class="example_code prettyprint">type operator+(const type&amp; left, const type&amp; right) {
+	return type(left.x + right.x, left.y + right.y);
 }</pre>
 			<p>
-				It may seem that there is no point to make an operator a friend over a member, or vice versa, and this is true for most operators. It doesn’t matter how you implement your operators, except for a few special cases. These are that the assignment operator must always be a member, and the insertion/extraction operator must be friends, as well as any other operators that would require you to modify a different class. What I mean by this, you will learn in the last two sections.
+				It may seem like there is no point in making an operator a friend over a member&mdash;this is true for most operators. However, there are a few special cases. First, the assignment operator must always be a member. Second, the insertion and extraction operators must always be friends. Any other operators that should be a member of an inaccessible class must be friends. More on that in a bit.
 			</p>
 			<h2 id="avcc">Assignment Operator vs. Copy Constructor</h2>
 			<p>
-				You might think that the assignment operator and the copy constructor do much the same thing, and you’d be right: they both copy data from one instance of a type into another. However, there are a couple of key differences. First, you should remember that the constructor of an object is only called once, when the object is instantiated. This means that the copy constructor will always start with a blank slate, and never needs to clean up data before copying in new data. 
+				You might think that the assignment operator and the copy constructor do much the same thing, and you’d be right: they both copy data from one instance of a type into another. However, there are a couple of key differences. First, you should remember that the constructor of an object is only called once, when the object is instantiated. This means that the copy constructor will always start with a blank slate, and never needs to clean up before copying in new data. The assignment operator, on the other hand, can be called any number of times and consequently must make sure to reset the instance before copying in new data.
 			</p>
 			<p>
-				Additionally, because the copy constructor is only called when you’re creating a new object, you know that your parameter, the source object, cannot be the same object as the calling object. On the other hand, with the assignment operator, you have no such guarantee. This may sound confusing, but look at the code...
+				Furthermore, because the copy constructor is only called when you’re creating a new object, you know that your parameter, the source object, cannot be the same object as the calling object. On the other hand, with the assignment operator, you have no such guarantee. This may sound confusing, but look at the code...
 			</p>
 			<pre class="example_code prettyprint">type object1(object1);</pre>
 			<p>This makes no sense, and will not compile.</p>
 			<pre class="example_code prettyprint">object2 = object2;</pre>
 			<p>This is totally valid and will compile.</p>
+			<pre class="example_code prettyprint">type object1;
+type* objPtr;
+// many lines of code later
+objPtr = &amp;object1;
+// many lines of code later
+object1 = *objPtr;</pre>
+			<p>This is the sort of situation where this bug can actually occur.</p>
 			<p>
-				This means that within your assignment operator, you should always make sure the source object is not the same as the calling object. Of course, the only way to know for sure if two things are exactly the same is to compare their addresses, and the keyword “this” conveniently provides us with a pointer to the current calling object. Note that to do this, you must pass your source object by reference, or else a copy will be made when it is passed to the function.
+				Within your assignment operator, you should always make sure the source object is not the same as the calling object. Of course, the only way to know for sure if two things are exactly the same is to compare their addresses. The keyword “this” conveniently provides us with a pointer to the current calling object. Note that to make this test, you must pass the source parameter by reference&mdash;else a copy is be made when passed to the function.
 			</p>
 			<pre class="example_code prettyprint">type&amp; type::operator=(const type&amp; source) {
 	if(this != &amp;source)
 	{
-		// do copy
+		// source and calling objects are different, do copy
 	}
+	// source and calling objects are the same, do nothing
 }</pre>
-			<p>Finally, although counterintuitive, if you use the assignment operator while creating an object, your program will actually call the copy constructor. The assignment operator is only called when you have two objects, already instantiated, set equal to each other.</p>
+			<p>Finally, although counterintuitive, if you use the assignment operator when instantiating an instance, your program will actually call the copy constructor. The assignment operator is only called when you have two objects, both already instantiated.</p>
 			<pre class="example_code prettyprint">type object2 = object1;</pre>
-			<p>Will call the copy constructor</p>
+			<p>This will call the copy constructor</p>
 			<pre class="example_code prettyprint">type object2;
 object2 = object1;</pre>
-			<p>Will call the assignment operator</p>
+			<p>This will call the assignment operator</p>
 			<h2 id="inex">Insertion &amp; Extraction Operators</h2>
 			<p>
-				The final thing we’re going to cover is how to overload the insertion and extraction operators in your own class. 
+				You can overload the insertion and extraction operators for your own class. This greatly streamlines input and output.
 			</p>
 			<pre class="example_code prettyprint">cout << object1;</pre>
 			<p>
-				Earlier, I said that the left hand object is the one that calls the function, so would that make “cout” the calling object? Actually, yes. However, we can’t modify the type of “cout,” so we need another way to describe the operator. This is why it must be a friend rather than a member of our ADT.
+				Earlier, I said that the left side is the calling object&mdash;so would that make “cout” the calling object? Actually, yes. However, we can’t modify “cout,” so we need another way to implement the operator. Hence, it must be a friend rather than a member of our class.
 			</p>
 			<p>
-				Other than friendship, the insertion/extraction operators are exceedingly simple to implement. The insertion operator should take a parameter of type “ostream&,” as this is what describes an output stream. It should return the same type, for chaining. On the other hand, the extraction operator should take a parameter of type “istream&,” as this is what describes an input stream. Again, it should return the same type for chaining.
+				The insertion operator should take a parameter of type “ostream&amp;,” as this is what describes an output stream. "cout" and file out variables are both "ostreams," and you can define your own. The operator should also return the ostream, for chaining. Note that this should be a return by reference, as the next operator in the chain needs the actual same output stream, not a copy.
 			</p>
 			<p>
-				Using the types as described will allow you to simply use “cout” and “cin” with your ADT, but will also work for any input/output streams, including file streams.
+				On the other hand, the extraction operator should take a parameter of type “istream&amp;,” as this is what describes an input stream. "cin" and file input variables are both "istreams," and you can define your own. Again, the operator should return the same type (by reference) for chaining.
 			</p>
+			<p>
+				Implementation is quite simple&mdash;in the operator, simply use the ostream variable as you would "cout," formatting and outputting each value individually. Then, remember to return the ostream when you are done. Finally, because these operators are always a friend of your class (and do not have a calling object), you must pass the instance to output as a parameter. This should be a <a href="..\14\14.html#constp">constant reference</a>.
+			</p>
+			<p>For example...</p>
 			<pre class="example_code prettyprint">ostream&amp; operator<<(ostream&amp; out, const type&amp; source) {
 	out << source.x << “ “ << source.y << endl;
 	return out;
 }</pre>
-			<p>Is called with...</p>			
-			<pre class="example_code prettyprint">cout << object1;</pre>
-			<p>(Assuming object1 is of type “type”).</p>
+			<p>Is called by...</p>			
+			<pre class="example_code prettyprint">type object1;
+cout << object1;</pre>
+			<p>And can be called by...</p>
+			<pre class="example_code prettyprint">ofstream fout("out.txt");
+type object1;
+fout << object1;</pre>
+			<p>In this case, "fout" is passed as the "out" ostream.</p>
 			<h2 id="brpr">Brackets &amp; Parenthesis Operators</h2>
 			<p>
-				Finally, a quick word on the bracket/parenthesis operators: they are usually used to look up a piece of data within a data structure (if your class is a data structure), and take any parameters you want. 
+				Finally, a quick word on the bracket/parenthesis operators: they are usually used to look up a piece of data within a data structure, and may take any parameters you desire. 
 			</p>
-			<pre class="example_code prettyprint">char operator[](int index);
-char operator()(int index);
+			<pre class="example_code prettyprint">class type {
+public:
+	char operator[](int index);
+	char operator()(int index);
+	// ...
+
+private:
+	// ...
+};
 
 char type::operator[](int index) {
 	return data[index];
@@ -332,12 +369,18 @@ char type::operator[](int index) {
 
 char type::operator()(int index) {
 	return data[index];
-}</pre>
-			<p>You get the idea.</p>
+}
+
+int main() {
+	type object1;
+
+	char val = object1[10];
+};</pre>
+			<p>The final line calls the square brackets operator from type with the parameter 10. You get the idea.</p>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
-			<p>Most all your data in these classes should be private! Member functions should mostly be public.</p>
+			<p>All the data members in these classes should be private! Member functions should mostly be public.</p>
 			<ol>
 				<li>Create your own “string” class that uses a dynamically allocated c-style string at its core. It should implement at least the following operators:</li>
 				<pre>= - copy strings
@@ -346,7 +389,7 @@ char type::operator()(int index) {
 == - test if strings are equal
 << - output string
 >> - input string</pre>
-				<li>If you’d like to continue in the strain the card games project, try creating a “card” class which implements overloaded operators.</li>
+				<li>If you’d like to continue doing card-related exercises, try creating a “card” class which implements overloaded operators.</li>
 			</ol>
 		</section>
 			<aside role="complementary" class="example_program bot">
@@ -355,8 +398,8 @@ char type::operator()(int index) {
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/iy2HBv" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 
@@ -368,7 +411,7 @@ class Vector2
 public:
 	// Default constructor
 	Vector2();
-	// Paramterized constructor
+	// Parametrized constructor
 	Vector2(int _x, int _y);
 	// Copy constructor
 	Vector2(const Vector2&amp; src);
@@ -437,7 +480,7 @@ Vector2&amp; Vector2::operator=(const Vector2&amp; src)
 
 Vector2 Vector2::operator+(const Vector2&amp; src)
 {
-	// Use the paramterized constructor to return a new Vector2
+	// Use the parametrized constructor to return a new Vector2
 	// with the added data
 	return Vector2(x + src.x, y + src.y);
 }
