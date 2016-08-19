@@ -37,32 +37,31 @@
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/5pim2e" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 
 using namespace std;
 
-
-// SEE THE LAST EXAMPLE FOR COMMENTS ON THE ACTUAL LIST DATA STRUCTURE,
-// COMMENTS HERE ARE ONLY ON TEMPLATE FEATURES
+// See last example for comments on the list data structure
+// Comments here are only for template features
 
 
 // Our forward declaration has to be template
 template &lt;typename T&gt; class LinkedList;
 
-// Here our node is templated so each node can hold an arbitrary data type
+// Here our node is templated so nodes can hold an arbitrary data type
 template &lt;typename T&gt; 
 class node {
-	// Our value paramter is of our template paramter "T"
+	// Our value parameter is of our template parameter "T"
 	// This is also implemented here, in the class definition
 	node(T v, node* n = NULL) {
 		value = v;
 		next = n;
 	}
 	// Don't need this to do anything
-	~node() {}
+ 	~node() {}
 
 	// The value this node holds should, of course, be of generic type "T"
 	T value;
@@ -78,7 +77,7 @@ class node {
 	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
 };
 
-// Here our actual list is templated to accomodate the templated nodes and arbitrary data input/output
+// Here our actual list is templated to accommodate the templated nodes and arbitrary data input/output
 template &lt;typename T&gt; 
 class LinkedList {
 public:
@@ -163,9 +162,11 @@ int main() {
 	LinkedList&lt;int&gt; intList;
 	// Declare list using floats
 	LinkedList&lt;float&gt; floatList;
-	// Delcare list using lists that use integers
-	// prior to c++11, you have to leave a space between two '&gt;' brackets in a
+	
+	// Prior to c++11, you have to leave a space between two '&gt;' brackets in a
 	// nested template, otherwise the compiler thinks you're using the "&gt;&gt;" operator 
+	
+	// Declare list using lists that use integers
 	LinkedList&lt;LinkedList&lt;int&gt; &gt; listList;
 
 	// Output lists
@@ -302,8 +303,8 @@ struct Vector
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
 			<ol>
-				<li>Template last week’s exercise, the linked-list based list data structure. Make sure it will work with any data type, including another list.</li>
-				<li>Create your own full-featured, templated, arbitrarily sized vector class. Try implementing the following members:</li>
+				<li>Template last week’s exercise, the linked-list based list data structure. Make sure it will work with any data type, including itself.</li>
+				<li>Create your own full-featured, templated, arbitrarily sized vector class (in the mathematical sense). Try implementing the following members:</li>
 				<div class="nocollapse">
 				<ul style="float:left;width:25%;">
 					<li>Default constructor</li>
@@ -336,32 +337,31 @@ struct Vector
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/5pim2e" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 
 using namespace std;
 
-
-// SEE THE LAST EXAMPLE FOR COMMENTS ON THE ACTUAL LIST DATA STRUCTURE,
-// COMMENTS HERE ARE ONLY ON TEMPLATE FEATURES
+// See last example for comments on the list data structure
+// Comments here are only for template features
 
 
 // Our forward declaration has to be template
 template &lt;typename T&gt; class LinkedList;
 
-// Here our node is templated so each node can hold an arbitrary data type
+// Here our node is templated so nodes can hold an arbitrary data type
 template &lt;typename T&gt; 
 class node {
-	// Our value paramter is of our template paramter "T"
+	// Our value parameter is of our template parameter "T"
 	// This is also implemented here, in the class definition
 	node(T v, node* n = NULL) {
 		value = v;
 		next = n;
 	}
 	// Don't need this to do anything
-	~node() {}
+ 	~node() {}
 
 	// The value this node holds should, of course, be of generic type "T"
 	T value;
@@ -377,7 +377,7 @@ class node {
 	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
 };
 
-// Here our actual list is templated to accomodate the templated nodes and arbitrary data input/output
+// Here our actual list is templated to accommodate the templated nodes and arbitrary data input/output
 template &lt;typename T&gt; 
 class LinkedList {
 public:
@@ -462,9 +462,11 @@ int main() {
 	LinkedList&lt;int&gt; intList;
 	// Declare list using floats
 	LinkedList&lt;float&gt; floatList;
-	// Delcare list using lists that use integers
-	// prior to c++11, you have to leave a space between two '&gt;' brackets in a
+	
+	// Prior to c++11, you have to leave a space between two '&gt;' brackets in a
 	// nested template, otherwise the compiler thinks you're using the "&gt;&gt;" operator 
+	
+	// Declare list using lists that use integers
 	LinkedList&lt;LinkedList&lt;int&gt; &gt; listList;
 
 	// Output lists

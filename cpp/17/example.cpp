@@ -1,22 +1,21 @@
-//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include <iostream>
 
 using namespace std;
 
-
-// SEE THE LAST EXAMPLE FOR COMMENTS ON THE ACTUAL LIST DATA STRUCTURE,
-// COMMENTS HERE ARE ONLY ON TEMPLATE FEATURES
+// See last example for comments on the list data structure
+// Comments here are only for template features
 
 
 // Our forward declaration has to be template
 template <typename T> class LinkedList;
 
-// Here our node is templated so each node can hold an arbitrary data type
+// Here our node is templated so nodes can hold an arbitrary data type
 template <typename T> 
 class node {
-	// Our value paramter is of our template paramter "T"
+	// Our value parameter is of our template parameter "T"
 	// This is also implemented here, in the class definition
 	node(T v, node* n = NULL) {
 		value = v;
@@ -39,7 +38,7 @@ class node {
 	template <typename U> friend ostream& operator<<(ostream& out, const LinkedList<U>& src);
 };
 
-// Here our actual list is templated to accomodate the templated nodes and arbitrary data input/output
+// Here our actual list is templated to accommodate the templated nodes and arbitrary data input/output
 template <typename T> 
 class LinkedList {
 public:
@@ -124,9 +123,11 @@ int main() {
 	LinkedList<int> intList;
 	// Declare list using floats
 	LinkedList<float> floatList;
-	// Delcare list using lists that use integers
-	// prior to c++11, you have to leave a space between two '>' brackets in a
+	
+	// Prior to c++11, you have to leave a space between two '>' brackets in a
 	// nested template, otherwise the compiler thinks you're using the ">>" operator 
+	
+	// Declare list using lists that use integers
 	LinkedList<LinkedList<int> > listList;
 
 	// Output lists

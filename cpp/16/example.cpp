@@ -10,7 +10,7 @@ class LinkedList;
 
 // Example node class for linked lists
 class node {
-	// Paramterized constructor
+	// Parametrized constructor
 	node(int v, node* n = NULL);
 	// Destructor
 	~node();

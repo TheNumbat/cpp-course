@@ -48,7 +48,7 @@ class LinkedList;
 
 // Example node class for linked lists
 class node {
-	// Paramterized constructor
+	// Parametrized constructor
 	node(int v, node* n = NULL);
 	// Destructor
 	~node();
@@ -191,50 +191,53 @@ int main() {
 		<article role="article">
 			<h2 id="llist">Linked Lists</h2>
 			<p>
-				Linked lists are another fundamental concept in computer science, as they are used as the underlying implementation of many data structures, and can be used in a variety of situations. As of yet, we’ve only used arrays (dynamically allocated or otherwise) to store collections of data. A linked list is another way to store collections of data, but with a different set of advantages and disadvantages.
+				Linked lists are another important concept, as they are in the implementation of many data structures, in a variety of situations. As of yet, we’ve only used arrays to store collections of data. A linked list is another way to store data, but with a different set of advantages and disadvantages.
 			</p>
 			<p>
-				The main advantage of linked lists verses arrays is that they have no set limit on capacity (other than the maximum memory or your system), and the size can grow and shrink dynamically when data is added and removed. In an array, to change the size one must completely delete and reallocate the memory. Additionally, a linked list does not need to find a contiguous block of memory like an array does, making it faster and easier to allocate. 
+				The main advantage of linked lists compared to arrays is that they have no set limit on capacity&mdash;the size can grow and shrink dynamically when data is added and removed. Conversely, to change the size of an array, one must reallocate, copy, and delete the array. Further, a linked list does not need to allocate a contiguous block of memory like an array does&mdah;making it much faster to initially construct. 
 			</p>
 			<p>
-				However, there is a significant disadvantage to linked lists: to access the data within them, you must traverse a number of spaces in memory to find the data you’re looking for. This will make more sense in a minute. On the other hand, arrays, because they are a contiguous block of memory, can always retrieve any of their data in a constant, short amount of time.
+				However, there is also a significant disadvantage to linked lists: to access the data within them, your program must traverse a number of pointers. On the other hand, arrays, because they are stored in a contiguous block of memory, can retrieve data at any index in a short, constant amount of time.
 			</p>
+			<p>Note &mdash; diagrams will be very helpful this lesson.</p>
 			<h2 id="nodes">Nodes</h2>
 			<p>
-				The basic component of a linked list is what’s called a “node.” A node is what it sounds like: it represents one piece of the list and includes one piece of data. A node has two parts: data, to hold what is actually contained in the list, and one or more pointers to another node. 
+				The basic component of a linked list is what’s called a node. A node is what it sounds like: it represents one item of the list and includes one piece of data. A node has two parts: the data and one or more pointers to other nodes.
 			</p>
 			<img src="node.png">
 			<h2 id="links">Links</h2>
 			<p>
-				The pointer portion of the node is what constitutes the “links” of the linked lists. You can probably guess where this is going: each node is “linked” to the next one in the list by storing its address in the node’s pointer portion. With many nodes, this creates a chain. Of course, if you don’t have a way to access the first node in the chain, you can’t access any of them, so when you’re using a linked list, you should always store a pointer to the “head,” or first node. Note that here, if you ever lose your pointer to the first node, you have leaked memory, as you will never be able to get back to the first node.
+				The pointer sections of the nodes are what constitute the “links” of a linked list. Each node is linked to the next in the list by storing its address. With several nodes, the links create a chain. In this situation, if you don’t have access to the first node in the chain, you are not able to access one or more nodes. When you’re creating a linked list, you should always store a pointer to the “head,” or first node to prevent losing nodes and hence leaking memory.
 			</p>
 			<img src="link.png">
 			<h2 id="addrem">Adding and Removing Nodes</h2>
+			<p>That’s pretty much the entire basic concept of linked lists&mdash;though there are other types of linked lists that add more complications.</p>
 			<p>
-				That’s pretty much the entire basic concept of linked lists, although there are many other types of linked lists that add more complications. So, let’s move on to working with linked lists. The basic operations are, of course, adding and removing nodes. Imagine we have a “cursor,” which is a pointer to a node in the list. Adding a node after the cursor is extremely simple: you just have to have the new node point to the next node after where you’re inserting it (new node->next = cursor->next), then have the node before it point to your new node (cursor->next = new node). Removing a node is also simple, although it is much easier if you are removing the node after your cursor.
+				The fundamental operations on a linked list are, of course, adding and removing nodes. Suppose we have a “cursor” pointer to some node in our list. Adding a node after the cursor is extremely simple: have the new node point to the node after the cursor (newNode->next = cursor->next), then have the cursor point to your new node (cursor->next = new node). Removing a node after the cursor is similarly simple.
 			</p>
 			<p>
-				Remember that the examples here are only one case of what could happen. For example, image what you would need to do if you want to remove a node, but your cursor is pointing to the last node in your list. Further, these example processes are assuming you’re using a singly linked list.
+				Remember that these examples are only one instance of an operation. Always consider the possible initial states of your list when implementing an operation, so that you don't, for example, accidentally try to delete off the end of the list. Image what you would need to do if you want to remove a node, but your cursor is pointing to the last node in your list.
 			</p>
-			<p>Inserting a node:</p>
+			<p>These example operations are assuming a singly linked list.</p>
+			<p>Inserting a Node after the Cursor:</p>
 			<img src="add.png">
 			<p>Removing a Node after the Cursor:</p>
 			<img src="remove.png">
 			<p>
-				Again, there are many more situations than those shown here. For example, what if you wanted to remove the node that the cursor is pointing to? What if you want to insert a node before the cursor? There are too many possibilities to go into great detail here, but hopefully you can figure out what to do on your own.
+				Again, there are many more situations than shown here. For example, what if you wanted to remove the node that the cursor is pointing to? What if you want to insert a node before the cursor? There are too many possibilities to go into great detail here&mdash;you can figure out what to do on your own.
 			</p>
 			<p>
-				<strong>Drawing pictures is extremely helpful!</strong> Diagramming simple processes like the ones above can make linked lists easy to deal with.
+				<strong>Diagramming is extremely helpful!</strong> Drawing out processes like the ones above can make linked lists easy and intuitive to deal with.
 			</p>
 			<h2 id="clear">Clearing Nodes</h2>
 			<p>
-				We’ll go over one more process related to linked lists here: clearing them. At some point, you’re always going to want to clear your linked lists, and you don’t want to leak memory when doing so. As with the other processes, diagramming what needs to happen is a great idea.
+				Here's another example list operation: clearing all nodes. At some point, you’re always going to want to clear your linked list (destructor, etc.), and you don’t want to leak memory when doing so. Again, diagramming the process is a great idea.
 			</p>
 			<img src="clear.png">
 			<p>Repeat this process to remove all nodes.</p>
 			<h2 id="types">Other Types of Linked Lists</h2>
 			<p>
-				So far, these examples have been diagrammed assuming a singly linked list. However, there are several other types you should know of.
+				These examples have been diagrammed assuming a singly linked list. However, there are several other types you should be able to work with.
 			</p>
 			<h3>Singly Linked</h3>
 			<p>A list is singly linked if each node has one pointer to the next node in the chain. This is the simplest type of list. The end node should have “NULL” as the next node.</p>
@@ -243,20 +246,23 @@ int main() {
 			<p>A circularly linked list is exactly the same as a singly linked list, except that the final node’s “next” node points back to the head of the list.</p>
 			<img src="clink.png">
 			<h3>Doubly Linked</h3>
-			<p>A doubly linked list is what it sounds like: each node has two pointers, one two the next node, and one to the previous node. This makes traversing the list backwards way faster than a singly linked list (where you would have to traverse the list from the beginning until you found the node behind where you are), but comes at the cost of storing an extra pointer in each node.</p>
+			<p>A doubly linked list is what it sounds like: each node has two pointers, one to the next node, and one to the previous node. This design makes traversing the list backwards way faster than a singly linked list (where you would have to traverse from the beginning), but comes at the cost of storing an extra pointer in each node.</p>
 			<img src="dlink.png">
-			<p>Of course, you can also make a doubly linked list circular by having the first node point back to the last node and the last node point up to the first node.</p>
+			<p>You can also make a doubly linked list circular by having the first node point back to the last node and the last node point up to the first node.</p>
 			<h3>Trees</h3>
-			<p>Finally, there are linked trees, which are a bit more complicated to deal with. They’re also what they sound like: each node can have multiple “child” nodes, and point back towards their “parent” node.</p>
+			<p>Finally, there are linked trees. Trees can a bit more complicated to deal with, but are quite interesting. They’re also what they sound like: each node can have multiple “child” nodes and points back towards its “parent” node.</p>
 			<img src="tree.png">
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
 			<ol>
 				<li>Create your own data structure using a circularly, singularly linked list.</li>
-				<p>This will be a “List” data structure, meaning it uses a “cursor” to point to a node, and the member functions move the cursor around and manipulate the list at that point. You should make sure that all of your member functions account for each possible state of the list (e.g. you probably want to do something different if the list is empty vs if it has nodes) in order to work correctly and fail elegantly (not crash).</p>
-				<p>Basic features:</p>
+				<p>This will be a “List” data structure: it uses a “cursor” pointer with member functions to traverse and modify the list. You should make sure that all of your member functions account for each possible state of the list&mdash;e.g. do something different if the list is empty vs if it has nodes.</p>
+				<p>Members:</p>
 				<ul>
+					<li>list() - default constructor</li>
+					<li>list(list) - copy constructor</li>
+					<li>~list() - destructor</li>
 					<li>next() – move cursor forward one node</li>
 					<li>prev() – move cursor back one node</li>
 					<li>get() – get the value of the node at the cursor</li>
@@ -286,7 +292,7 @@ class LinkedList;
 
 // Example node class for linked lists
 class node {
-	// Paramterized constructor
+	// Parametrized constructor
 	node(int v, node* n = NULL);
 	// Destructor
 	~node();
