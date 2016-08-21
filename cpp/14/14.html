@@ -20,12 +20,12 @@
 			<nav role="navigation">
 				<ul class="subsections">
 					<li><a href="#copy">Copy Constructors</a></li> | 
-					<li><a href="#const">Constants</a></li> | 
+					<li><a href="#friend">Friendship</a></li> | 
+					<li><a href="#static">Static Members</li> | 
 					<li><a href="#constv">Constant Variables</a></li> | 
 					<li><a href="#constp">Constant Parameters</a></li> | 
 					<li><a href="#constr">Constant Returns</a></li> | 
 					<li><a href="#constm">Constant Member Functions</a></li> | 
-					<li><a href="#friend">Friendship</a></li> | 
 					<li><a href="#exercises">Exercises</a></li>
 				</ul>
 			</nav>
@@ -176,13 +176,124 @@ myClass::myClass(const myClass&amp; src) {
 	str = new char[50];
 	strcpy(str,src.str);	
 }</pre>
-			<h2 id="const">Constants</h2>
+			<h2 id="friend">Friendship</h2>
 			<p>
-				You’ve probably seen the keyword “const” written before a variable or parameter definition. As one would expect, it stands for "constant," and marks some value or some code in your program as immutable, unchangeable. There are four other cases in which "const" can be useful.
+				Friendship is extremely simple: it allows non-member functions and classes to have access to private data members. You can selectively specify what functions or classes can access private data within your class definition. To do this, simply add the keyword “friend” before either a function prototype or class name. This allows that function or class to access private data members of instances of the specified type&mdash;without being members of that class. 
 			</p>
+			<p>
+				For example, if a function is passed a friend class object, it can access the private members of that instance. And because friend functions are not member functions, they are not called using an instance of the object and the dot operator. Instead, they are called just like any other function you’ve used in the past. Hence, there is no calling object, and to access data from an instance, that instance must be passed as a parameter.
+			</p>
+			<p>Friendship is particularly useful when you are forced to implement a function as a non-member that needs private access, or when you want to make a class only accessible by another, or a specific function.</p>
+			<pre class="example_code prettyprint">class card {
+public:
+	// Member functions
+	void setRank(const char* r);
+	char* getRank() const;
+private:
+	// Data members
+	char* rank;
+	
+	// Friends
+	friend void print(const card&amp; c);
+	friend class deck;
+};</pre>
+			<p>Here, friendship allows the print function and the deck class access to the normally private rank data member.</p>
+			<pre class="example_code prettyprint">void print(const card&amp; c) {
+	cout << “rank: “ << c.rank;
+}</pre>
+			<p>print() can access the rank member of the card.</p>
+			<pre class="example_code prettyprint">int main() {
+	card c;
+	print(c);
+}</pre>
+			<p>Finally, you can see that calling the friend function is no different than calling any other function.</p>
+			<p>
+				Another interesting feature of friendship is that it gives you the option to allow only a specific class or function the ability to create instances of another class. Remember when I said your constructors should always be public? Well, if you make all constructors private&mdash;and give friendship&mdash;a friend class can create instances of your private class, as it can access private members, but no where else can.	
+			</p>
+			<pre class="example_code prettyprint">class card {
+// Default access modifier is private
+	card();
+	int value;
+	friend class deck;
+};
+
+class deck {
+public:
+	deck();
+
+	card* makeCard() const;
+};
+
+card* deck::makeCard() const {
+	// This calls card's private constructor. 
+	// Only deck can do this, as it has friendship
+	return new card;
+}</pre>
+			<h2 id="static">Static Members</h2>
+			<p>
+				Remember <a href="..\04\04.html#static">static variables</a>? Well, you can do something similar with class members. The most basic use is simply having a static data member. A static data member will be globally shared between all instances of the class. Each instance can update it for everyone. For example, all instances could have a unique ID, and a static member to keep track of the used IDs. 
+			</p>
+			<p>
+				Furthermore, a static data member (if public) can be accessed by other code, without an instance of the class. However, if a static member is public, it should almost always be constant (see next section). Public, static, constant members are useful to provide the rest of your program with values related to that class. For example, you could have the dimensions of a game board class be public, static, and constant.
+			</p>
+			<p>
+				To access a (public) static member, use the scope resolution operator (::). This works just like the dot operator, except that instead of an instance, you use the operator on the name of the class.
+			</p>
+			<pre class="example_code prettyprint">class deck {
+public:
+	// This can be accessed anywhere, without an instance of deck
+	const static int SIZE = 52;
+
+	deck();
+	// ...
+
+private:
+	// This is shared between all instances of deck
+	static int maxID = 0;
+	// This is not
+	int ID;
+};
+
+deck::deck() {
+	ID = maxID;
+	maxID++;
+}
+
+int main() {
+	// 52
+	int cards = deck::SIZE;
+	
+	// Will have ID: 0
+	deck d0;
+
+	// Will have ID: 1
+	deck d1;
+};</pre>
+			<p>
+				Member functions can also be static. However, it doesn't exactly make sense to share a private function between instances&mdash;they all have the same logic anyway. Nevertheless, public, static member functions can be useful. Like with data members, a public, static member function can be accessed without an instance of the class. This means that the function does not have a calling object, and consequently cannot access non-static class data members. Public, static member functions are useful for creating "helper" classes which are essentially collections of functions. Additionally, because static functions can access static members, the can be used to store functional state.
+			</p>
+			<pre class="example_code prettyprint">class mathHelper {
+public:
+	static double PI = 3.14159;
+	static double sin(double val);
+	static double cos(double val);
+	// ...
+
+private:
+	// Static functions can access this
+	static int tries;
+};
+
+int main() {
+	// See that we never create an instance of mathHelper
+	
+	double r1 = mathHelper::sin(5.37);
+	double r2 = mathHelper::cos(4.345);
+	double p = mathHelper::PI;
+};</pre>
 			<h2 id="constv">Constant Variables</h2>
 			<p>
-				The most obvious use of the constant keyword is to define variables whose values cannot change. It is often not incredibly useful to have constant variables in your main code, but a constant can be used to make sure a value that should not change doesn’t change&mdash;an error is thrown at an attempt. Additionally, constants can be used to define “global constants.” These are simply global values that can be used by your entire program, but cannot be changed. Hence, they do not suffer the same issues as global (mutable) variables. Global constants are usually named in all caps. You can make any variable constant, no matter the type. You can have a constant integer, character, student, card, or whatever you want. 
+				Let's go on a bit of a tangent here and talk about constants. The most obvious use of the constant keyword is to define variables whose values cannot change. It is often not incredibly useful to have constant variables in your main code, but a constant can be used to make sure a value that should not change doesn’t change&mdash;an error is thrown at an attempt. Additionally, constants can be used to define “global constants.” These are simply global values that can be used by your entire program, but cannot be changed. Hence, they do not suffer the same issues as global (mutable) variables. Global constants are usually named in all caps. You can make any variable constant, no matter the type. You can have a constant integer, character, student, card, or whatever you want. 
 			</p>
 			<pre class="example_code prettyprint">const int NUM_CARDS = 52;</pre>
 			<p>Global constant defining the size of a deck.</p>
@@ -237,59 +348,6 @@ private:
 			<pre class="example_code prettyprint">c.setRank(“king”); // Error</pre>
 			<p>But you can still call the print function.</p>
 			<pre class="example_code prettyprint">c.print(); // Good</pre>
-			<h2 id="friend">Friendship</h2>
-			<p>
-				Friendship is extremely simple: it allows non-member functions and classes to have access to private data members. You can selectively specify what functions or classes can access private data within your class definition. To do this, simply add the keyword “friend” before either a function prototype or class name. This allows that function or class to access private data members of instances of the specified type&mdash;without being members of that class. 
-			</p>
-			<p>
-				For example, if a function is passed a friend class object, it can access the private members of that instance. And because friend functions are not member functions, they are not called using an instance of the object and the dot operator. Instead, they are called just like any other function you’ve used in the past. Hence, there is no calling object, and to access data from an instance, that instance must be passed as a parameter.
-			</p>
-			<p>Friendship is particularly useful when you are forced to implement a function as a non-member that needs private access, or when you want to make a class only accessible by another, or a specific function.</p>
-			<pre class="example_code prettyprint">class card {
-public:
-	// Member functions
-	void setRank(const char* r);
-	char* getRank() const;
-private:
-	// Data members
-	char* rank;
-	
-	// Friends
-	friend void print(const card&amp; c);
-	friend class deck;
-};</pre>
-			<p>Here, friendship allows the print function and the deck class access to the normally private rank data member.</p>
-			<pre class="example_code prettyprint">void print(const card&amp; c) {
-	cout << “rank: “ << c.rank;
-}</pre>
-			<p>print() can access the rank member of the card.</p>
-			<pre class="example_code prettyprint">int main() {
-	card c;
-	print(c);
-}</pre>
-			<p>Finally, you can see that calling the friend function is no different than calling any other function.</p>
-			<p>
-				Another interesting feature of friendship is that it gives you the option to allow only a specific class or function the ability to create instances of another class. Remember when I said your constructors should always be public? Well, if you make all constructors private&mdash;and give friendship&mdash;a friend class can create instances of your private class, as it can access private members, but no where else can.	
-			</p>
-			<pre class="example_code prettyprint">class card {
-// Default access modifier is private
-	card();
-	int value;
-	friend class deck;
-};
-
-class deck {
-public:
-	deck();
-
-	card* makeCard() const;
-};
-
-card* deck::makeCard() const {
-	// This calls card's private constructor. 
-	// Only deck can do this, as it has friendship
-	return new card;
-}</pre>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>

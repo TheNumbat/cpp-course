@@ -26,6 +26,7 @@
 					<li><a href="#usage">Using Functions</a></li> | 
 					<li><a href="#default">Default Parameters</a></li> | 
 					<li><a href="#overload">Overloading Functions</a></li> | 
+					<li><a href="#static">Static Variables</li> | 
 					<li><a href="#exercises">Exercises</a></li>
 				</ul>
 			</nav>
@@ -173,7 +174,7 @@ int int1 = function(3,7);		// This is valid, and will return the value 2
 int int3 = function(3,7,2);		// This is also valid, and will return the value 5</pre>
 			<h2 id="overload">Overloading Functions</h2>
 			<p>
-				C and C++ support overloaded functions. Essentially, this means that you can have multiple functions with the same name. However, all functions must have different signatures. A function's signature is the combination of its identifier and parameter types. Hence, if you create  multiple functions with the same identifier, they must have different parameter types. For example, you can create several print() functions, each which takes a different data type parameter. Of course, you could instead create printInt, printDbl, etc...function overloading is only required in one situation (see <a href="..\13\13.html">lesson 13</a>), but can be useful for style and API design, especially if you do not want to use <a href="..\17\17.html">templates</a>.
+				C and C++ support overloaded functions. Essentially, this means that you can have multiple functions with the same name. However, all functions must have different signatures. A function's signature is the combination of its identifier and parameter types. Hence, if you create  multiple functions with the same identifier, they must have different parameter types. For example, you can create several print() functions, each which takes a different data type parameter. Of course, you could instead create printInt, printDbl, etc...function overloading is only required in one situation (see <a href="..\13\13.html#types">lesson 13</a>), but can be useful for style and API design, especially if you do not want to use <a href="..\17\17.html">templates</a>.
 			</p>
 			<pre class="example_code prettyprint">void func(int x, int y, int z) {
 
@@ -188,14 +189,29 @@ void func(coord c) {
 }
 
 int main() {
-	func(5,4,6); // Calls the first overload
-	func(5.0f,4.0f,6.0f); // Calls the second overload
-	func(coord(5,4,6)); // Calls the third overload
-}
-</pre>
+	func(5,4,6); 			// Calls the first overload
+	func(5.0f,4.0f,6.0f); 		// Calls the second overload
+	func(coord(5,4,6)); 		// Calls the third overload
+}</pre>
 			<p>
 				Note that the <em>parameter</em> identifiers do not affect a function's signature. This means that print(int x) and print(int y) have the same signature, and will produce an error if both implemented. To overload a function, you must use a different combination of parameter <strong>data types</strong>. This makes sense&mdash;when you call an overloaded function, the only way your program knows which function to call is by deducing the parameter types.
 			</p>
+			<h2 id="static">Static Variables</h2>
+			<p>
+				Static variables are essentially scoped global variables. While they can only be used within the scope they are declared in, they retain their value even after the scope ends. This means that you can declare a static variable in a function or loop, and have it keep track of a value throughout the program's lifetime. For example, you could have a function keep track of how many times it has been run, and do something different every 10th time. Because a static variable is persistent, the line declaring it is only run once. Hence, you can set it to a default value on declaration.
+			</p>
+			<p>The syntax is very simple: just add the keyword "static" before your variable declaration.</p>
+			<pre class="example_code prettyprint">for(int i = 0; i < 10; i++) {
+	for(int j = 0; j < 10; j++) {
+		static int counter = 0;
+		counter++;
+	}
+}</pre>
+			<pre class="example_code prettyprint">void func() {
+	static int timesRun = 0;
+	// ...
+	timesRun++;
+}</pre>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
