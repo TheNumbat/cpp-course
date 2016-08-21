@@ -36,44 +36,44 @@
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/XuKzPC" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 #include &lt;vector&gt;
 
 using namespace std;
 
-// our base class
+// Base class
 class animal {
 public:
 	animal();
-	// You're usually going to want to make descrutors virtual so the specific one will be called before the general one
+	// You're usually going to want to make destructors virtual so the specific one will be called before the general one
 	virtual ~animal();
 
 	// Speak is virtual so subclasses can override it
 	virtual void speak() const;
 
-// inherited classes will have access to this data
+// Inherited classes will have access to this data
 protected:
-	char name[10]; // example data
+	char name[10]; // Example data
 
-// inherited classes will NOT have access to private data
+// Inherited classes will NOT have access to private data
 private:
-	int ID; // example data
+	int ID; // Example data
 };
 
 // 1st inherited class
 class dog : public animal {
 public:
-	// normal constructor/destructor
+	// Normal constructor/destructor
 	dog();
-	// this should not be a base class, so we don't make this virtual
+	// This should not be a base class, so we don't make this virtual
 	~dog();
 
 	void speak() const;
 
-// dog can have its own private data
+// Dog can have its own private data
 private:
 	char color;
 };
@@ -81,16 +81,16 @@ private:
 // 2nd inherited class
 class cat : public animal {
 public:
-	// normal constructor/destructor
+	// Normal constructor/destructor
 	cat();
-	// this should not be a base class, so we don't make this virtual
+	// This should not be a base class, so we don't make this virtual
 	~cat();	
 
 	void speak() const;
 
-// cat can have its own private data
+// Cat can have its own private data
 private:
-	// some data
+	// Some data
 };
 
 animal::animal()  {
@@ -131,9 +131,9 @@ void cat::speak() const {
 
 
 int main() {
-	// polymorphism won't work
+	// Polymorphism won't work here
 	vector&lt;animal&gt; animals;
-	// polymorphism will work
+	// Polymorphism will work here
 	vector&lt;animal*&gt; kennel;
 
 	cout &lt;&lt; endl &lt;&lt; "Constructing a dog:" &lt;&lt; endl;
@@ -142,13 +142,13 @@ int main() {
 	cat c; 
 	cout &lt;&lt; endl &lt;&lt; "Constructing an animal:" &lt;&lt; endl;
 	animal a;
-	// Add stuff to animals. Here, everything gets turned into just an "animal," making polymorphism useless
+	// Add animals to animals vector. Here, everything gets turned into just an "animal," making polymorphism useless
 	cout &lt;&lt; endl &lt;&lt; "Pass-by-value copies will be destructed as animals:" &lt;&lt; endl;
 	animals.push_back(d);
 	animals.push_back(c);
 	animals.push_back(a);
 
-	// Add stuff to kennel. Here, each animal retains its real type of dog or cat
+	// Add animals to kennel vector. Here, each animal retains its real type of dog or cat
 	for(int index = 0; index &lt; 3; index++) {
 		cout &lt;&lt; endl &lt;&lt; "Dynamically constructing a dog:" &lt;&lt; endl;
 		kennel.push_back(new dog);
@@ -170,7 +170,7 @@ int main() {
 	}
 	cout &lt;&lt; endl;
 
-	// delete polymorphic animals
+	// Delete polymorphic animals
 	for(int index = 0; index &lt; kennel.size(); index++) {
 		cout &lt;&lt; endl &lt;&lt; "Destructing some polymorphic animal:" &lt;&lt; endl;
 		delete kennel[index];
@@ -183,49 +183,53 @@ int main() {
 		<article role="article">
 			<h2 id="inherit">Inheritance</h2>
 			<p>
-				Inheritance and polymorphism are two defining characteristics of object-oriented programming—with only what we’ve learned so far, OOP isn’t a whole lot different than procedural programming. These concepts are so defining, in fact, that if someone says they use OOP, it very often means they use inheritance and polymorphism (although the design pattern of composition is also rather popular).
+				From what you've learned so far, OOP isn’t a whole lot different than procedural programming. However, inheritance and polymorphism will change that, as they are two defining features of object-oriented programming. These concepts are so defining, in fact, that if someone says they use OOP, it usually means they use inheritance and polymorphism.
 			</p>
 			<p>
-				So, what is inheritance? Generally, it’s a way to organize classes into a hierarchy where data and logic can be shared and overridden. Specifically, one creates what’s called a “base class,” which contains the most general logic and data, creates “derived classes” which extend and modify the functionality of the base class. Some examples of this are (see: the example program) having an “animal” base class that is extended by specific classes like “dog” and “cat.” Derived classes are said to “inherit” from their base class, and the base class is called the “parent” or just the base class of its derived classes.
+				What is inheritance? It’s a way to organize classes into a hierarchy where data and logic can be shared and overridden. Specifically, you creates what is called a base class, containing the most general logic and data and derived classes that extend and modify the functionality of the base class. Some examples of this are (see the example program) having an “animal” base class that is extended by specific classes like “dog” and “cat.” Derived classes are said to “inherit” from their base class, and the base class is called the “parent” or just the base class of its derived classes.
 			</p>
 			<p>
-				In C++, any class can be inherited from—derived classes can themselves be used as base classes—multiple derived classes can inherit from the same base class, and a derived class can inherit from multiple base classes. 
+				In C++, any class can be inherited from&mdash;derived classes can themselves be used as base classes, multiple derived classes can inherit from the same base class, and a derived class can inherit from multiple base classes. 
 			</p>
 			<p>
-				It’s common practice to diagram inheritance trees (as they’re called) like we diagramed linked trees, although here, the links represent inheritance rather than pointers. For example, one could structure the entities in a game as such:
+				It’s common practice to diagram inheritance trees (as they’re called) like we diagrammed linked trees, although here, the links represent inheritance rather than pointers. For example, one could structure entities in a game as such:
 			</p>
 			<img src="tree.png" style="padding-left:10px;">
 			<p>
-				Inheritance can be useful in many situations—entire languages, such as Java and C#, are based off of it—but I’m not trying to say OOP is the best programming paradigm to use in any situation. Ideally, you should assess what you’re trying to do and choose whichever method will be the most effective. Some people really like OOP, some abhor it. Personally, I’d stay at a distance from <em>overly</em> complicated inheritance and polymorphism trees and logic, as I find it more effective, maintainable, and performant to use other design patterns.
+				Inheritance can be useful in many situations&mdash;entire languages, such as Java and C#, are centered around OOP&mdash;but I’m not trying to say OOP is the best programming paradigm to use in any situation. Ideally, you should assess what you’re trying to create and choose whichever method will be the most effective. Some people really like OOP, some abhor it. Personally, I’d be wary of <em>overly</em> complicated inheritance and polymorphism trees, as they can be difficult to work with and debug, and can impact performance.
 			</p>
+			<p>The example program will be very helpful this week! Download it and follow how each step propagates through the inheritance tree.</p>
 			<h2 id="access">Access Modifiers</h2>
 			<p>
-				We’ve already learned about the “public” and “private” keywords to specify data availability within classes. To rehash, “public” allows anything and anyone to access the method or data, and “private” allows only other member functions of that class to access the method or data.
+				We’ve already learned about how “public” and “private” specify data availability within classes. To rehash, “public” allows anything and anyone to access the method or data, and “private” allows only member functions of that class to access the method or data.
 			</p>
 			<p>
-				However, there is a third keyword we haven’t talked about: “protected.” Essentially, “protected” signifies that the class itself can access the data (like “private”), but derived classes may also access the data. For example, if your “animal” base class contained a “protected” name data member, all derived classes (e.g. “dog”) can access the name member as if it is a member. However, “private” data in a base class will not be accessible through a base class—still only the base class’ member functions may access it. This means that if a class has only private data, there’s likely not much point in inheriting from it, as the derived class won’t receive any of the data. 
+				There is a third modifier we haven’t talked about: “protected.” Protected signifies that derived classes, as well as the class itself, can access the member. For example, if your “animal” base class contains a protected name member, all derived classes (e.g. “dog”) can access the name member. Private data, on the other hand, will not be accessible in a derived class&mdash;only the original classes' member functions may access it. 
 			</p>
 			<p>
-				Why ever use “private” instead of “protected,” you might ask, which is a good question. Well, the most common use of “private” is to make sure that the class is not inheritable (technically, it still is, but it will not be useful to do so). Additionally, one can make sure that important data—say an encryption key—will never be messed with if someone else (or their self) extends that class and adds functionality.
+				When creating classes to be used with inheritance, your data should primarily be protected for use in derived classes. However, private data may still be used for security. If you do not want your class to be inherited from, do not use protected.
 			</p>
 			<h2 id="usagei">Using Inheritance</h2>
 			<p>
-				Declaring an inherited class is quite simple in C++: simply begin like any other class with the keyword “class” and your identifier, but then add a colon, an access modifier, and your base class. 
+				Declaring an inherited class is quite simple in C++: begin like any other class, then add a colon, an access modifier, and your base class. 
 			</p>
-			<pre class="example_code prettyprint">class dog : public animal {};
-class monster : protected entity {};</pre>
+			<pre class="example_code prettyprint">class dog : public animal { /* ... */ };
+class monster : protected entity { /* ... */ };</pre>
 			<p>
-				Here, the access modifier has a different meaning; it represents how the base members are interpreted within the derived class. Inheriting as “public” will change nothing about the base class’s members—public members will remain public and protected will be protected. Inheriting as “protected” will simply make the public members protected within the derived class, and the protected members will still remain protected. Finally, inheriting as “private” will make both public and protected members of the base class private within the derived class.
+				Here, the access modifier has a different meaning; it represents how the base members are interpreted within the derived class. Inheriting as “public” will change nothing about the base class’s members&mdash;public members will remain public and protected will remain protected. Inheriting as “protected” will inherit public members as protected within the derived class. Protected members will still remain protected. Finally, inheriting as “private” will make both public and protected members of the base class private within the derived class.
 			</p>
 			<p>
-				After declaring your class as inherited, the rest of the syntax is exactly the same as we’ve learned, except that you can now use the “protected” keyword. Implementing the class is also the same, except that you can use the inherited data members and member functions. Once you’ve created your derived class, you can create it, use it, and destroy it like any other class. 
+				After declaring your class as inherited, the rest of the syntax is exactly the same as we’ve learned. Implementing members is also the same, except that you can reference  inherited data members and member functions. In the example, a member function of dog could call setName()&mdash;the function is inherited from animal.
+			</p>
+			<p>
+				Finally, instantiating your derived class is the same as always. You use the instance in the same way, except you can access public members from both the base class and the derived class. In the example, setName() is called from an instance of dog. This is OK, because dog inherits the function from animal.
 			</p>
 			<pre class="example_code prettyprint">class animal
 {
 public:
 	animal();
 	~animal();
-	void setname(const char* n);
+	void setName(const char* n);
 
 private:
 	char name[10];
@@ -247,23 +251,29 @@ int main() {
 }</pre>
 			<h2 id="poly">Polymorphism</h2>
 			<p>
-				Using purely inheritance allows you to extend functionality and create sub-types, but you’re still limited to using only your new derived class, and you can’t change the base functionality of the base class. Polymorphism allows you to generalize derived classes by their base class, enabling you do things such as store them under one type, generalize functionality, and customize logic. Essentially, your bass class specifies an interface that all subclasses are guaranteed to support.
+				Inheritance allows you to extend functionality and create sub-types, but you are stuck with the base functionality of the parent class. Polymorphism is much more powerful. It allows you to abstract derived classes as their base class, generalizing interfaces while customizing logic. Essentially, when using polymorphism your bass class specifies an interface that all subclasses must support.
 			</p>
 			<p>
-				For example, if you created some polymorphic animals (again, see example), your base “animal” class specifies what functions will be available in all subclasses, so you can have your “dog” override the “speak” method to print “bark!,” while your “cat” can override the “speak” method to say “meow!” 
+				For example, if you created some polymorphic animals (see example), your base “animal” class specifies what functions will be available in all subclasses. Then, you can have your “dog” override a “speak” method to print “bark!,” whereas your “cat” can override the “speak” method to say “meow!” Furthermore, you can store all your “cats” and “dogs” within the same, single-typed data structure, under their shared base class “animal.” 
 			</p>
 			<p>
-				Now, you can store all your “cats” and “dogs” within the same, single-typed data structure, under their shared base class “animal.” In C++, polymorphism only works using pointers/dynamic memory. This means that if you, for example, create an array that holds “animals,” all your “cats” and “dogs” will be converted to simple “animals” when added to the array, but if you create an array that holds pointers to “animals,” your “cats” and “dogs” remain “cats” and “dogs” when you add their addresses to the array. 
+				In C++, polymorphism only works using pointers/dynamic memory. For example, if create an array that holds “animals,” all your “cats” and “dogs” will be converted to  “animals” when added to the array. Any polymorphic features are lost. But, if you create an array that holds pointers to “animals,” your “cats” and “dogs” remain “cats” and “dogs” when you add their addresses to the array. 
 			</p>
 			<p>See the example program.</p>
 			<h2 id="virt">Virtual Functions</h2>
 			<p>
-				In C++, you must specifically define what member functions of a class are polymorphic and hence overrideable. This specifies that the function will be at least available in all derived classes, but it can be changed, overridden to do different things depending on the derived class. If the function exists in the derived class, even when accessing, for example, a “dog” as a general “animal,” the more specific version (“bark!”) will always be called. If the derived class doesn’t implement the function, the base class’s more general version will be called. The keyword “virtual” is used for this, and any virtual function will make the class polymorphic. 
+				In C++, you must specifically define what member functions of a class are polymorphic and hence overrideable. A virtual function will be available in all derived classes, but it can be changed&mdash;overridden to do different things depending on the derived class. 
 			</p>
 			<p>
-				You are almost always going to want at least your base class destructor to be virtual, as this tells the program to first call the destructor of the derived class, then the destructor of the base class when an object of the derived class is destroyed. If you make another member function virtual, it works similarly to the destructor: if it is redefined within your base class, the more specific function will be called, even if you’re looking at, for example, your “dog” as simply an “animal.” However, the more general base class function will not be called afterwards.
+				If a derived class re-implements (overrides) a virtual function, the more specific version (“bark!”) will always be called. If the derived class doesn’t implement the function, the base class’s more general version will be called. For example, if you have a pointer to an "animal," which is technically a "dog," calling a virtual function will call the function from "dog" if it exists, and the function from "animal" if it doesn't.
 			</p>
-			<p>All of this is rather theoretical; I really encourage you to check out the example program.</p>
+			<p>
+				The keyword “virtual” denotes functions as polymorphic. Any class with one or more virtual functions is considered polymorphic.
+			</p>
+			<p>
+				You are almost always going to want at your base class destructor to be virtual. This is a special case&mdash;when an object is destroyed, this tells the program to first call the destructor of any derived class, then the destructor of the base class. If the base destructor isn't virtual, the derived destructor will not be called, and the program may leak memory. Of course, remember that for other virtual functions, only the most specific version is called.
+			</p>
+			<p>All of this is rather theoretical; I highly encourage you to check out the example program. Follow how each step invokes constructors, functions, and destructors.</p>
 			<pre class="example_code prettyprint">class animal
 {
 public:
@@ -289,9 +299,9 @@ int main() {
 }</pre>
 			<h2 id="usagep">Using Polymorphism</h2>
 			<p>
-				Finally, using your polymorphic, inherited classes is no different than using normal classes – you can still use them on their own. However, with polymorphic classes, you can create data structures of general (base) data types and actually store the specific (derived) data types within them, and have the functionality be preserved. Remember, you must use pointers for the polymorphic references to work.
+				Using polymorphic, inherited classes is no different than using normal classes. On their own, members are accessed in the exact same way. However, with polymorphic classes, you can create data structures of general (base) data types and actually store the specific (derived) data types within&mdash;and have functionality be preserved. Remember, you must use pointers for polymorphic references to work. 
 			</p>
-			<p>See the example program, where we create an array (vector) of animals and compare it to an array of animal*s in terms of polymorphic properties.</p>
+			<p>Yet agian&mdash;see the example program. We create an array (vector) of animals and compare it to an array of animal*s in terms of polymorphic properties.</p>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
@@ -307,44 +317,44 @@ int main() {
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/XuKzPC" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 #include &lt;vector&gt;
 
 using namespace std;
 
-// our base class
+// Base class
 class animal {
 public:
 	animal();
-	// You're usually going to want to make descrutors virtual so the specific one will be called before the general one
+	// You're usually going to want to make destructors virtual so the specific one will be called before the general one
 	virtual ~animal();
 
 	// Speak is virtual so subclasses can override it
 	virtual void speak() const;
 
-// inherited classes will have access to this data
+// Inherited classes will have access to this data
 protected:
-	char name[10]; // example data
+	char name[10]; // Example data
 
-// inherited classes will NOT have access to private data
+// Inherited classes will NOT have access to private data
 private:
-	int ID; // example data
+	int ID; // Example data
 };
 
 // 1st inherited class
 class dog : public animal {
 public:
-	// normal constructor/destructor
+	// Normal constructor/destructor
 	dog();
-	// this should not be a base class, so we don't make this virtual
+	// This should not be a base class, so we don't make this virtual
 	~dog();
 
 	void speak() const;
 
-// dog can have its own private data
+// Dog can have its own private data
 private:
 	char color;
 };
@@ -352,16 +362,16 @@ private:
 // 2nd inherited class
 class cat : public animal {
 public:
-	// normal constructor/destructor
+	// Normal constructor/destructor
 	cat();
-	// this should not be a base class, so we don't make this virtual
+	// This should not be a base class, so we don't make this virtual
 	~cat();	
 
 	void speak() const;
 
-// cat can have its own private data
+// Cat can have its own private data
 private:
-	// some data
+	// Some data
 };
 
 animal::animal()  {
@@ -402,9 +412,9 @@ void cat::speak() const {
 
 
 int main() {
-	// polymorphism won't work
+	// Polymorphism won't work here
 	vector&lt;animal&gt; animals;
-	// polymorphism will work
+	// Polymorphism will work here
 	vector&lt;animal*&gt; kennel;
 
 	cout &lt;&lt; endl &lt;&lt; "Constructing a dog:" &lt;&lt; endl;
@@ -413,13 +423,13 @@ int main() {
 	cat c; 
 	cout &lt;&lt; endl &lt;&lt; "Constructing an animal:" &lt;&lt; endl;
 	animal a;
-	// Add stuff to animals. Here, everything gets turned into just an "animal," making polymorphism useless
+	// Add animals to animals vector. Here, everything gets turned into just an "animal," making polymorphism useless
 	cout &lt;&lt; endl &lt;&lt; "Pass-by-value copies will be destructed as animals:" &lt;&lt; endl;
 	animals.push_back(d);
 	animals.push_back(c);
 	animals.push_back(a);
 
-	// Add stuff to kennel. Here, each animal retains its real type of dog or cat
+	// Add animals to kennel vector. Here, each animal retains its real type of dog or cat
 	for(int index = 0; index &lt; 3; index++) {
 		cout &lt;&lt; endl &lt;&lt; "Dynamically constructing a dog:" &lt;&lt; endl;
 		kennel.push_back(new dog);
@@ -441,7 +451,7 @@ int main() {
 	}
 	cout &lt;&lt; endl;
 
-	// delete polymorphic animals
+	// Delete polymorphic animals
 	for(int index = 0; index &lt; kennel.size(); index++) {
 		cout &lt;&lt; endl &lt;&lt; "Destructing some polymorphic animal:" &lt;&lt; endl;
 		delete kennel[index];

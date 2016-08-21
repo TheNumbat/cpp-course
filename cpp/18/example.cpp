@@ -1,41 +1,41 @@
-//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
-// our base class
+// Base class
 class animal {
 public:
 	animal();
-	// You're usually going to want to make descrutors virtual so the specific one will be called before the general one
+	// You're usually going to want to make destructors virtual so the specific one will be called before the general one
 	virtual ~animal();
 
 	// Speak is virtual so subclasses can override it
 	virtual void speak() const;
 
-// inherited classes will have access to this data
+// Inherited classes will have access to this data
 protected:
-	char name[10]; // example data
+	char name[10]; // Example data
 
-// inherited classes will NOT have access to private data
+// Inherited classes will NOT have access to private data
 private:
-	int ID; // example data
+	int ID; // Example data
 };
 
 // 1st inherited class
 class dog : public animal {
 public:
-	// normal constructor/destructor
+	// Normal constructor/destructor
 	dog();
-	// this should not be a base class, so we don't make this virtual
+	// This should not be a base class, so we don't make this virtual
 	~dog();
 
 	void speak() const;
 
-// dog can have its own private data
+// Dog can have its own private data
 private:
 	char color;
 };
@@ -43,16 +43,16 @@ private:
 // 2nd inherited class
 class cat : public animal {
 public:
-	// normal constructor/destructor
+	// Normal constructor/destructor
 	cat();
-	// this should not be a base class, so we don't make this virtual
+	// This should not be a base class, so we don't make this virtual
 	~cat();	
 
 	void speak() const;
 
-// cat can have its own private data
+// Cat can have its own private data
 private:
-	// some data
+	// Some data
 };
 
 animal::animal()  {
@@ -93,9 +93,9 @@ void cat::speak() const {
 
 
 int main() {
-	// polymorphism won't work
+	// Polymorphism won't work here
 	vector<animal> animals;
-	// polymorphism will work
+	// Polymorphism will work here
 	vector<animal*> kennel;
 
 	cout << endl << "Constructing a dog:" << endl;
@@ -104,13 +104,13 @@ int main() {
 	cat c; 
 	cout << endl << "Constructing an animal:" << endl;
 	animal a;
-	// Add stuff to animals. Here, everything gets turned into just an "animal," making polymorphism useless
+	// Add animals to animals vector. Here, everything gets turned into just an "animal," making polymorphism useless
 	cout << endl << "Pass-by-value copies will be destructed as animals:" << endl;
 	animals.push_back(d);
 	animals.push_back(c);
 	animals.push_back(a);
 
-	// Add stuff to kennel. Here, each animal retains its real type of dog or cat
+	// Add animals to kennel vector. Here, each animal retains its real type of dog or cat
 	for(int index = 0; index < 3; index++) {
 		cout << endl << "Dynamically constructing a dog:" << endl;
 		kennel.push_back(new dog);
@@ -132,7 +132,7 @@ int main() {
 	}
 	cout << endl;
 
-	// delete polymorphic animals
+	// Delete polymorphic animals
 	for(int index = 0; index < kennel.size(); index++) {
 		cout << endl << "Destructing some polymorphic animal:" << endl;
 		delete kennel[index];
