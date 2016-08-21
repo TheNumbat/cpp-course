@@ -35,7 +35,8 @@ class node {
 	// We also have to specify what kind of list we're outputting, so we do LinkedList<type>.
 	// Hence, the friend must also be templated. Note that the template declaration goes before
 	// "friend," and that we must use U as our argument, as T is already defined.
-	template <typename U> friend ostream& operator<<(ostream& out, const LinkedList<U>& src);
+	template <typename U> 
+	friend ostream& operator<<(ostream& out, const LinkedList<U>& src);
 };
 
 // Here our actual list is templated to accommodate the templated nodes and arbitrary data input/output
@@ -92,7 +93,8 @@ public:
 	}
 
 	// Again, we can't implement a friend here, and we must specify that the LinkedList uses type U
-	template <typename U> friend ostream& operator<<(ostream& out, const LinkedList<U>& src);
+	template <typename U> 
+	friend ostream& operator<<(ostream& out, const LinkedList<U>& src);
 
 private:
 	// Our node must use generic type T

@@ -24,7 +24,8 @@
 					<li><a href="#func">Template Functions</a></li> | 
 					<li><a href="#param">Template Parameters</a></li> | 
 					<li><a href="#adt">Template Structures &amp; Classes</a></li> | 
-					<li><a href="#usage">Using Template Structurs &amp; Classes</a></li> | 
+					<li><a href="#usage">Using Template Structures &amp; Classes</a></li> | 
+					<li><a href="#spec">Template Specialization</a></li> | 
 					<li><a href="#node">Templated Nodes</a></li> | 
 					<li><a href="#exercises">Exercises</a></li>
 				</ul>
@@ -74,7 +75,8 @@ class node {
 	// We also have to specify what kind of list we're outputting, so we do LinkedList&lt;type&gt;.
 	// Hence, the friend must also be templated. Note that the template declaration goes before
 	// "friend," and that we must use U as our argument, as T is already defined.
-	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
+	template &lt;typename U&gt; 
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
 };
 
 // Here our actual list is templated to accommodate the templated nodes and arbitrary data input/output
@@ -131,7 +133,8 @@ public:
 	}
 
 	// Again, we can't implement a friend here, and we must specify that the LinkedList uses type U
-	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
+	template &lt;typename U&gt; 
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
 
 private:
 	// Our node must use generic type T
@@ -205,106 +208,189 @@ int main() {
 		<article role="article">
 			<h2 id="gen">Generic Programming</h2>
 			<p>
-				Generic programming is a general topic of discussion in computer science, and it represents the ability to program logic without knowing or caring about the actual type of data you will be using. Generic programming is particularly useful for abstracting data structures to the point that all you have to think about is the logic behind your data’s organization, not the data itself. Realistically, this would mean (for example) creating a list data structure that is agnostic of what type of data it stores, whether it be integers, strings, or even lists. 
+				Generic programming allows one to specify logic without knowing or caring about the type of data to be used. Generic programming is particularly useful for abstracting data structures, in which case all you have to think about is the logic behind the structure's organization. For example, you could can create a type-agnostic "list" data, and it will work whether it holds integers, strings, or even more lists. 
 			</p>
 			<h2 id="cpp">C++ Templates</h2>
 			<p>
-				Most languages support most, if not all, of what we’ve learned so far, although classes (i.e. objects) are specific to object oriented ones. However, we’re now going to start covering some C++ specific features, and templates are one of them. Other languages do support generic programming, but C++’s templates are an implementation specific to the language. 
+				This topic will be the first (and only) lesson in the basic C++ section that is really specific to C++. Many languages support generic programming, but C++'s implementation&mdash;templates&mdash;is relatively unique.
 			</p>
 			<p>
-				So, templates are C++’s way to do generic programming, giving you the ability to make functions and data structures type-agnostic. However, you have to be wary of using them—they may cause more problems than they solve. They are hard to validate in all cases, they can significantly slow compilation time, old C++ compilers don’t support them, and error messages from templates are practically incomprehensible. Seriously—template errors can generate a hundred or so lines of error messages from one problem, and give you no straightforward information but the line number of the error.
+				Templates give you the ability to make functions and data structures type-agnostic. However, they sometimes cause more problems than they solve. They are hard to validate for all cases, they can significantly slow compilation time, old C++ compilers don’t support them, and related error messages are practically incomprehensible. (Seriously&mdash;template errors can be hundreds of lines and only directly give you the line number of the error.)
 			</p>
 			<p>
-				So, why would you want to use templates? Often, you won’t. However, when used in moderation, they can allow you to reuse data structures and methods to significant effect.
+				Most of these problems arise from the fact that templates are not compiled into code in C++. This is because to compile truly type-agnostic functions and objects would incur significant performance overhead, and the main strength of C++ is its low overhead and high execution speed. Instead, the C++ compiler generates specific versions of templates whenever they are instantiated. 
+			</p>
+			<p>
+				In basic terms, the compiler automatically writes an "int" version of your object if you instantiate the template with an "int," a "float" version if you instantiate it with a "float," etc. This code, using concrete data types, is actually compiled. You might see how this can cause problems. Of course, the compiler can't generate code for every possible combination of your template parameters, so it only does so when they are specified. Consequently, buggy, even uncompilable code may lie dormant until one day, you instantiate a template with a new type and all hell breaks loose.
+			</p>
+			<p>Additionally, <a href="https://monoinfinito.wordpress.com/series/introduction-to-c-template-metaprogramming/">you can do some pretty crazy metaprogramming with templates.</a> There's nested templates, template recursion, template functors, and much more. But that's not to say that you should. You shouldn't. It's needlessly overcomplicated.</p>
+			<p>
+				If there is one piece of advice for using templates, it would simply be to seriously consider if using templates is actually making your code more straightforward and your life easier. If you're using templates for more than type plasticity, the answer is likely no.
+			</p>
+			<p>
+				So, why would you want to use templates? Most of the time, you won’t. However, when used intelligently, they can be effective in allowing you to easily reuse data structures and methods. Finally, the C++ Standard Template Library (<a href="..\..\index.html#stl">STL</a>) is, as the name implies, built around templates. Even if you never create your own, you should be at least familiar with using templates.
 			</p>
 			<h2 id="func">Template Functions</h2>
 			<p>
-				To declare a templated function, you begin with the word “template,” as you might expect. However, you can then add template parameters, the important part. Template parameters, specified in pointy brackets, can be normal parameter data, or the name of a type. To declare a type name parameter, simply define the type as “typename,” or “class.” 
+				When declaring any template, begin with the word “template," then add template parameters. Template parameters, specified in pointy brackets, can be normal parameter data&mdash;or type names. The type of a type name parameter can be either "typename" or "class." (Bit of a mouthful.)
 			</p>
 			<pre class="example_code prettyprint">template &lt;typename T, int x&gt;
 // templated thing</pre>
 			<p>
-				Now, in your templated “thing,” you can use the template parameters as constants (in the case of regular parameters), or actual types (in the case of type names). This is the generic part: the arbitrary type parameter can be used specify variables, pointers, the function return type, parameters, and anything else. For example, if we wanted to make a templated function that creates an array of a type of a specified length...
+				Within your templated object or function, template parameters can be used constants or actual data types. This is what makes it generic: the arbitrary type parameter can be used specify variables, pointers, the function return type, parameters&mdash;anything. 
 			</p>
+			<p>For example, a templated function that creates an array of any type of any length...</p>
 			<pre class="example_code prettyprint">template &lt;typename T, int n&gt;
-T* createArray()
-{
+T* createArray() {
 	return new T[n];
 }</pre>
-			<p>Of course, “n” could be passed as a normal parameter, but for the sake of the example it’s a template parameter.</p>
+			<p>Here, “n” could be passed as a normal parameter, but for the sake of the example it’s a template parameter.</p>
 			<p>
-				So, since templates are used to abstract the type of data you’ll be working with, when actually using a templated function or object, you must specify what type of data you’re working with. Passing template parameters parallels passing normal parameters: you pass actual values, but this time inside pointy brackets, and before your actual parameters. For example, if we wanted to call the previous example to create an array of 10 integers, we would do:
+				Since templates abstract data types, when actually using a templated function or object, you must specify what types you’re working with. Passing template parameters parallels passing normal parameters, except that values can now include type names. Template parameters are passed inside pointy brackets, before your actual parameters. For example, to tell the previous example to allocate an array of 10 integers...
 			</p>
 			<pre class="example_code prettyprint">int* array = createArray&lt;int,10&gt;();</pre>
-			<p>Here, we pass “int” as the type name “T,” and “10” as the integer template parameter “n.” This will create an array of 10 integers.</p>
+			<p>Here, we pass “int” as the type name “T,” and “10” as the integer template parameter “n.” The function will allocate an array of 10 integers.</p>
 			<h2 id="param">Template Parameters</h2>
 			<p>
-				Another useful feature of templates is that if possible, the compiler will automatically detect what types you’re using as template parameters. In these cases, you can leave off the template parameters entirely. 
+				Another useful feature of templates is that if possible, the compiler will automatically detect what types you’re using, allowing you to omit the template parameters. For example...
 			</p>
 			<pre class="example_code prettyprint">template &lt;typename T&gt;
-T abs_value(T value)
-{
+T abs_value(T value) {
 	if(value < 0) return –value;
 	return value;
 }
 
-abs_value(-10);	   // This will automatically use “int” as “T”
-abs_value(5.45);	   // This will automatically use “float” as “T”</pre>
+int main() {
+	float f = abs_value(5.45f);	   // This call will automatically use “float” as “T”
+	int i = abs_value(-10);	   // This call will automatically use “int” as “T”
+}</pre>
 			<p>
-				Templates can be used to create many useful utility functions, for example a to-string function, a from-string function, operator overloads, and more, but the main use is creating reusable data structures in the next section.
+				Just like <a href="..\04\04.html#default">functions</a>, templates can have default parameters. They work in exactly the same way as function default parameters. They are also declared in the same way: in the template definition, simply set a parameter equal to its default value.
+			</p>
+			<pre class="example_code prettyprint">template &lt;typename T = float&gt;
+T divide(float x, float y) {
+	return x / y;
+}
+
+int main() {
+	float f = divide(5,7);
+	int i = divide&lt;int&gt;(5,7);
+}</pre>
+			<p>This example is a little contrived, as this isn't really how you would use default template parameters. However, it illustrates how if you leave out the template parameter, the function will automatically return a float. Default template parameters will be more useful when creating data structures.</p>
+			<p>
+				Templates can be used to create many useful utility functions, but the main use is creating reusable data structures.
 			</p>
 			<h2 id="adt">Template Structures &amp; Classes</h2>
 			<p>
-				Declaring a templated structure or class is much the same as templating a function: you begin with the keyword “template” and the template parameters, then declare the class/struct as usual, except using your template parameters. For example, say we want to create a “vector” structure, which contains N elements of type T. In this case, note that N would not work as a normal parameter, as you cannot create a static array with a non-constant variable. Also, you would want a constructor/destructor, but they are omitted for the example:
+				Declaring a templated structure or class is much the same as templating a function: you begin with the keyword “template” and the template parameters, then declare the class/struct as usual. In the declaration, you can use your template parameters as constants or types. 
+			</p>
+			<p>
+				For example, to create a “vector” structure that contains N elements of type T....
 			</p>
 			<pre class="example_code prettyprint">template &lt;typename T, int N&gt;
-struct Vector
-{
-	T elements[N];
-
+}
+class Vector {
+public:
 	Vector&amp; operator=(const Vector&amp; src);
 	T operator*(const Vector&amp; other);
+private:
+	T elements[N];
 };</pre>
-			<p>Here, we create an array of type “T” with length “N,” and prototype some member functions. Note that “Vector” is still used normally, and “T” can be used as the return type for the * operator. </p>
-			<p>If you were to implement member functions of a templated struct/class normally, the syntax is very obtuse, as you have to declare the member as a template, and each time you were to write “Vector,” you have to write the type with all template parameters. </p>
-			<pre class="example_code prettyprint">template <typename T, int N>
-Vector&lt;T,N&gt;&amp; Vector&lt;T,N&gt;::operator=(const Vector&lt;T,N&gt;&amp; src)
-{
+			<p>In this case, N would not work as a normal parameter, as you cannot create a static array of non-constant size. However, as a template parameter, N is considered a constant at compile time. Note that the “Vector” type is still used normally, and “T” can be used as the return type for the * operator.</p>
+			<p>
+				The syntax to implement external member functions of a templated struct/class is very obtuse, as you have to declare the member as a template, and each time you were to write the class type, you have to write the type with all template parameters.
+			</p>
+			<pre class="example_code prettyprint">template &lt;typename T, int N&gt;
+Vector&lt;T,N&gt;&amp; Vector&lt;T,N&gt;::operator=(const Vector&lt;T,N&gt;&amp; src) {
 	// …
 }</pre>
-			<p>Because this is ugly and prone to errors, it’s conventional to simply implement your member functions directly in the declaration of your struct/class, for example:</p>
-			<pre class="example_code prettyprint">template &lt;typename T, int N&gt;
-struct Vector
-{
-	T elements[N];
-
-	Vector&amp; operator=(const Vector&amp; src)
-	{
-		// …
-	}
-
-	T operator*(const Vector&amp; other)
-	{
-		// …
-	}
-}</pre>
-			<h2 id="usage">Using Template Structurs &amp; Classes</h2>
 			<p>
-				You’re probably going to want to use your fancy new templatized data types. Creating a templated type is very similar to calling a templated function: simply specify your template parameters in pointy brackets. 
+				However, it is conventional to implement members functions of templated classes directly within the class definition. Because the compiler does not directly compile templates, a templated class cannot be compiled on its own. This creates a bit of a paradox. The compiler wants to compile each class individually, but if some code references a templated class, the compiler must go find the template implementation, generate code, and finally compile that. And the compiler's job is not to look at the code holistically&mdash;that's the linker's job. Consequently, if you implement your template members within the class definition, this code is automatically included (in your .h) in each necessary compilation unit. 
+			</p>
+			<p>If this part mostly went over your head, that's OK&mdash;we haven't talked about the compilation and linkage process. However, know that you should implement members for a template class in the definition. This has the added benefit of allowing you to drop the clunky template parameters from each reference to your class type.</p>
+			<pre class="example_code prettyprint">template &lt;typename T, int N&gt;
+class Vector {
+public:
+	Vector&amp; operator=(const Vector&amp; src) {
+		// …
+	}
+
+	T operator*(const Vector&amp; other) {
+		// …
+	}
+private:
+	T elements[N];
+}</pre>
+			<p>Instead of implementing each member like previous example, you can simply implement at the prototype.</p>
+			<h2 id="usage">Using Template Structures &amp; Classes</h2>
+			<p>
+				Creating a templated type is very similar to calling a templated function: simply specify your template parameters in pointy brackets. 
 			</p>
 			<pre class="example_code prettyprint">Vector&lt;int,3&gt; vec1;</pre>
-			<p>Creates a vector holding 3 integers named “vec1.”</p>
-			<p>Using your newly created object is no different than anything else you’ve dealt with, member functions, data members, operators, and everything else works the same way.</p>
+			<p>This creates a vector holding 3 integers named “vec1.”</p>
+			<p>Using your newly created instance is no different than using any other object: member functions, data members, operators, and everything else works the same way.</p>
+			<h2 id="spec">Template Specialization</h2>
+			<p>
+				Template specialization allows you to specify entirely different logic for special template parameters. For example, you can specialize a templated function to perform different operations for integers, floats, and everything else. Specialization is only really useful in (obviously) special cases that require different handling. However, specialization is also a not insignificant part of the STL and functional programming in C++, so it's useful to know.
+			</p>
+			<p>
+				A template can be fully or partially specialized. A fully specialized template is the most specific case: all parameters are accounted for. A partially specialized template, on the other hand, only has one or more parameter specified.
+			</p>
+			<p>
+				The syntax for template specialization is a little complicated: as always, begin the declaration with the keyword "template." However, if you are fully specializing your template, leave the pointy brackets empty. If you are partially specializing, only include the arbitrary parameters. Then, declare the function/class the same as the generalized version, and add another set of pointy brackets. These brackets contain the specialized parameters. For example, if you are fully specializing a data structure for integers, you would have template&lt;&gt; class name&lt;int&gt; { ... }; 
+			</p>
+			<p>
+				Next, implement the specialized function or class. This implementation technically does not have to share any similarities with the more general type&mdash;it's its own fully fledged type. However, be aware that when using the template later in your program, you (or another programmer) may not know if they are using the specialized or generalized version. This is another dangerous property of templates. Hence, it is conventional for any specialized templates to have the same interface, or API, as the generalized version. The user should not have to know if they are using the specialized or generalized version.
+			</p>
+			<p>
+				Finally, as I just alluded to, using the specialized template is automatic&mdash;the specialized version will automatically be used when needed. Just remember that the specialized version is an entirely different type than the generalized.
+			</p>
+			<p>A fully specialized function for integers:</p>
+			<pre class="example_code prettyprint">template&lt;typename T&gt;
+int floor(T val) {
+	return std::floor(val);
+};
+
+template&lt;&gt;
+int floor&lt;int&gt;(int val) {
+	return val;
+};</pre>
+			<p>A partially specialized vector for zero elements:</p>
+			<pre class="example_code prettyprint">template&lt;typename T, int N&gt;
+class Vector {
+public:
+	// ...
+private:
+	T elements[N];
+};
+
+template&lt;typename T&gt;
+class Vector&lt;T,0&gt; {
+public:
+	// ...
+private:
+	T element;
+};
+
+int main() {
+	Vector&lt;int,3&gt; v1;
+	Vector&lt;int,0&gt; v2;
+
+	// Assume these are public
+	cout << v1.elements[0] << endl;
+	// This line is totally valid&mdash;Vector&lt;int,0&gt; is an entirely different type and has a different data member
+	cout << v2.element << endl;
+};</pre>
 			<h2 id="node">Templated Nodes</h2>
 			<p>
-				As I’ve mentioned several times, templates are often used to create generic data structures. I don’t have much to say here: first, we’ve already created a simple templated data structure, the Vector. Simply templating a struct/class is often enough to create your data structure. However, say you wanted to template a linked list-based structure, like we made last week. Here, you would need to template both the “node,” to hold arbitrary types, and the list to accommodate templatized nodes. See the example program.
+				As I’ve mentioned several times, templates are often used to create generic data structures. A quick note here: simply templating a class is often enough to make it generic. However, suppose you want to template a linked list-based structure. In this case, you would need to not only template the node type to hold arbitrary data, but also the list type to accommodate the template nodes. See the example program for an example.
 			</p>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
 			<ol>
 				<li>Template last week’s exercise, the linked-list based list data structure. Make sure it will work with any data type, including itself.</li>
-				<li>Create your own full-featured, templated, arbitrarily sized vector class (in the mathematical sense). Try implementing the following members:</li>
+				<li>Create your own full-featured, templated, arbitrarily sized vector class (the mathematical vector, not the STL vector). Try implementing the following members:</li>
 				<div class="nocollapse">
 				<ul style="float:left;width:25%;">
 					<li>Default constructor</li>
@@ -325,8 +411,8 @@ struct Vector
 					<li>angle()</li>
 					<li>operator==</li>
 					<li>operator!=</li>
-					<li>templated operator* -- multiply by constant</li>
-					<li>operator * -- dot product</li>
+					<li>templated operator* - multiply by constant</li>
+					<li>operator * - dot product</li>
 				</ul>
 				</div>
 			</ol>
@@ -374,7 +460,8 @@ class node {
 	// We also have to specify what kind of list we're outputting, so we do LinkedList&lt;type&gt;.
 	// Hence, the friend must also be templated. Note that the template declaration goes before
 	// "friend," and that we must use U as our argument, as T is already defined.
-	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
+	template &lt;typename U&gt; 
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
 };
 
 // Here our actual list is templated to accommodate the templated nodes and arbitrary data input/output
@@ -431,7 +518,8 @@ public:
 	}
 
 	// Again, we can't implement a friend here, and we must specify that the LinkedList uses type U
-	template &lt;typename U&gt; friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
+	template &lt;typename U&gt; 
+	friend ostream&amp; operator&lt;&lt;(ostream&amp; out, const LinkedList&lt;U&gt;&amp; src);
 
 private:
 	// Our node must use generic type T
