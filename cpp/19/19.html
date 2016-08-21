@@ -246,7 +246,7 @@ dog::speak() {
 			<div class="nocollapse">
 			<img src="diamond.png" style="float:left;padding-right:25px;padding-left:10px;">
 			<p>
-				In this situation, class ‘D’ inherits from both ‘B’ and ‘C,’ which in turn both inherit from ‘A.’ So, if you were to create an object of type ‘D,’ where would the ‘A’ part come from? Since an object of type ‘D’ contains an object of type ‘B’ and ‘C,’ both of those objects contain their own copy of ‘A.’ Hence, if you were to call a virtual function from ‘A,’ which path would the call take?
+				In this situation, class ‘D’ inherits from both ‘B’ and ‘C,’ which in turn both inherit from ‘A.’ So, if you were to create an object of type ‘D,’ where would the ‘A’ part come from? Under the hood, a derived class stores a pointer to an instance of its base class. Hence, because an object of type ‘D’ contains two objects of type ‘B’ and ‘C,’ both of those objects contain their own copy of ‘A.’ Therefore, if you were to call a virtual function from ‘A,’ which path would the call take?
 			</p>
 			<p>
 				Well, these problems are solved by the use of “virtual” inheritance. In the example, if classes ‘B’ and ‘C’ are virtually inherited from ‘A,’ an instance of ‘D’ will have only one ‘A’ part, hence any calls will be unambiguous. You shouldn’t use virtual inheritance unless you have to, because it can cause significant performance overhead. However, “diamond” inheritance is often not a suitable design pattern, as even using virtual inheritance, problems can be created through ambiguous virtual functions and data access patterns. As with everything else, make sure what design you’re using actually fits your situation. 
