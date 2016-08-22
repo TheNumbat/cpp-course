@@ -35,8 +35,8 @@
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/8ItXqy" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 
@@ -131,19 +131,21 @@ int main() {
 		<article role="article">
 			<h2 id="type">Type Members, Enumerations, Casting</h2>
 			<p>
-				When using inheritance to store derived classes in a generalized data structure, it is often necessary to re-transform the elements into their derived states in order to access the data members specific to the derived class. One could technically achieve this through using only virtual functions, but that forces you to have at least a generalized concept of that function where it may not make sense.
+				When using inheritance to store derived instances in a generalized data structure, it is often necessary to re-transform the elements into their derived states in order to access more specific data members. Technically, you could achieve this using virtual functions, but that would force you to have generalized functions where they do not make sense.
 			</p>
-			<p>If you know exactly what type the object was originally, you can simply cast the pointer to the more specific type. </p>
+			<p>
+				If you know exactly what type an object really is, you can simply cast the pointer to the more specific type.
+			</p>
 			<pre class="example_code prettyprint">dog newDog;
 animal* something = &amp;newDog;
 
 dog* someDog = (dog*)something;</pre>
-			<p>“someDog” will now point to “newDog,” as a “dog” instead of just an “animal.”</p>
+			<p>“someDog” now points to “newDog” as a “dog” instead of just an “animal.”</p>
 			<p>
-				However, you usually won’t know the original type of your object, so there are two common ways to get around this: specific “type” members and the dynamic_cast keyword. A “type” member is just what it sounds like—your base class defines a shared data member describing the specific type of the object, and each of your derived classes (in their constructor) sets that member to the specific type. 
+				However, you usually won’t know the original type of the object. There are two common ways to get around this: specific “type” members and the dynamic_cast operator. A “type” member is what it sounds like&mdash;the base class defines a data member describing the specific type of the object. Each of derived class (in its constructor) sets that member to denote the specific type. 
 			</p>
 			<p>
-				Enumerations, or enums for short, are often used for this purpose, as they create a set of constant, related values. For example, you could create an enum called “class_types,” where each member signifies a specific derived type. 
+				Enumerations, or enums for short, are often used for this purpose. An enum is a set of constant, related values. For example, you could create an enum called “class_types,” where each member signifies a specific derived type. 
 			</p>
 			<pre class="example_code prettyprint">enum animal_types 
 {
@@ -153,7 +155,7 @@ dog* someDog = (dog*)something;</pre>
 	animal_bird
 };</pre>
 			<p>
-				Allows you to use “animal_generic,” “animal_dog,” “animal_cat,” and “animal_bird,” as if they were constants of type “animal_types.” You can probably see why this is useful in creating “type” members, for example:
+				This example allows you to use “animal_generic,” “animal_dog,” “animal_cat,” and “animal_bird” as if they were constants of type “animal_types.” You can probably see why this is useful in creating “type” members.
 			</p>
 			<pre class="example_code prettyprint">class animal {
 	animal();
@@ -174,54 +176,68 @@ dog::dog() {
 	type = animal_dog;
 }</pre>
 			<p>
-				Your type member can be accessed through any animal, as you know that every animal contains the data. Hence, if you have a pointer to a general animal, you can automatically check what type it is. Once you have checked the type, you can then simply cast the pointer to the more specific type. 
+				Here, if we create an animal, the animal constructor will set the type to "animal_generic." However, if we were to create a dog, the animal constructor will still set the type to "animal_generic," but the dog constructor will then set it to "animal_dog."
 			</p>
-			<pre class="example_code prettyprint">animal* something;	// assume this points to a cat, a dog, or a general animal
+			<p>
+				Being a member of the base class, the type member is shared through all animals. Hence, if you have a pointer to a general animal, you can simply check what type it is. Once you have checked the type, you can cast the pointer to the derived type. 
+			</p>
+			<pre class="example_code prettyprint">animal* something;	// This points to a cat, a dog, or a general animal
 
+// Test for dog
 if(something->type == animal_dog) {
 	dog* someDog = (dog*)something;
 }
+// Test for cat
 else if(something->type == animal_cat) {
 	cat* someCat = (cat*)something;
-}
-// etc</pre>
-			<p>You can now use your full derived class functionality.</p>
+}</pre>
+			<p>Once cast, the full features of the derived class are available.</p>
 			<h2 id="cast">dynamic_cast</h2>
 			<p>
-				C++ provides a way to automatically cast a base class pointer into the original (most) derived type. This is with the dynamic_cast keyword. dynamic_cast takes two arguments; the type (template) argument of what you want to cast to, and the pointer (parameter) argument of what pointer you want to cast. For example, the code above could be written as:
+				C++ provides a way to perform this type checking without a type member. This is with the dynamic_cast keyword. dynamic_cast takes two arguments: the type you want to cast to, and the pointer you want to cast. The type is, of course, a template parameter. For example, instead of the previous example (checking the type member before casting) you could do this...
 			</p>
 			<pre class="example_code prettyprint">dog* someDog = dynamic_cast&lt;dog*&gt;(something);</pre>
 			<p>
-				However, if you already know exactly what type you want to cast to, there’s not much point in using dynamic_cast. So, the useful thing about dynamic_cast is that if the cast fails, instead of giving you a pointer with invalid data, will simply return a null pointer. Hence, you can simply check if the cast worked or not.
+				If you already know exactly what type you want to cast to, there’s not much point in using dynamic_cast. However&mdash;the useful thing about dynamic_cast is that if the cast fails, instead of giving you an invalid pointer, it returns a null pointer.
 			</p>
+			<p>Hence, it is simple to test if a cast is successful. The previous example could be replaced with...</p>
 			<pre class="example_code prettyprint">dog* someDog = dynamic_cast&lt;dog*&gt;(something);
 
+// Test if dog cast succeeded
 if(someDog)
 {
-	// stuff
+	// ...
 }
-else 
+else // Not a dog
 {
 	cat* someCat = dynamic_cast&lt;cat*&gt;(something);
+	// Test if cat cast succeeded
 	if(someCat)
 	{
-		// stuff
+		// ...
 	}
 }</pre>
 			<h2 id="pure">Pure Virtual Functions &amp; Abstract Classes</h2>
 			<p>
-				Often, it doesn’t make sense to create an object of a base class type, or a generalized logic to exist. Even if it does make sense, you still might not want them to exist. In fact, you might only want the lowest level of derived classes to exist. For example, an inheritance tree of entities in a game might start with a generic “entity,” which is a base for “player” and “monster,” which are in turn base classes for “knight,” and “skeleton,” but you only want the final layer (knights and skeletons) to exist. 
+				Often, it doesn’t make sense to instantiate an object of a base class type, or even for generalized logic to exist. You might even want only the bottom level of derived classes to exist. For example, a tree might start with a generic “entity,” which is a base for “player” and “monster,” which are in turn bases for “knight,” and “skeleton.” However, you may only want the final layer of entities (knights and skeletons) to actually be created. 
 			</p>
 			<p>
-				You can restrict the creation of base class objects, but still have them describe shared functionality by the use of pure virtual functions. A class with one or more pure virtual functions is called an “abstract” class, as it specifies the interface of derived classes, but cannot be itself created. An abstract class cannot be instantiated; attempting to do so will generate a compiler error. However, pointers to abstract classes are completely valid: if they point to an actual object, that object just be of a non-abstract, derived type. The implementation of a pure virtual function is not defined in the base class, so there is no generalized logic—every derived class is forced to implement their own version. If the derived class does not implement the pure virtual function, it becomes an abstract class as well, and its children will have to then implement it or become abstract as well.
+				You can restrict the creation of base class objects, but still provide shared functionality by the use of pure virtual functions. A class with one or more pure virtual functions is called an “abstract” class. An abstract class specifies the interface of derived classes, but cannot itself be created. However, pointers to abstract classes are completely valid if they point to a real object; a concrete derived type. This means that you can still store derived types under their base class&mdash;you just can't create objects of the base type.
 			</p>
-			<p>The previous rules of virtual function calls still apply, except here there is no base or generic option. Defining a pure virtual function is extremely simple:</p>
+			<p>
+				The implementation of a pure virtual function is not defined, so there is no generalized logic&mdash;every derived class is forced to implement their own version or become abstract as well. The rules of virtual function calls still apply, except here, there is no generic option. 
+			</p>
+			<p>Defining a pure virtual function is extremely simple...</p>
 			<pre class="example_code prettyprint">class animal {
-	virtual void speak() = 0;	// see the ‘= 0’
+public:			
+	virtual void speak() = 0;	// '= 0' makes the function pure virtual
+	// ...
 };</pre>
-			<p>When creating your derived classes (say “dog”), you must redefine and implement the pure virtual functions, as again, there is no generic “some animal sound,” or what have you.</p>
-			<pre class="example_code prettyprint">class dog {
+			<p>Then, when creating your derived classes (say “dog”), you must redefine and implement the any inherited pure virtual functions, as again, there is no generic to fall back on.</p>
+			<pre class="example_code prettyprint">class dog : public animal {
+public:
 	speak();
+	// ...
 };
 
 dog::speak() {
@@ -229,27 +245,30 @@ dog::speak() {
 }</pre>
 			<h2 id="mult">Multiple Inheritance</h2>
 			<p>
-				Unlike many other Object-Oriented languages (such as Java), C++ supports multiple inheritance, meaning a derived class can inherit from more than one base class. This works more or less how you’d expect: the derived class inherits the methods and data of both classes, and can be polymorphically abstracted to either base class type. 
+				Unlike many other object-oriented languages (such as Java), C++ supports multiple inheritance. This means a derived class can inherit from more than one base class. It works more or less how you’d expect: the derived class inherits the methods and data of both base classes, and can be polymorphically abstracted to either base class type. 
 			</p>
 			<p>
-				Multiple inheritance is particularly useful to define classes by building up different sets of functionality, rather than extending the functionality of a more general class. For example, you could have a “car” class inherit from “controlledVehicle,” “usesFuel,” and “wheeledVehicle” base classes. This would mean that a “car” implements the interfaces from each of the component parts. In this paradigm, the components would likely be abstract classes that simply specify a set of functionality to be incorporated into another class.
+				Multiple inheritance is particularly useful in defining objects by building up different sets of functionality rather than extending the functionality of a more general class. For example, you could have a “car” class inherit from “controlledVehicle,” “usesFuel,” and “wheeledVehicle” base classes. Here, “car” must implement the interfaces from each of the component parts. In this paradigm, the components would likely be abstract classes that specific a set of functionality to be implemented in another class.
 			</p>
-			<p>To specify multiple inheritance, simply add the other base classes delaminated by commas:</p>
+			<p>To specify multiple inheritance, simply add the more base classes delineated by commas:</p>
 			<pre class="example_code prettyprint">class car : public wheeledVehicle, public controlledVehicle {
-	// override functions
-	// data, etc
+	// Implement abstract interfaces
+	// ...
 }</pre>
 			<h2 id="virt">Virtual Inheritance</h2>
 			<p>
-				Although not immediately obvious, there is a big problem with multiple inheritance described as of yet. This is called the “diamond” problem, because of what the problem inheritance tree looks like:
+				Although not immediately obvious, there is a big problem with multiple inheritance. This is called the “diamond” problem, because of what the problem inheritance tree looks like:
 			</p>
 			<div class="nocollapse">
 			<img src="diamond.png" style="float:left;padding-right:25px;padding-left:10px;">
 			<p>
-				In this situation, class ‘D’ inherits from both ‘B’ and ‘C,’ which in turn both inherit from ‘A.’ So, if you were to create an object of type ‘D,’ where would the ‘A’ part come from? Under the hood, a derived class stores a pointer to an instance of its base class. Hence, because an object of type ‘D’ contains two objects of type ‘B’ and ‘C,’ both of those objects contain their own copy of ‘A.’ Therefore, if you were to call a virtual function from ‘A,’ which path would the call take?
+				In this situation, class ‘D’ inherits from both ‘B’ and ‘C,’ which in turn both inherit from ‘A.’ So, if you were to create an object of type ‘D,’ where would the ‘A’ part come from? Under the hood, a derived class stores a pointer to an instance of its base class. Hence, because an object of type ‘D’ contains two objects of type ‘B’ and ‘C,’ both of those objects contain their own copy of ‘A.’ Therefore, if you were to call a virtual function from ‘A,’ which path would the call take? It's ambiguous.
 			</p>
 			<p>
-				Well, these problems are solved by the use of “virtual” inheritance. In the example, if classes ‘B’ and ‘C’ are virtually inherited from ‘A,’ an instance of ‘D’ will have only one ‘A’ part, hence any calls will be unambiguous. You shouldn’t use virtual inheritance unless you have to, because it can cause significant performance overhead. However, “diamond” inheritance is often not a suitable design pattern, as even using virtual inheritance, problems can be created through ambiguous virtual functions and data access patterns. As with everything else, make sure what design you’re using actually fits your situation. 
+				These problems are solved by the use of virtual inheritance. In the example, if classes ‘B’ and ‘C’ virtually inherited from ‘A,’ an instance of ‘D’ will have only one ‘A’ part, hence any calls will be unambiguous. That's all there is to virtual inheritance.
+			</p>
+			<p>
+				You shouldn’t use virtual inheritance unless you have to, because it can cause significant performance overhead. Further, “diamond” inheritance is often a sign of bad design, as problems can still be created by ambiguous names and data access patterns. As with everything else, just make sure your design fits your problem. 
 			</p>
 			</div>
 			<p>To specify a class as virtually inherited, simply add the keyword “virtual”:</p>
@@ -258,28 +277,28 @@ dog::speak() {
 };
 
 class B : public virtual A {
-	// stuff
+	// ...
 }; 
 
 class C : public virtual A {
-	// stuff
+	// ...
 };
 
 class D : public B, public C {
-	// stuff
+	// ...
 }
  
 int main() {
 	D object;
 	object.foo();
 }</pre>
-		<p>If ‘B’ and ‘C’ did not inherit virtually, this would be ambiguous, as ‘object’ would contain two instances of ‘A.’</p>
+		<p>If ‘B’ and ‘C’ did not inherit virtually, the call to foo() would be ambiguous, as ‘object’ would contain two instances of ‘A.’</p>
 		</article>
 		<section class="exercises">
 			<h2 id="exercises">Programming Exercises</h2>
 			<ol>
 				<li>Play around with the example! (Again)</li>
-				<p>Test behavior if you change what is virtual (especially destructors), what inherits virtually, multiple inheritance, adding more classes, and generally complicating the inheritance tree. Then, test how casting behaves.</p>
+				<p>Test behavior in changing what is virtual (especially destructors), what inherits virtually, multiple inheritance, adding more classes, and generally complicating the inheritance tree. Then, test how casting behaves.</p>
 				<li>Similarly to last lesson's second exercise, create your own inheritance tree, but this time using a component-based model with multiple and virtual inheritance. For example, entities in a game, or vehicles, or employees, or more animals.</li>
 			</ol>
 		</section>
@@ -289,8 +308,8 @@ int main() {
 				<a href="example.cpp" download>Download</a> | 
 				<a href="http://ideone.com/8ItXqy" target="_blank">Run this Code</a>
 			</div>
-			<pre class="example_program prettyprint">//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+			<pre class="example_program prettyprint">// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include &lt;iostream&gt;
 

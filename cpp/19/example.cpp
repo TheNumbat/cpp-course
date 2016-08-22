@@ -1,5 +1,5 @@
-//If you are not sure what some lines of code do, try looking back at
-//previous example programs, notes, or ask a question.
+// If you are not sure what some lines of code do, try looking back at
+// previous example programs, notes, or ask a question.
 
 #include <iostream>
 

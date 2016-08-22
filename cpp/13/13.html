@@ -216,7 +216,9 @@ int main() {
 			<p>
 				C++ is an object oriented language, and implements objects as "classes." Classes are similar to structures&mdash;they both define ADTs&mdash;but classes have more features: member functions (logic), private and public data, and self-contained/managed memory to name the most important. 
 			</p>
-			<p>Technically, C++ structures can also utilize the features of classes, but it is conventional to use a class for anything more complicated than aggregate data.</p>
+			<p>
+				Technically, C++ structures can also utilize the features of classes, but it is conventional to use a class for anything more complicated than aggregate data.
+			</p>
 			<h2 id="decl">Defining Classes</h2>
 			<p>
 				The syntax of declaring classes is much same as structures: after “class,” add the type name, curly brackets, and a closing semicolon. Then, put your data members in your class’s scope. 
@@ -360,7 +362,7 @@ card::card(int v) {
 	value = v;
 }</pre>
 			<p>
-				Additionally, you can create a hybrid of these two types using <a href="..\04\04.html#default">default parameters</a>. As you might expect, a parameterized, default constructor is simply a parameterized constructor will all default parameters. This method can be useful, but you must be aware of the limitations of default parameters (see <a href="..\04\04.html#default">default parameters</a>.)
+				Additionally, you can create a hybrid of these two types using <a href="..\04\04.html#default">default parameters</a>. As you might expect, a parameterized, default constructor is simply a parameterized constructor will all default parameters. This method can be useful, but you must be aware of the limitations of default parameters.
 			</p>
 			<pre class="example_code prettyprint">class card {
 public:
