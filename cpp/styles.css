@@ -140,3 +140,17 @@ footer {
 	height: 0;
 	clear: both;
 }
+
+.content_list {
+	list-style-type: none;
+	width: 45%;
+}
+.content_list > li {
+	font-size: 1.5em;
+}
+.left {
+	float: left;
+}
+.right {
+	float: right;
+}
