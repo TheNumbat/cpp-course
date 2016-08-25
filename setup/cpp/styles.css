@@ -1,0 +1,20 @@
+
+#left {
+	width: 30%;
+	float: left;
+}
+
+#mid {
+	width: 30%;
+	display: inline-block;
+	margin-left: 5%;
+}
+
+#right {
+	width: 30%;
+	float: right;
+}
+
+.thin {
+	display: none;
+}
