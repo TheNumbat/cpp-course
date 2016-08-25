@@ -13,13 +13,90 @@
 			<a id="home" href="..\..\index.html">Home</a>
 			<nav role="navigation">
 				<ul class="subsections">
-
+					<li><a href="#install">Install</a></li> | 
+					<li><a href="#project">Creating a Project</a></li> | 
+					<li><a href="#build">Build</a></li> | 
+					<li><a href="#add">Adding Files</a></li>
 				</ul>
 			</nav>
 		</header>
 		<main role="main" class="nocollapse">
 		<article role="article">
-
+			<h2 id="install">Install</h2>
+			<p>
+				To start, <a href="https://sourceforge.net/projects/orwelldevcpp/files/Setup%20Releases/Dev-Cpp%205.9.2%20TDM-GCC%204.8.1%20Setup.exe/download">download Dev C++ 5.9.2</a>. It's completely free. Later versions have more features in terms of editing, completion, etc, but have issues with the debugger. Use at your own risk.
+			</p>
+			<p>
+				Default settings should be correct:
+			</p>
+			<img src="00.png">
+			<h2 id="project">Creating a Project</h2>
+			<p>
+				Once the install completes, create a project:
+			</p>
+			<img src="01.png">
+			<p>
+				Select “console application,” “C++ project,” and name your project:
+			</p>
+			<img src="02.png">
+			<p>
+				Save your project in a new folder:
+			</p>
+			<img src="03.png">
+			<p>
+				Your project should now look like this:
+			</p>
+			<img src="04.png">
+			<p>
+				Save the main.cpp file (to the same folder), rename it if you’d like:
+			</p>
+			<img src="05.png">
+			<p>
+				You should now have a working project. To change compiler/linker settings:
+			</p>
+			<img src="06.png">
+			<p>
+				Here you can change project settings like name, type, icon, etc. To enable debugging information, enable Compiler > Linker > Generate Debugging Information (-g3). I'd also recommend enabling warnings (Compiler > Warnings > Show Most Warnings, Show More Warnings). For now, you will only be interested in the “General,” “Output,” and maybe the “Compiler” and “Directories” tabs.
+			</p>
+			<img src="07.png">
+			<h2 id="build">Build</h2>
+			<p>
+				If you are satisfied with your settings, write a “hello world” program and press F11 to compile and run:
+			</p>
+			<img src="08.png">
+			<p>
+				If you set up your project correctly, you should get what you expect.
+			</p>
+			<img src="09.png">
+			<h2 id="add">Adding Files</h2>
+			<p>
+				To add non-code files to your project, such as text or data for input:
+			</p>
+			<img src="10.png">
+			<p>
+				To add a class:
+			</p>
+			<img src="11.png">
+			<p>
+				Here, name your class and add a default constructor/destructor:
+			</p>
+			<img src="12.png">
+			<p>
+				An .h and .cpp file for your class should appear. Save them both to your project folder.
+			</p>
+			<img src="13.png">
+			<p>
+				In the .h file, you can replace all of the # statements with “#pragma once” if you’d like. This makes sure that if your .h file would be included more than once, it is only included once:
+			</p>
+			<img src="14.png">
+			<p>
+				To use your class in the main file, simply include your new .h file, using quotes. Try compiling this, to make sure everything is working. To add more classes, simply repeat this process.
+			</p>
+			<img src="15.png">
+			<p>
+				Finally, you are finished! Remember to save your project settings when you close Dev C++. Your project folder should now have several unfamiliar files. The .dev file is your project, and is what you will open when you want to work on your project. The .layout, .o, and makefile files are all byproducts of compiling with multiple files, so leave them be and you should be good.
+			</p>
+			<img src="16.png">
 		</article>
 		</main>
 		<footer role="contentinfo">
