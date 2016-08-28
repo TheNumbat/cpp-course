@@ -3,46 +3,33 @@
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="..\..\styles.css">
-		<link rel="stylesheet" href="..\styles.css">
 		<link rel="stylesheet" href="styles.css">
 		<link rel="stylesheet" media="screen and (max-width: 900px)" href="thin.css">
 		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-		<title>The Compiler, Linker, and Files</title>
+		<title>A Note on Files and the Build Process</title>
 	</head>
 	<body>
 	<div id="main">
 		<header role="banner">
-			<h1>The Compiler, Linker, and Files</h1>
+			<h1>A Note on Files and the Build Process</h1>
 			<a id="home" href="..\..\index.html">Home</a>
 			<nav role="navigation">
 				<ul class="subsections">
-					<li><a href="#proc">The Process</a></li> | 
+					<li><a href="#files">Files</a></li> | 
+					<li><a href="#proc">The Build Process</a></li> | 
 					<li><a href="#comp">The Compiler</a></li> | 
-					<li><a href="#link">The Linker</a></li> | 
-					<li><a href="#files">Files</a></li>
+					<li><a href="#link">The Linker</a></li>
 				</ul>
 			</nav>
 		</header>
 		<main role="main" class="nocollapse">
 		<article role="article">
-		<h2 id="proc">The Process</h2>
-		<p>
-			
-		</p>
-		<h2 id="comp">The Compiler</h2>
-		<p>
-			
-		</p>
-		<h2 id="link">The Linker</h2>
-		<p>
-			
-		</p>
 		<h2 id="files">Files</h2>
 		<p>
-			All example classes in the basic C++ section are defined and implemented in the same .cpp as the main function. However, it is conventional and useful to split classes into multiple files. Generally, the definition of your class goes in its own .h or .hpp file, whereas the class implementation goes in its own .cpp file. 
+			All example classes in the basic C++ section are defined and implemented in the same .cpp as the main function. However, it is conventional and useful to split classes into multiple files. Generally, the definition of your class goes in its own .h or .hpp file, whereas the implementation goes in its own .cpp file. 
 		</p>
 		<p>
-			There are several benefits of doing this: first and most obvious, it allows you more easily organize your code. Second, if other programmers use your classes&mdash;or if you're coming back to it after a while&mdash;they can easily open the .h file of your class and see how to use the class API. Third, because code is distributed throughout several files, the compiler only has to compile the files that have changed. 
+			There are several benefits of doing this: first and most obvious, it allows you more easily organize your code. Second, if other programmers use your classes&mdash;or if you're coming back to it after a while&mdash;they can easily open the .h file of your class and see how to use the class API. Third, because code is distributed throughout several files, the compiler only has to compile the files that have changed. This is demonstrated in the <a href="..\..\setup\03\03.html#make">GCC + Sublime</a> setup lesson.
 		</p>
 		<p>
 			This means that the first time you compile your program, the compiler will compile each class (and other .cpp files) individually. Henceforth, it will only need to recompile files  that have changed. For example, if you change one class, only that one class will need to be recompiled. This can greatly speed up compile times. Finally, because your class definition is included in an .h file, you can simply #include that file wherever you need to use your class. When #including a file that you’ve created, use quotes (“”) instead of pointy brackets (&lt;&gt;). This tells the compiler to look for the file starting in the current directory.
@@ -50,8 +37,13 @@
 		<p>
 			Including your own classes also means that you only have to #include definitions where you use them. You won't need to include all of your classes all the time. For example, if you had a “card” and a “deck” class, the “card” class may need to be #included in the “deck” class, but if the main file does not have to reference cards, "card.h" does not have to be #included in your main file.
 		</p>
+		<p>
+			Finally, to prevent a header file from being included more than once in the same compilation unit, you can add the directive "#pragma once" to the top of the file. 
+		</p>
 		<div class="thick nocollapse">
-		<span id="left"><h3>card.h</h3><pre class="example_code prettyprint">class card {
+		<span id="left"><h3>card.h</h3><pre class="example_code prettyprint">#pragma once
+
+class card {
 public:
 	card();
 	~card();
@@ -63,7 +55,9 @@ private:
 	int val;
 	// ...
 };</pre></span>
-		<span id="mid"><h3>card.cpp</h3><pre class="example_code prettyprint">card::card() {
+		<span id="mid"><h3>card.cpp</h3><pre class="example_code prettyprint">#include "card.h"
+
+card::card() {
 	val = 0;
 	// ...
 }
@@ -91,7 +85,9 @@ int main() {
 }</pre></span>
 		</div>
 		<div class="thin">
-		<span><h3>card.h</h3><pre class="example_code prettyprint">class card {
+		<span><h3>card.h</h3><pre class="example_code prettyprint">#pragma once
+
+class card {
 public:
 	card();
 	~card();
@@ -103,7 +99,9 @@ private:
 	int val;
 	// ...
 };</pre></span>
-		<span><h3>card.cpp</h3><pre class="example_code prettyprint">card::card() {
+		<span><h3>card.cpp</h3><pre class="example_code prettyprint">#include "card.h"
+
+card::card() {
 	val = 0;
 	// ...
 }
@@ -130,6 +128,64 @@ int main() {
 	return 0;
 }</pre></span>
 		</div>
+		<h2 id="proc">The Build Process</h2>
+		<p>
+			You should know how (in general) how the compiler works to build an executable program from your code. The basic process is very simple: first, the compiler compiles each compilation unit into an object file, then the linker combines the object files into an executable program. A compilation unit is simply a collection of files that #include each other. Most often, a unit starts with a class .cpp file and includes any necessary headers.
+		</p>
+		<img src="comp.png">
+		<h2 id="comp">The Compiler</h2>
+		<p>
+			An object file created by the compiler includes the compiled code for that complication unit (in assembly for the specific platform)&mdash;but only that code. Calls and references to other compilation units or libraries are still represented by references. For example...
+		</p>
+		<p>Note: the example assembly code is not at all correct.</p>
+		<div class="nocollapse">
+		<div style="float:left;margin-right:50px;"><h3>main.o</h3>
+		<table>
+			<tbody>
+			<tr><td class="header">Instruction</td><td class="header">Data</td></tr>
+			<tr><td>mov</td><td>ax,'23'</td></tr>
+			<tr><td>mov</td><td>di,counter</td></tr>
+			<tr><td>rep</td><td>cs,digits</td></tr>
+			<tr><td colspan="2">[Standard Library Call]</td></tr>
+			<tr><td>dec</td><td>counter</td></tr>
+			<tr><td colspan="2">[Reference to object.o]</td></tr>
+			</tbody>
+		</table></div>
+		<div style="float:left"><h3>object.o</h3>
+		<table>
+			<tbody>
+			<tr><td class="header">Instruction</td><td class="header">Data</td></tr>
+			<tr><td>call</td><td>print</td></tr>
+			<tr><td>inc</td><td>x</td></tr>
+			<tr><td>mov</td><td>bx,1</td></tr>
+			<tr><td>pushf</td><td></td></tr>
+			<tr><td colspan="2">[Standard Library Call]</td></tr>
+			</tbody>
+		</table></div>		
+		</div>
+		<h2 id="link">The Linker</h2>
+		<p>
+			Next, the linker simply combines the object files, filling in references between compilation units and calls to other libraries. For example...
+		</p>
+		<h3>program.exe</h3>
+		<table>
+			<tbody>
+			<tr><td class="header">Instruction</td><td class="header">Data</td></tr>
+			<tr><td>mov</td><td>ax,'23'</td></tr>
+			<tr><td>mov</td><td>di,counter</td></tr>
+			<tr><td>rep</td><td>cs,digits</td></tr>
+			<tr><td>call</td><td>stdprint</td></tr>
+			<tr><td>dec</td><td>counter</td></tr>
+			<tr><td>call</td><td>print</td></tr>
+			<tr><td>inc</td><td>x</td></tr>
+			<tr><td>mov</td><td>bx,1</td></tr>
+			<tr><td>pushf</td><td></td></tr>
+			<tr><td>call</td><td>fork</td></tr>
+			</tbody>
+		</table>
+		<p>
+			Finally, your program can be run by the operating system.
+		</p>
 		</article>
 		</main>
 		<footer role="contentinfo">
