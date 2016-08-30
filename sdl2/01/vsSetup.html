@@ -14,16 +14,72 @@
 			<nav role="navigation">
 				<ul class="subsections">
 					<li><a href="#install">SDL Files</a></li> | 
-					<li><a href="#project">Project Settings</a></li> | 
-					<li><a href="#build">Build</a></li>
+					<li><a href="#project">Project Settings</a></li>
 				</ul>
 			</nav>
 		</header>
 		<main role="main" class="nocollapse">
 		<article role="article">
 			<h2 id="install">SDL Files</h2>
+			<p>
+				First, <a href="..\..\setup\02\02.html">set up an empty project</a>.
+			</p>
+			<p>
+				Then, <a href="https://www.libsdl.org/download-2.0.php">download SDL</a>. For Visual Studio, download the "VC" development library.
+			</p>
+			<img src="00.png">
+			<p>
+				Extract the files and move the folder into your project.
+			</p>
+			<img src="01.png">
 			<h2 id="project">Project Settings</h2>
-			<h2 id="build">Build</h2>
+			<p>
+				Open up your project and press ALT + F7 to open the properties window.
+			</p>
+			<img src="02.png">
+			<p>
+				Go to VC++ directories, select include directories, and select edit.
+			</p>
+			<img src="03.png">
+			<p>
+				Add the path to the "include" folder in your SDL source folder. $(ProjectDir) is replaced with the path to your .vxproj file. Your path will likely differ from this example.
+			</p>
+			<img src="05.png">
+			<p>
+				Hit OK, then do the same for library directories. Here, add lib/x86 from your SDL source folder.
+			</p>
+			<img src="05.png">
+			<p>
+				Next, expand the linker options and select input. Click on additional dependencies and select edit.
+			</p>
+			<img src="06.png">
+			<p>
+				Add SDL2.lib and SDL2main.lib.
+			</p>
+			<img src="07.png">
+			<p>
+				Next, go to debugging and edit environment.
+			</p>
+			<img src="08.png">
+			<p>
+				Add this command. Use the path to the lib/x86 folder in your SDL source folder. This allows your program to see the SDL libraries at runtime. To run the executable on its own, you must copy those libraries into the same directory.
+			</p>
+			<img src="09.png">
+			<p>
+				Finally, go to system under linker. Edit subsystem.
+			</p>
+			<img src="10.png">
+			<p>
+				Select console.
+			</p>
+			<img src="11.png">
+			<p>
+				You should now be done. To test, add a .cpp file with the example code for <a href="01.html">lesson 01</a>. 
+			</p>
+			<img src="12.png">
+			<p>
+				Try building and running the project.
+			</p>
 		</article>
 		</main>
 		<footer role="contentinfo">
