@@ -1,4 +1,26 @@
 
+
+aside.top {
+	display: none;
+}
+aside.bot {
+	display: block;
+	float: none;
+}
+article {
+	padding: 0;
+	margin-right: 0;
+}
+section.exercises {
+	padding-bottom: 5px;
+	margin-bottom: 25px;
+	border-bottom: 1px solid black;
+}
+aside.example_program {
+	margin: 0;
+	max-width: 100%;
+}
+
 .content_list {
 	list-style-type: none;
 	width: 90%;
