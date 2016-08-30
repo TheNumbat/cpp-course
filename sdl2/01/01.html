@@ -1,0 +1,174 @@
+<doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 01 - Setup &amp; Windowing</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\02\02.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 01 - Setup &amp; Windowing</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#intro">Introduction</a></li> | 
+					<li><a href="#setup">Setup</a></li> | 
+					<li><a href="#winc">Creating a Window</a></li> | 
+					<li><a href="#rect">Drawing a Rectangle</a></li> | 
+					<li><a href="#wind">Destroying a Window</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+
+// You shouldn't really use this statement, but it's fine for small programs
+using namespace std;
+
+// You must include the command line parameters for your main function to be recognized by SDL
+int main(int argc, char** args) {
+
+	// Pointers to our window and surface
+	SDL_Surface* winSurface = NULL;
+	SDL_Window* window = NULL;
+
+	// Initialize SDL. SDL_Init will return -1 if it fails.
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		// End the program
+		return 1;
+	} 
+
+	// Create our window
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN );
+
+	// Make sure creating the window succeeded
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		system("pause");
+		// End the program
+		return 1;
+	}
+
+	// Get the surface from the window
+	winSurface = SDL_GetWindowSurface( window );
+
+	// Make sure getting the surface succeeded
+	if ( !winSurface ) {
+		cout &lt;&lt; "Error getting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		// End the program
+		return 1;
+	}
+
+	// Fill the window with a white rectangle
+	SDL_FillRect( winSurface, NULL, SDL_MapRGB( winSurface->format, 255, 255, 255 ) );
+
+	// Update the window display
+	SDL_UpdateWindowSurface( window );
+
+	// Wait
+	system("pause");
+
+	// Destroy the window. This will also destroy the surface
+	SDL_DestroyWindow( window );
+
+	// End the program
+	return 0;
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="intro">Introduction</h2>
+			<h2 id="setup">Setup</h2>
+			<p><a href="devSetup.html">Setup for Dev C++</a></p>
+			<p><a href="vsSetup.html">Setup for Visual Studio</a></p>
+			<p><a href="http://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php">Other Setup Guides</a></p>
+			<h2 id="winc">Creating a Window</h2>
+			<h2 id="rect">Drawing a Rectangle</h2>
+			<h2 id="wind">Destroying a Window</h2>
+		</article>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+
+// You shouldn't really use this statement, but it's fine for small programs
+using namespace std;
+
+// You must include the command line parameters for your main function to be recognized by SDL
+int main(int argc, char** args) {
+
+	// Pointers to our window and surface
+	SDL_Surface* winSurface = NULL;
+	SDL_Window* window = NULL;
+
+	// Initialize SDL. SDL_Init will return -1 if it fails.
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		// End the program
+		return 1;
+	} 
+
+	// Create our window
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN );
+
+	// Make sure creating the window succeeded
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		system("pause");
+		// End the program
+		return 1;
+	}
+
+	// Get the surface from the window
+	winSurface = SDL_GetWindowSurface( window );
+
+	// Make sure getting the surface succeeded
+	if ( !winSurface ) {
+		cout &lt;&lt; "Error getting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		// End the program
+		return 1;
+	}
+
+	// Fill the window with a white rectangle
+	SDL_FillRect( winSurface, NULL, SDL_MapRGB( winSurface->format, 255, 255, 255 ) );
+
+	// Update the window display
+	SDL_UpdateWindowSurface( window );
+
+	// Wait
+	system("pause");
+
+	// Destroy the window. This will also destroy the surface
+	SDL_DestroyWindow( window );
+
+	// End the program
+	return 0;
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
