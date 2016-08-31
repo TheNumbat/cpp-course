@@ -20,10 +20,11 @@
 				<ul class="subsections">
 					<li><a href="#intro">Introduction</a></li> | 
 					<li><a href="#setup">Setup</a></li> | 
+					<li><a href="#init">Initializing SDL</a></li> | 
 					<li><a href="#winc">Creating a Window</a></li> | 
 					<li><a href="#surf">Surfaces</a></li> | 
 					<li><a href="#rect">Drawing a Rectangle</a></li> | 
-					<li><a href="#wind">Destroying a Window</a></li>
+					<li><a href="#shut">Shutting Down</a></li>
 				</ul>
 			</nav>
 		</header>
@@ -134,9 +135,13 @@ int main(int argc, char** args) {
 			<p>
 				Also, if you set up your compiler correctly, you should be able to use pointy brackets (e.g. #include &lt;SDL.h&gt;). This tells the compiler to look in its specified include directories.
 			</p>
+			<h2 id="init">Initializing SDL</h2>
+			<p>
+				Before doing anything else, you must initialize SDL as a whole. As you might expect, 
+			</p>
 			<h2 id="winc">Creating a Window</h2>
 			<p>
-				Before you do anything else, you must create the window that your program will use for multimedia input and output. When creating a Windows application from scratch, you must define a "WinMain," call the operating system to get handles, create windows, etc, etc. SDL provides a much simpler, platform-independent windowing API.
+				You must create the window that your program will use for multimedia input and output. When creating a Windows application from scratch, you must define a "WinMain," call the operating system to get handles, create windows, etc, etc. SDL provides a much simpler, platform-independent windowing API.
 			</p>
 			<p>
 				For managing a window, SDL conveniently provides the structure SDL_Window and functions such as <a href="https://wiki.libsdl.org/SDL_CreateWindow">SDL_CreateWindow()</a>. 
@@ -174,7 +179,7 @@ SDL_UpdateWindowSurface( win );</pre>
 				To test if your window surface is working correctly, you can fill it with a color. A very easy way to do this is with <a href="https://wiki.libsdl.org/SDL_FillRect">SDL_FillRect()</a>. To fill the entire window, simply pass NULL instead of a <a href="https://wiki.libsdl.org/SDL_Rect">SDL_Rect</a> pointer. Additionally, <a href="https://wiki.libsdl.org/SDL_FillRect">SDL_FillRect()</a> takes a specifically formated number representing a color. To get this format, you can call <a href="https://wiki.libsdl.org/SDL_MapRGB">SDL_MapRGB</a> with the surface format and desired RGB values.
 			</p>
 			<pre class="example_code prettyprint">SDL_FillRect( winSurface, NULL, SDL_MapRGB( winSurface->format, 255, 90, 120 ));</pre>
-			<h2 id="wind">Destroying a Window</h2>
+			<h2 id="shut">Shutting Down</h2>
 			<p>
 				Once your program has completed its operation, it must destroy the window and free related resources. As you might expect, <a href="https://wiki.libsdl.org/SDL_DestroyWindow">SDL_DestroyWindow()</a> does just that. The function will close your window, freeing related memory (including the window surface).
 			</p>
