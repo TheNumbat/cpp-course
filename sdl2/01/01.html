@@ -122,11 +122,18 @@ int main(int argc, char** args) {
 				<li>The "related functions" section at the bottom of each page will show you what else to use. We won't be covering every function in every lesson.</li>
 			</ul>
 			<h2 id="setup">Setup</h2>
+			<p>Guides:</p>
 			<ul class="content_list">
 				<li><a href="devSetup.html">Setup for Dev C++</a></li>
 				<li><a href="vsSetup.html">Setup for Visual Studio</a></li>
 				<li><a href="http://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php">Other Setup Guides</a></li>
 			</ul>
+			<p>
+				When using SDL functions or objects, you must (of course) include their header files. The file SDL.h will automatically include just about everything else&mdash;most often this is all you will need. However, many functions are prototyped in specific files. Simply check the documentation if you're not sure what you need to include. 
+			</p>
+			<p>
+				Also, if you set up your compiler correctly, you should be able to use pointy brackets (e.g. #include &lt;SDL.h&gt;). This tells the compiler to look in its specified include directories.
+			</p>
 			<h2 id="winc">Creating a Window</h2>
 			<p>
 				Before you do anything else, you must create the window that your program will use for multimedia input and output. When creating a Windows application from scratch, you must define a "WinMain," call the operating system to get handles, create windows, etc, etc. SDL provides a much simpler, platform-independent windowing API.
