@@ -130,7 +130,7 @@ int main(int argc, char** args) {
 			<ul class="content_list">
 				<li><a href="devSetup.html">Setup for Dev C++</a></li>
 				<li><a href="vsSetup.html">Setup for Visual Studio</a></li>
-				<li><a href="http://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php">Other Setup Guides</a></li>
+				<li><a href="http://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php" target="_blank">Other Setup Guides</a></li>
 			</ul>
 			<p>
 				When using SDL functions or objects, you must (of course) include their header files. The file SDL.h will automatically include just about everything else&mdash;most often this is all you will need. However, many functions are prototyped in specific files. Simply check the documentation if you're not sure what you need to include. 
@@ -154,21 +154,24 @@ int main(int argc, char** args) {
 				For managing a window, SDL conveniently provides the structure SDL_Window and functions such as <a href="https://wiki.libsdl.org/SDL_CreateWindow">SDL_CreateWindow()</a>. 
 			</p>
 			<p>
-				Slight tangent: you might notice that there is no documentation link to SDL_Window. This is because the structure is opaque; your program cannot see what is actually contained in an "SDL_Window." You will simply manage a pointer to a SDL_Window.
+				Slight tangent: you might notice that there is no documentation link to SDL_Window. This is because the structure is opaque; your program cannot see what is actually contained in a "SDL_Window." You will simply manage a pointer to a SDL_Window.
 			</p>
 			<p>
 				<a href="https://wiki.libsdl.org/SDL_CreateWindow">SDL_CreateWindow()</a> does what you'd expect: it takes parameters specifying the name, size, position, and options for the window, and returns a pointer to the new SDL_Window structure. Look at the SDL documentation for details.
 			</p>
 			<pre class="example_code prettyprint">SDL_Window* win = SDL_CreateWindow( "my window", 100, 100, 640, 480, SDL_WINDOW_SHOWN );</pre>
 			<p>
-				Most SDL functions will return a specific value on failure. For functions that return pointers, they will return NULL on failure. Hence, you can easily check if the operation succeeded. Finally, after any error, the function <a href="https://wiki.libsdl.org/SDL_GetError">SDL_GetError()</a> allows you to retrieve a string describing the error.
+				Most SDL functions will return a specific value on failure. For functions that return pointers, this value is NULL. Hence, you can easily check if the operation succeeded.
+			</p>
+			<p>
+				After any error, the function <a href="https://wiki.libsdl.org/SDL_GetError">SDL_GetError()</a> allows you to retrieve a string describing the error.
 			</p>
 			<pre class="example_code prettyprint">if ( !win ) {
 	cout &lt;&lt; "Failed to create a window! Error: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
 }</pre>
 			<h2 id="surf">Surfaces</h2>
 			<p>
-				Once you have created a window, you need a way to draw to it. SDL abstracts any area you can draw on&mdash;including loaded images&mdash;as a "surface." (This is for software rendering&mdash;in the future, we'll get into GPU rendering, which does not use surfaces.)
+				Once you have created a window, you need a way to draw to it. SDL abstracts any area you can draw to&mdash;including loaded images&mdash;as a "surface." (This is for software rendering&mdash;in the future, we'll get into GPU rendering, which does not use surfaces.)
 			</p>
 			<p>
 				The structure <a href="https://wiki.libsdl.org/SDL_Surface">SDL_Surface</a> and functions such as <a href="https://wiki.libsdl.org/SDL_LoadBMP">SDL_LoadBMP()</a> and <a href="https://wiki.libsdl.org/SDL_GetWindowSurface">SDL_GetWindowSurface()</a> provide the software rendering (also known as blitting) API. 
@@ -183,7 +186,7 @@ int main(int argc, char** args) {
 SDL_UpdateWindowSurface( win );</pre>
 			<h2 id="rect">Drawing a Rectangle</h2>
 			<p>
-				To test if your window surface is working correctly, you can fill it with a color. A very easy way to do this is with <a href="https://wiki.libsdl.org/SDL_FillRect">SDL_FillRect()</a>. To fill the entire window, simply pass NULL instead of a <a href="https://wiki.libsdl.org/SDL_Rect">SDL_Rect</a> pointer. Additionally, <a href="https://wiki.libsdl.org/SDL_FillRect">SDL_FillRect()</a> takes a specifically formated number representing a color. To get this format, you can call <a href="https://wiki.libsdl.org/SDL_MapRGB">SDL_MapRGB</a> with the surface format and desired RGB values.
+				To test if your window surface is working correctly, you can fill it with a color. A very easy way to do this is with <a href="https://wiki.libsdl.org/SDL_FillRect">SDL_FillRect()</a>. To fill the entire window, simply pass NULL instead of a <a href="https://wiki.libsdl.org/SDL_Rect">SDL_Rect</a> pointer. Additionally, <a href="https://wiki.libsdl.org/SDL_FillRect">SDL_FillRect()</a> takes a specifically formated number representing a color. To get a color in this format, you can call <a href="https://wiki.libsdl.org/SDL_MapRGB">SDL_MapRGB</a> with the surface format and desired RGB values.
 			</p>
 			<pre class="example_code prettyprint">SDL_FillRect( winSurface, NULL, SDL_MapRGB( winSurface->format, 255, 90, 120 ));</pre>
 			<h2 id="shut">Shutting Down</h2>
