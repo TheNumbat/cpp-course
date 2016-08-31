@@ -54,6 +54,9 @@ int main(int argc, char** args) {
 	// Destroy the window. This will also destroy the surface
 	SDL_DestroyWindow( window );
 
+	// Quit SDL
+	SDL_Quit();
+
 	// End the program
 	return 0;
 }

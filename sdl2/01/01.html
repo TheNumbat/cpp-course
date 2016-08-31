@@ -89,6 +89,9 @@ int main(int argc, char** args) {
 	// Destroy the window. This will also destroy the surface
 	SDL_DestroyWindow( window );
 
+	// Quit SDL
+	SDL_Quit();
+	
 	// End the program
 	return 0;
 }</pre>
@@ -137,8 +140,12 @@ int main(int argc, char** args) {
 			</p>
 			<h2 id="init">Initializing SDL</h2>
 			<p>
-				Before doing anything else, you must initialize SDL as a whole. As you might expect, 
+				Before doing anything else, you must initialize SDL as a whole. As you might expect, <a href="https://wiki.libsdl.org/SDL_Init">SDL_Init()</a> does this. If you would like to initialize all parts of SDL, pass SDL_INIT_EVERYTHING.
 			</p>
+			<p>
+				SDL also allows you to initialize particular subsets (or subsystems) of the library individually. To specify, either specify flags to <a href="https://wiki.libsdl.org/SDL_Init">SDL_Init()</a>, or use <a href="https://wiki.libsdl.org/SDL_InitSubSystem">SDL_InitSubSystem()</a>. If you plan to initialize the subsystems individually, simply pass 0 to <a href="https://wiki.libsdl.org/SDL_Init">SDL_Init()</a>.
+			</p>
+			<pre class="example_code prettyprint">SDL_Init( SDL_INIT_EVERYTHING );</pre>
 			<h2 id="winc">Creating a Window</h2>
 			<p>
 				You must create the window that your program will use for multimedia input and output. When creating a Windows application from scratch, you must define a "WinMain," call the operating system to get handles, create windows, etc, etc. SDL provides a much simpler, platform-independent windowing API.
@@ -186,6 +193,10 @@ SDL_UpdateWindowSurface( win );</pre>
 			<pre class="example_code prettyprint">SDL_DestroyWindow( win );
 win = NULL;
 winSurface = NULL;</pre>
+			<p>
+				Finally, to shut down SDL as a whole, call <a href="https://wiki.libsdl.org/SDL_Quit">SDL_Quit()</a>. It's pretty self-explanatory.
+			</p>
+			<pre class="example_code prettyprint">SDL_Quit();</pre>
 		</article>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
@@ -246,6 +257,9 @@ int main(int argc, char** args) {
 
 	// Destroy the window. This will also destroy the surface
 	SDL_DestroyWindow( window );
+	
+	// Quit SDL
+	SDL_Quit();
 
 	// End the program
 	return 0;
