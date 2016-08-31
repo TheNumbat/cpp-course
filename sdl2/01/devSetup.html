@@ -14,15 +14,57 @@
 			<nav role="navigation">
 				<ul class="subsections">
 					<li><a href="#install">SDL Files</a></li> | 
-					<li><a href="#project">Project Settings</a></li>
+					<li><a href="#project">Project Settings</a></li> | 
+					<li><a href="#build">Build</a></li>
 				</ul>
 			</nav>
 		</header>
 		<main role="main" class="nocollapse">
 		<article role="article">
 			<h2 id="install">SDL Files</h2>
+			<p>
+				First, <a href="..\..\setup\01\01.html">set up an empty project</a>.
+			</p>
+			<p>
+				Then, <a href="https://www.libsdl.org/download-2.0.php">download SDL</a>. For Dev C++, download the "MinGW" development library.
+			</p>
+			<img src="dev/00.png">
+			<p>
+				Extract the files and move the folder into your project.
+			</p>
+			<img src="dev/01.png">
 			<h2 id="project">Project Settings</h2>
+			<p>
+				Open up your project and right click or press CRTL + H to open the project options window. Go to the directories tab.
+			</p>
+			<img src="dev/02.png">
+			<p>
+				Click on the folder icon in the bottom right and navigate to your SDL source folder. Go to x86_64_w64_mingw32 and select the lib folder.
+			</p>
+			<img src="dev/03.png">
+			<p>
+				Click "add" in the directories tab to add the directory. Next, move to include directories and repeat the process.
+			</p>
+			<img src="dev/05.png">
+			<p>
+				Next, go to the parameters tab. In the linker area, add "-lSDL2" and "-lSDL2main."
+			</p>
+			<img src="dev/06.png">
+			</p>
+				You should now be done. To test, add example code for <a href="01.html">lesson 01</a> to your main.cpp file. 
+			</p>
 			<h2 id="build">Build</h2>
+			<p>
+				Assuming your project compiles, you'll notice you can't run it. It will say something along the lines of "SDL2.dll not found." To fix this, simply copy SDL2.dll to the same directory as your executable.
+			</p>
+			<p>
+				Find it here (remember to use the one in x86_64_w64_mingw32/bin).
+			</p>
+			<img src="dev/07.png">
+			<p>
+				Copy it to the project/executable directory. You should now be able to run your program.
+			</p>
+			<img src="dev/08.png">
 		</article>
 		</main>
 		<footer role="contentinfo">
