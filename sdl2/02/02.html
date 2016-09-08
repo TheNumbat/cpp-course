@@ -183,6 +183,21 @@ if ( result < 0 ) {
 	// save failed
 }</pre>
 			<h2 id="blit">Blitting to the Window</h2>
+			<p>
+				The basic way to blit to a surface is with <a href="https://wiki.libsdl.org/SDL_BlitSurface">SDL_BlitSurface()</a>. The function takes a source surface and region and blits the pixels to a destination surface and region. These regions are specified with the <a href="https://wiki.libsdl.org/SDL_Rect">SDL_Rect</a> structure. 
+			</p>
+			<p>
+				The source rectangle contains the coordinates and size of the area from the source surface to be copied. NULL can be passed instead of this rectangle to use the entire surface. Only the x and y coordinates of the destination rectangle are actually used, and clipping will be done automatically.
+			</p>
+			<pre class="example_code prettyprint">SDL_Rect dest;
+dest.x = 100;
+dest.y = 50;
+
+int result = SDL_BlitSurface( surface, NULL, windowSurface, &amp;dest );
+
+if ( result < 0 ) {
+	// blit failed
+}</pre>
 			<h2 id="opts">Optimized Surfaces</h2>
 			<h2 id="scal">Scaling</h2>
 		</article>
