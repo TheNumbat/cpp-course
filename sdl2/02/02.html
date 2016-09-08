@@ -9,28 +9,28 @@
 
   ga('create', 'UA-83606680-1', 'auto');
   ga('send', 'pageview');
-
 </script>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="..\..\styles.css">
 		<link rel="stylesheet" href="styles.css">
 		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\..\thin.css">
 		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-		<title>Lesson 02 - Surfaces</title>
+		<title>Lesson 02 - Bitmaps</title>
 	</head>
 	<body>
 	<header>
-		<a class="top_button" href="..\02\02.html" id="next">Next</a>
+		<a class="top_button" href="..\01\01.html" id="last">Last</a>
+		<a class="top_button" href="..\03\03.html" id="next">Next</a>
 	</header>
 	<div id="main">
 		<header role="banner">
-			<h1>Lesson 02 - Surfaces</h1>
+			<h1>Lesson 02 - Bitmaps</h1>
 			<a id="home"  href="..\..\index.html">Home</a>
 			<nav role="navigation">
 				<ul class="subsections">
-					<li><a href="#surf">Surfaces</a></li> | 
 					<li><a href="#bits">Bitmaps &amp; Blitting</a></li> | 
 					<li><a href="#load">Loading a Bitmap</a></li> | 
+					<li><a href="#save">Saving a Bitmap</a></li> | 
 					<li><a href="#blit">Blitting to the Window</a></li> | 
 					<li><a href="#opts">Optimized Surfaces</a></li> | 
 					<li><a href="#scal">Scaling</a></li>
@@ -41,19 +41,262 @@
 			<aside role="complementary" class="example_program top">
 			<h2>Example Program</h2>
 			<div class="example_links">
-				<a href="example.cpp" download>Download</a>
+				<a href="example.zip" download>Download</a>
 			</div>
-			<pre class="example_program prettyprint"></pre>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+
+using namespace std;
+
+bool init();
+void kill();
+bool load();
+
+// Variables to hold our window and surfaces
+SDL_Window* window;
+SDL_Surface* winSurface;
+SDL_Surface* image1;
+SDL_Surface* image2;
+
+int main(int argc, char** args) {
+
+	if ( !init() ) return 1;
+
+	if ( !load() ) return 1;
+
+	// Blit image to entire window
+	SDL_BlitSurface( image1, NULL, winSurface, NULL );
+
+	// Blit image to scaled portion of window
+	SDL_Rect dest;
+	dest.x = 160;
+	dest.y = 120;
+	dest.w = 320;
+	dest.h = 240;
+	SDL_BlitScaled( image2, NULL, winSurface, &amp;dest );
+
+	// Update window
+	SDL_UpdateWindowSurface( window );
+	system("pause");
+
+	kill();
+	return 0;
+}
+
+bool load() {
+	// Temporary surfaces to load images into
+		// This should use only 1 temp surface, but for conciseness we use two
+	SDL_Surface *temp1, *temp2;
+
+	// Load images
+	temp1 = SDL_LoadBMP("test1.bmp");
+	temp2 = SDL_LoadBMP("test2.bmp");
+
+	// Make sure loads succeeded
+	if ( !temp1 || !temp2 ) {
+		cout &lt;&lt; "Error loading image: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	// Format surfaces
+	image1 = SDL_ConvertSurface( temp1, winSurface-&gt;format, 0 );
+	image2 = SDL_ConvertSurface( temp2, winSurface-&gt;format, 0 );
+
+	// Free temporary surfaces
+	SDL_FreeSurface( temp1 );
+	SDL_FreeSurface( temp2 );
+
+	// Make sure format succeeded
+	if ( !image1 || !image2 ) {
+		cout &lt;&lt; "Error converting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+	return true;
+}
+
+bool init() {
+	// See last example for comments
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	} 
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN );
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	winSurface = SDL_GetWindowSurface( window );
+	if ( !winSurface ) {
+		cout &lt;&lt; "Error getting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+	return true;
+}
+
+void kill() {
+	// Free images
+	SDL_FreeSurface( image1 );
+	SDL_FreeSurface( image2 );
+
+	// Quit
+	SDL_DestroyWindow( window );
+	SDL_Quit();
+}</pre>
 		</aside>
 		<article role="article">
+			<h2 id="bits">Bitmaps &amp; Blitting</h2>
+			<p>
+				You've probably heard of bitmaps before; the possibly out-of-date ".bmp" images. Well, a bitmap is technically just an image stored in a format where pixel data is represented by a block of memory, or you could say, a map of bits. The "bmp" format denotes an image where the color values of each pixel (monochrome, RGB, RGBA, etc) are simply stored sequentially after a header. Other formats such as "png" and "jpg" are still a from of bitmap, but make use of compression technologies to reduce file size (ideally) without sacrificing image quality. 
+			</p>
+			<p>
+				In software (CPU) 2D rendering, once a bitmap is loaded into memory, the CPU simply modifies and/or copies pixel values from the loaded bitmap to the region representing the window. This is called "blitting." Blitting can be more complex than simply copying pixels; it can involve resizing, stretching, flipping, or otherwise post-processing images as well.
+			</p>
+			<p>
+				SDL provides functionality for loading and blitting bitmaps. While the API can be used, it is relatively limiting. By default SDL can only load "bmp" format bitmaps&mdash;to load more image formats, such as "png," "jpg," "gif," or "tif," the extension library <a href="https://www.libsdl.org/projects/SDL_image/">SDL_Image</a> can be used. We'll learn about more extension libraries in lesson 07. Furthermore, in lesson 04, we'll learn about the much more fully-featured hardware (GPU) rendering API. 
+			</p>
+			<h2 id="load">Loading a Bitmap</h2>
+			<p>
+				Last lesson, I mentioned how SDL abstracts pixel memory to <a href="..\01\01.html#surf">surfaces</a>. A surface can represent a loaded bitmap, a new texture you're creating, or even the window you're drawing to.
+			</p>
+			<p>
+				To load a bitmap into a surface, use the function <a href="https://wiki.libsdl.org/SDL_LoadBMP">SDL_LoadBMP()</a>. Its usage is very straightforward&mdash;simply send it the name of the .bmp file you wish to load (relative to the location of the executable). If the load succeeds, you will receive a pointer to a new <a href="https://wiki.libsdl.org/SDL_Surface">SDL_Surface</a> containing your bitmap data. If the load fails, the function will return NULL.
+			</p>
+			<pre class="example_code prettyprint">SDL_Surface* image = SDL_LoadBMP( "image.bmp" );
 
+if ( !image ) {
+	// load failed
+}</pre>
+			<h2 id="save">Saving a Bitmap</h2>
+			<p>
+				The opposite of loading a bitmap is, of course, saving one. The function <a href="https://wiki.libsdl.org/SDL_SaveBMP">SDL_SaveBMP()</a> just does that. Pass it the surface containing the bitmap data and the name of the bitmap file to save. The function will return 0 on success or a negative value on failure.
+			</p>
+			<pre class="example_code prettyprint">int result = SDL_SaveBMP( surface, "saved.bmp" );
+
+if ( result < 0 ) {
+	// save failed
+}</pre>
+			<h2 id="blit">Blitting to the Window</h2>
+			<h2 id="opts">Optimized Surfaces</h2>
+			<h2 id="scal">Scaling</h2>
 		</article>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
 			<div class="example_links">
-				<a href="example.cpp" download>Download</a>
+				<a href="example.zip" download>Download</a>
 			</div>
-			<pre class="example_program prettyprint"></pre>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+
+using namespace std;
+
+bool init();
+void kill();
+bool load();
+
+// Variables to hold our window and surfaces
+SDL_Window* window;
+SDL_Surface* winSurface;
+SDL_Surface* image1;
+SDL_Surface* image2;
+
+int main(int argc, char** args) {
+
+	if ( !init() ) return 1;
+
+	if ( !load() ) return 1;
+
+	// Blit image to entire window
+	SDL_BlitSurface( image1, NULL, winSurface, NULL );
+
+	// Blit image to scaled portion of window
+	SDL_Rect dest;
+	dest.x = 160;
+	dest.y = 120;
+	dest.w = 320;
+	dest.h = 240;
+	SDL_BlitScaled( image2, NULL, winSurface, &amp;dest );
+
+	// Update window
+	SDL_UpdateWindowSurface( window );
+	system("pause");
+
+	kill();
+	return 0;
+}
+
+bool load() {
+	// Temporary surfaces to load images into
+		// This should use only 1 temp surface, but for conciseness we use two
+	SDL_Surface *temp1, *temp2;
+
+	// Load images
+	temp1 = SDL_LoadBMP("test1.bmp");
+	temp2 = SDL_LoadBMP("test2.bmp");
+
+	// Make sure loads succeeded
+	if ( !temp1 || !temp2 ) {
+		cout &lt;&lt; "Error loading image: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	// Format surfaces
+	image1 = SDL_ConvertSurface( temp1, winSurface-&gt;format, 0 );
+	image2 = SDL_ConvertSurface( temp2, winSurface-&gt;format, 0 );
+
+	// Free temporary surfaces
+	SDL_FreeSurface( temp1 );
+	SDL_FreeSurface( temp2 );
+
+	// Make sure format succeeded
+	if ( !image1 || !image2 ) {
+		cout &lt;&lt; "Error converting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+	return true;
+}
+
+bool init() {
+	// See last example for comments
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	} 
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN );
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	winSurface = SDL_GetWindowSurface( window );
+	if ( !winSurface ) {
+		cout &lt;&lt; "Error getting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+	return true;
+}
+
+void kill() {
+	// Free images
+	SDL_FreeSurface( image1 );
+	SDL_FreeSurface( image2 );
+
+	// Quit
+	SDL_DestroyWindow( window );
+	SDL_Quit();
+}</pre>
 		</aside>
 		</main>
 		<footer role="contentinfo">
