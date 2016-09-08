@@ -173,6 +173,10 @@ void kill() {
 if ( !image ) {
 	// load failed
 }</pre>
+			<p>
+				Freeing a surface is just as simple as allocating one&mdash;when a surface is no longer in use, the function <a href="https://wiki.libsdl.org/SDL_FreeSurface">SDL_FreeSurface()</a> can be used to destroy it and free the memory. 
+			</p>
+			<pre class="example_code prettyprint">SDL_FreeSurface( image );</pre>
 			<h2 id="save">Saving a Bitmap</h2>
 			<p>
 				The opposite of loading a bitmap is, of course, saving one. The function <a href="https://wiki.libsdl.org/SDL_SaveBMP">SDL_SaveBMP()</a> just does that. Pass it the surface containing the bitmap data and the name of the bitmap file to save. The function will return 0 on success or a negative value on failure.
@@ -199,6 +203,23 @@ if ( result < 0 ) {
 	// blit failed
 }</pre>
 			<h2 id="opts">Optimized Surfaces</h2>
+			<p>
+				While not absolutely necessary, a surface can be optimized with regard to another to improve the speed of blits. Essentially, this just means changing the pixel format of a surface to match another. Then, the program can simply copy the data when blitting, rather than also having to change the format.
+			</p>
+			<p>
+				This is done with the function <a href="https://wiki.libsdl.org/SDL_ConvertSurface">SDL_ConvertSurface()</a>. This function takes the surface you wish to convert and the format to convert to. This format is specified in the "format" data member of the target surface, which should almost always be the window surface. If the conversion succeeds, the function returns a new, converted surface. It does not change or free the original (unconverted) surface&mdash;you must do that yourself.
+			</p>
+			<pre class="example_code prettyprint">SDL_Surface* load = SDL_LoadBMP("test.bmp");
+
+SDL_Surface* image = SDL_ConvertSurface( load, windowSurface->format, 0 );
+
+if ( !image ) {
+	// convert failed
+} else {
+	// convert succeeded
+	SDL_FreeSurface( load );
+	load = NULL;
+}</pre>
 			<h2 id="scal">Scaling</h2>
 		</article>
 			<aside role="complementary" class="example_program bot">
