@@ -156,10 +156,10 @@ void kill() {
 				You've probably heard of bitmaps before; the possibly out-of-date ".bmp" images. Well, a bitmap is technically just an image stored in a format where pixel data is represented by a block of memory, or you could say, a map of bits. The "bmp" format denotes an image where the color values of each pixel (monochrome, RGB, RGBA, etc) are simply stored sequentially after a header. Other formats such as "png" and "jpg" are still a from of bitmap, but make use of compression technologies to reduce file size (ideally) without sacrificing image quality. 
 			</p>
 			<p>
-				In software (CPU) 2D rendering, once a bitmap is loaded into memory, the CPU simply modifies and/or copies pixel values from the loaded bitmap to the region representing the window. This is called "blitting." Blitting can be more complex than simply copying pixels; it can involve resizing, stretching, flipping, or otherwise post-processing images as well.
+				In software (CPU) 2D rendering, once a bitmap is loaded into memory, the CPU simply modifies and/or copies pixel values from a loaded bitmap to the region representing the window. This is called "blitting." Blitting can be more complex than simply copying pixels; it can involve resizing, stretching, flipping, or otherwise post-processing images as well.
 			</p>
 			<p>
-				SDL provides functionality for loading and blitting bitmaps. While the API can be used, it is relatively limiting. By default SDL can only load "bmp" format bitmaps&mdash;to load more image formats, such as "png," "jpg," "gif," or "tif," the extension library <a href="https://www.libsdl.org/projects/SDL_image/">SDL_Image</a> can be used. We'll learn about more extension libraries in lesson 07. Furthermore, in lesson 04, we'll learn about the much more fully-featured hardware (GPU) rendering API. 
+				SDL provides functionality for loading and blitting bitmaps. The blitting API can be useful, but it is relatively limiting. By default SDL can only load "bmp" format bitmaps&mdash;the extension <a href="https://www.libsdl.org/projects/SDL_image/">SDL_Image</a> must be used to load more image formats, such as "png," "jpg," "gif," or "tif." We'll learn about more extension libraries in lesson 07. Furthermore, in lesson 04, we'll learn about the much more fully-featured hardware (GPU) rendering API. 
 			</p>
 			<h2 id="load">Loading a Bitmap</h2>
 			<p>
@@ -221,6 +221,20 @@ if ( !image ) {
 	load = NULL;
 }</pre>
 			<h2 id="scal">Scaling</h2>
+			<p>
+				With <a href="https://wiki.libsdl.org/SDL_BlitSurface">SDL_BlitSurface()</a>, you can stamp bitmaps anywhere you wish. However, I mentioned that only the x and y coordinates of the destination rectangle are taken into account. This means that the blitted image will be the same size every time. To stretch or scale your bitmap to fit an arbitrary area, you can use the function <a href="https://wiki.libsdl.org/SDL_BlitScaled">SDL_BlitScaled()</a>. This function takes the same parameters as <a href="https://wiki.libsdl.org/SDL_BlitSurface">SDL_BlitSurface()</a>, except that it takes into account the width and height of the destination rectangle.
+			</p>
+			<pre class="example_code prettyprint">SDL_Rect dest;
+dest.x = 100;
+dest.y = 50;
+dest.w = 200;
+dest.h = 100;
+
+int result = SDL_BlitScaled( surface, NULL, windowSurface, &amp;dest );
+
+if ( result < 0 ) {
+	// blit failed
+}</pre>
 		</article>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
