@@ -21,8 +21,8 @@
 	</head>
 	<body>
 	<header>
-		<a class="top_button" href="..\02\01.html" id="last">Last</a>
-		<a class="top_button" href="..\02\03.html" id="next">Next</a>
+		<a class="top_button" href="..\02\02.html" id="last">Last</a>
+		<a class="top_button" href="..\04\04.html" id="next">Next</a>
 	</header>
 	<div id="main">
 		<header role="banner">
@@ -31,6 +31,7 @@
 			<nav role="navigation">
 				<ul class="subsections">
 					<li><a href="#loop">The Event Loop</li> | 
+					<li><a href="#sdle">SDL_Event</li> | 
 					<li><a href="#quit">Quitting</a></li> | 
 					<li><a href="#keeb">Keyboard Events</a></li> | 
 					<li><a href="#pol">Keyboard Polling</a></li> | 
@@ -44,7 +45,7 @@
 			<aside role="complementary" class="example_program top">
 			<h2>Example Program</h2>
 			<div class="example_links">
-				<a href="example.cpp" download>Download</a>
+				<a href="example.zip" download>Download</a>
 			</div>
 			<pre class="example_program prettyprint">#include &lt;iostream&gt;
 #include &lt;SDL.h&gt;
@@ -192,10 +193,10 @@ void kill() {
 			</p>
 			<img src="queue.png" style="max-width:500px;">
 			<p>
-				In your programs, you will always have an event (or "game," or "main") loop that processes these events and runs your program based on the input. Each time the event loop is run, you must pull each event off the event queue (in order) to process the input. This is done with the function <a href="https://wiki.libsdl.org/SDL_PollEvent">SDL_PollEvent()</a>. This function removes the first event from the queue, copying the value into a parameter of type <a href="https://wiki.libsdl.org/SDL_Event">SDL_Event</a>. An event contains one of many subtypes of event (note that this is not done through inheritance&mdash;<a href="https://wiki.libsdl.org/SDL_Event">SDL_Event</a> has a union of sub-events). If the event queue was empty, the function will return 0.
+				In your programs, you will always have an event (or "game," or "main") loop that processes these events and runs your program based on the input. Each time the event loop is run, you must pull each event off the event queue (in order) to process the input. This is done with the function <a href="https://wiki.libsdl.org/SDL_PollEvent">SDL_PollEvent()</a>. This function removes the first event from the queue, copying the value into a parameter of type <a href="https://wiki.libsdl.org/SDL_Event">SDL_Event</a>. If the event queue was empty, the function will return 0.
 			</p>
 			<p>
-				Then, you can use the event in a logic chain to deduce what the input was and how to respond. 
+				Once you have polled your event, you can use it in a logic chain to deduce what the input was and how to respond. 
 			</p>
 			<pre class="example_code prettyprint">SDL_Event ev;
 bool running = true;
@@ -210,9 +211,25 @@ while ( running ) {
 	// Wait before next frame
 	SDL_Delay(100);
 }</pre>
+			<h2 id="sdle">SDL_Event</h2>
+			<p>
+				<a href="https://wiki.libsdl.org/SDL_Event">SDL_Event</a> contains one of any sub-event. This is possible through the use of a union. A union describes several mutually exclusive data members within a structure. This means the sub-event-types are all stored in the same memory, so <a href="https://wiki.libsdl.org/SDL_Event">SDL_Event</a> can be flexible without wasting space. However, this system makes syntax slightly clunkier&mdash;to access the sub-event-data, one must first access the sub-event within <a href="https://wiki.libsdl.org/SDL_Event">SDL_Event</a>. 
+			</p>
+			<p>
+				For example, accessing a SDL_KeyboardEvent...
+			</p>
+			<pre class="example_code prettyprint">SDL_Event evt;
+SDL_PollEvent( &amp;evt );
+
+if (evt.type == SDL_KEYDOWN) {
+	switch ( evt.key.sym.sym ) { 	// Note evt.key accesses the real data, 
+							// the SDL_KeyboardEvent 
+		// ...
+	}
+}</pre>
 			<h2 id="quit">Quitting</h2>
 			<p>
-				Your event loop will recieve an event of type <a href="https://wiki.libsdl.org/SDL_EventType">SDL_QUIT</a> when the user wishes to close the program. This includes pressing the 'x' on the window, pressing ALT+F4, or otherwise requesting the program end. This does not include ending the process or sending CTRL+C to the console&mdash;those are uncontrolled, immediate abort. 
+				Your event loop will receive an event of type <a href="https://wiki.libsdl.org/SDL_EventType">SDL_QUIT</a> when the user wishes to close the program. This includes pressing the 'x' on the window, pressing ALT+F4, or otherwise requesting the program end. This does not include ending the process or sending CTRL+C to the console&mdash;those are uncontrolled, immediate aborts. 
 			</p>
 			<p>
 				Hence, when your program receives an <a href="https://wiki.libsdl.org/SDL_EventType">SDL_QUIT</a> event, it should gracefully shut down (or prompt the user for more information). The type of an event is accessible through its "type" member.
@@ -293,21 +310,108 @@ if ( keys[SDL_SCANCODE_W] ) {
 				All types of events are similar to keyboard events in that they have the event type included with several data members describing the input. Mouse events can be of types <a href="https://wiki.libsdl.org/SDL_EventType">SDL_MOUSEMOTION</a>, <a href="https://wiki.libsdl.org/SDL_EventType">SDL_MOUSEBUTTONDOWN</a>, <a href="https://wiki.libsdl.org/SDL_EventType">SDL_MOUSEBUTTONUP</a>, and <a href="https://wiki.libsdl.org/SDL_EventType">SDL_MOUSEWHEEL</a>.
 			</p>
 			<p>
-				Data is contained in 
+				These types are associated with <a href="https://wiki.libsdl.org/SDL_MouseButtonEvent">SDL_MouseButtonEvent</a>, <a href="https://wiki.libsdl.org/SDL_MouseMotionEvent">SDL_MouseMotionEvent</a>, and <a href="https://wiki.libsdl.org/SDL_MouseWheelEvent">SDL_MouseWheelEvent</a>. All of these types include the x and y coordinates of the mouse event, as well as extra data and modifiers.
 			</p>
+			<pre class="example_code prettyprint">SDL_Event ev;
+bool running = true;
+
+// Main loop
+while ( running ) {
+	// Event loop
+	while ( SDL_PolLEvent( &amp;ev ) != 0 ) {
+		// check event type
+		switch (ev.type) {
+			case SDL_QUIT:
+				// shut down
+				running = false;
+				break;
+			case SDL_KEYDOWN:
+				// test keycode
+				switch ( ev.key.keysym.sym ) {
+					case SDLK_w: 
+						break;
+					case SDLK_s:
+						break;
+					// etc
+				}
+				break;
+			case SDL_MOUSEBUTTONUP:
+				// test button
+				switch ( ev.button.button ) {
+					case SDL_BUTTON_LEFT:
+						break;
+					case SDL_BUTTON_RIGHT:
+						break;
+					case SDL_BUTTON_X1:
+						break;
+					// etc
+				}
+		}
+	}	
+
+	// Wait before next frame
+	SDL_Delay(100);
+}</pre>
 			<h2 id="other">Other Events</h2>
 			<p>
-				
+				There are many other types of events that these notes won't cover. I highly recommend taking a look through the SDL documentation website to learn how to use these other types.
 			</p>
+			<div class="nocollapse">
+			<p>Event Types:</p>
+			<ul class="evts">
+				<li><a href="https://wiki.libsdl.org/SDL_TextEditingEvent">SDL_TextEditingEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_TextInputEvent">SDL_TextInputEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_MouseMotionEvent">SDL_MouseMotionEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_MouseButtonEvent">SDL_MouseButtonEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_MouseWheelEvent">SDL_MouseWheelEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_JoyAxisEvent">SDL_JoyAxisEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_JoyBallEvent">SDL_JoyBallEvent</a></li>
+			</ul>
+			<ul class="evts">
+				<li><a href="https://wiki.libsdl.org/SDL_JoyHatEvent">SDL_JoyHatEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_JoyButtonEvent">SDL_JoyButtonEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_JoyDeviceEvent">SDL_JoyDeviceEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_ControllerAxisEvent">SDL_ControllerAxisEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_ControllerButtonEvent">SDL_ControllerButtonEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_ControllerDeviceEvent">SDL_ControllerDeviceEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_AudioDeviceEvent">SDL_AudioDeviceEvent</a></li>
+			</ul>
+			<ul class="evts">
+				<li><a href="https://wiki.libsdl.org/SDL_QuitEvent">SDL_QuitEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_UserEvent">SDL_UserEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_SysWMEvent">SDL_SysWMEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_TouchFingerEvent">SDL_TouchFingerEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_MultiGestureEvent">SDL_MultiGestureEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_DollarGestureEvent">SDL_DollarGestureEvent</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_DropEvent">SDL_DropEvent</a></li>
+			</ul>
+			</div>
 			<h2 id="user">User Events</h2>
 			<p>
-				
+				One more short section&mdash;user defined events. SDL provides the structure <a href="https://wiki.libsdl.org/SDL_UserEvent">SDL_UserEvent</a> for this purpose; it has arbitrary data members for the user to specify. This structure is used in conjunction with <a href="https://wiki.libsdl.org/SDL_RegisterEvents">SDL_RegisterEvents()</a> and <a href="https://wiki.libsdl.org/SDL_PushEvent">SDL_PushEvent()</a>.
 			</p>
+			<p>
+				<a href="https://wiki.libsdl.org/SDL_RegisterEvents">SDL_RegisterEvents()</a> is used to allocate a range of values for your user-defined event types. These numbers are used as the value of the "type" member of the generalized <a href="https://wiki.libsdl.org/SDL_Event">SDL_Event</a> structure. <a href="https://wiki.libsdl.org/SDL_PushEvent">SDL_PushEvent()</a> allows you to add an event to the queue. This can include your user defined events.
+			</p>
+			<pre class="example_code prettyprint">int userType = SDL_RegisterEvents(1);
+
+if (userType == ((uint32_t) -1)) {
+	// failure
+}
+
+SDL_Event ev;
+ev.type = userType;
+
+ev.user.code = someEvtCode;
+ev.user.data1 = &amp;someData;
+ev.user.data2 = 0;
+
+SDL_PushEvent(&amp;ev);</pre>
 		</article>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
 			<div class="example_links">
-				<a href="example.cpp" download>Download</a>
+				<a href="example.zip" download>Download</a>
 			</div>
 			<pre class="example_program prettyprint">#include &lt;iostream&gt;
 #include &lt;SDL.h&gt;
