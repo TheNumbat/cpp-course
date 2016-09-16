@@ -1,0 +1,457 @@
+<doctype html>
+<html>
+	<head>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83606680-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\..\styles.css">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 03 - Events</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\02\01.html" id="last">Last</a>
+		<a class="top_button" href="..\02\03.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 03 - Events</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#loop">The Event Loop</li> | 
+					<li><a href="#quit">Quitting</a></li> | 
+					<li><a href="#keeb">Keyboard Events</a></li> | 
+					<li><a href="#pol">Keyboard Polling</a></li> | 
+					<li><a href="#mouse">Mouse Events</a></li> | 
+					<li><a href="#other">Other Events</a></li> | 
+					<li><a href="#user">User Events</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+
+using namespace std;
+
+bool init();
+void kill();
+bool load();
+bool loop();
+
+// Variables to hold our window and surfaces
+SDL_Window* window;
+SDL_Surface* winSurface;
+SDL_Surface* image1;
+SDL_Surface* image2;
+
+int main(int argc, char** args) {
+
+	if ( !init() ) return 1;
+
+	if ( !load() ) return 1;
+
+	while ( loop() ) {
+		// wait before processing the next frame
+		SDL_Delay(10); 
+	}
+
+	kill();
+	return 0;
+}
+
+bool loop() {
+
+	static bool renderImage2;
+	SDL_Event e;
+
+	// Blit image to entire window
+	SDL_BlitSurface( image1, NULL, winSurface, NULL );
+
+	while( SDL_PollEvent( &amp;e ) != 0 ) {
+		switch (e.type) {
+			case SDL_QUIT:
+				return false;
+			case SDL_KEYDOWN:
+				renderImage2 = true;
+				break;
+			case SDL_KEYUP:
+				renderImage2 = false;
+				// can also test individual keys, modifier flags, etc, etc.
+				break;
+			case SDL_MOUSEMOTION:
+				// etc.
+				break;
+		}
+	}
+
+	if (renderImage2) {
+		// Blit image to scaled portion of window
+		SDL_Rect dest;
+		dest.x = 160;
+		dest.y = 120;
+		dest.w = 320;
+		dest.h = 240;
+		SDL_BlitScaled(image2, NULL, winSurface, &amp;dest);
+	}
+
+	// Update window
+	SDL_UpdateWindowSurface( window );
+
+	return true;
+}
+
+bool load() {
+	// Temporary surfaces to load images into
+		// This should use only 1 temp surface, but for conciseness we use two
+	SDL_Surface *temp1, *temp2;
+
+	// Load images
+	temp1 = SDL_LoadBMP("test1.bmp");
+	temp2 = SDL_LoadBMP("test2.bmp");
+
+	// Make sure loads succeeded
+	if ( !temp1 || !temp2 ) {
+		cout &lt;&lt; "Error loading image: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	// Format surfaces
+	image1 = SDL_ConvertSurface( temp1, winSurface-&gt;format, 0 );
+	image2 = SDL_ConvertSurface( temp2, winSurface-&gt;format, 0 );
+
+	// Free temporary surfaces
+	SDL_FreeSurface( temp1 );
+	SDL_FreeSurface( temp2 );
+
+	// Make sure format succeeded
+	if ( !image1 || !image2 ) {
+		cout &lt;&lt; "Error converting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+	return true;
+}
+
+bool init() {
+	// See last example for comments
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	} 
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN );
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	winSurface = SDL_GetWindowSurface( window );
+	if ( !winSurface ) {
+		cout &lt;&lt; "Error getting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+	return true;
+}
+
+void kill() {
+	// Free images
+	SDL_FreeSurface( image1 );
+	SDL_FreeSurface( image2 );
+
+	// Quit
+	SDL_DestroyWindow( window );
+	SDL_Quit();
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="evt">The Event Loop</h2>
+			<p>
+				Most multimedia programs rely on an events system to process input. SDL provides a flexible API for processing input events. Essentially, SDL records input from devices (like the keyboard, mouse, or controller) as events, storing them in the "event queue." You can think of this structure just like a waiting line&mdash;events are queued in the back of the line and taken from the front of the line.
+			</p>
+			<img src="queue.png" style="max-width:500px;">
+			<p>
+				In your programs, you will always have an event (or "game," or "main") loop that processes these events and runs your program based on the input. Each time the event loop is run, you must pull each event off the event queue (in order) to process the input. This is done with the function <a href="https://wiki.libsdl.org/SDL_PollEvent">SDL_PollEvent()</a>. This function removes the first event from the queue, copying the value into a parameter of type <a href="https://wiki.libsdl.org/SDL_Event">SDL_Event</a>. An event contains one of many subtypes of event (note that this is not done through inheritance&mdash;<a href="https://wiki.libsdl.org/SDL_Event">SDL_Event</a> has a union of sub-events). If the event queue was empty, the function will return 0.
+			</p>
+			<p>
+				Then, you can use the event in a logic chain to deduce what the input was and how to respond. 
+			</p>
+			<pre class="example_code prettyprint">SDL_Event ev;
+bool running = true;
+
+// Main loop
+while ( running ) {
+	// Event loop
+	while ( SDL_PolLEvent( &amp;ev ) != 0 ) {
+		// Test members of ev
+	}	
+
+	// Wait before next frame
+	SDL_Delay(100);
+}</pre>
+			<h2 id="quit">Quitting</h2>
+			<p>
+				Your event loop will recieve an event of type <a href="https://wiki.libsdl.org/SDL_EventType">SDL_QUIT</a> when the user wishes to close the program. This includes pressing the 'x' on the window, pressing ALT+F4, or otherwise requesting the program end. This does not include ending the process or sending CTRL+C to the console&mdash;those are uncontrolled, immediate abort. 
+			</p>
+			<p>
+				Hence, when your program receives an <a href="https://wiki.libsdl.org/SDL_EventType">SDL_QUIT</a> event, it should gracefully shut down (or prompt the user for more information). The type of an event is accessible through its "type" member.
+			</p>
+			<pre class="example_code prettyprint">SDL_Event ev;
+bool running = true;
+
+// Main loop
+while ( running ) {	
+	// Event loop
+	while ( SDL_PolLEvent( &amp;ev ) != 0 ) {
+		// check event type
+		switch (ev.type) {
+			case SDL_QUIT:
+				// shut down
+				running = false;
+				break;
+		}
+	}	
+
+	// Wait before next frame
+	SDL_Delay(100);
+}</pre>
+			<h2 id="keeb">Keyboard Events</h2>
+			<p>
+				Keyboard events come in two flavors&mdash;<a href="https://wiki.libsdl.org/SDL_EventType">SDL_KEYDOWN</a> and <a href="https://wiki.libsdl.org/SDL_EventType">SDL_KEYUP</a>. Both of these types are associated <a href="https://wiki.libsdl.org/SDL_KeyboardEvent">SDL_KeyboardEvent</a>, which includes a keycode and flags representing the input event. 
+			</p>
+			<p>
+				Whether the key is pressed/released/repeated can be determined through the state and repeat members of <a href="https://wiki.libsdl.org/SDL_KeyboardEvent">SDL_KeyboardEvent</a>, whereas the keycode and modifier keys are specified in the keysym member (<a href="https://wiki.libsdl.org/SDL_Keysym">SDL_Keysym</a>).
+			</p>
+			<pre class="example_code prettyprint">SDL_Event ev;
+bool running = true;
+
+// Main loop
+while ( running ) {
+	// Event loop
+	while ( SDL_PolLEvent( &amp;ev ) != 0 ) {
+		// check event type
+		switch (ev.type) {
+			case SDL_QUIT:
+				// shut down
+				running = false;
+				break;
+			case SDL_KEYDOWN:
+				// test keycode
+				switch ( ev.key.keysym.sym ) {
+					case SDLK_w: 
+						break;
+					case SDLK_s:
+						break;
+					// etc
+				}
+				break;
+		}
+	}	
+
+	// Wait before next frame
+	SDL_Delay(100);
+}</pre>
+			<p>
+				Check out <a href="https://wiki.libsdl.org/SDL_KeyboardEvent">SDL_KeyboardEvent</a> for more detail.
+			</p>
+			<h2 id="pol">Keyboard Polling</h2>
+			<p>
+				There is a way to get keyboard input without the event system. This is by polling the keyboard directly. This is not recommended, as polling the keyboard gives you the state at that moment in time, not a log of each event that happened since the last poll. However, polling can still occasionally be useful, so SDL provides the function <a href="https://wiki.libsdl.org/SDL_GetKeyboardState">SDL_GetKeyboardState()</a>. This function returns an array of values containing the key values. This array is persistent&mdash;and it will be updated as keyboard events are processed.
+			</p>
+			<p>
+				To access data within the key array, you can use a <a href="https://wiki.libsdl.org/SDL_Scancode">SDL_Scancode</a>. Scancodes are like the key values from <a href="https://wiki.libsdl.org/SDL_KeyboardEvent">SDL_KeyboardEvent</a>, but instead serve as indexes into the keyboard state array. 
+			</p>
+			<pre class="example_code prettyprint">char* keys = SDL_GetKeyboardState(NULL);
+
+// Test W key
+if ( keys[SDL_SCANCODE_W] ) {
+	// ...
+}</pre>
+			<h2 id="mouse">Mouse Events</h2>
+			<p>
+				All types of events are similar to keyboard events in that they have the event type included with several data members describing the input. Mouse events can be of types <a href="https://wiki.libsdl.org/SDL_EventType">SDL_MOUSEMOTION</a>, <a href="https://wiki.libsdl.org/SDL_EventType">SDL_MOUSEBUTTONDOWN</a>, <a href="https://wiki.libsdl.org/SDL_EventType">SDL_MOUSEBUTTONUP</a>, and <a href="https://wiki.libsdl.org/SDL_EventType">SDL_MOUSEWHEEL</a>.
+			</p>
+			<p>
+				Data is contained in 
+			</p>
+			<h2 id="other">Other Events</h2>
+			<p>
+				
+			</p>
+			<h2 id="user">User Events</h2>
+			<p>
+				
+			</p>
+		</article>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+
+using namespace std;
+
+bool init();
+void kill();
+bool load();
+bool loop();
+
+// Variables to hold our window and surfaces
+SDL_Window* window;
+SDL_Surface* winSurface;
+SDL_Surface* image1;
+SDL_Surface* image2;
+
+int main(int argc, char** args) {
+
+	if ( !init() ) return 1;
+
+	if ( !load() ) return 1;
+
+	while ( loop() ) {
+		// wait before processing the next frame
+		SDL_Delay(10); 
+	}
+
+	kill();
+	return 0;
+}
+
+bool loop() {
+
+	static bool renderImage2;
+	SDL_Event e;
+
+	// Blit image to entire window
+	SDL_BlitSurface( image1, NULL, winSurface, NULL );
+
+	while( SDL_PollEvent( &amp;e ) != 0 ) {
+		switch (e.type) {
+			case SDL_QUIT:
+				return false;
+			case SDL_KEYDOWN:
+				renderImage2 = true;
+				break;
+			case SDL_KEYUP:
+				renderImage2 = false;
+				// can also test individual keys, modifier flags, etc, etc.
+				break;
+			case SDL_MOUSEMOTION:
+				// etc.
+				break;
+		}
+	}
+
+	if (renderImage2) {
+		// Blit image to scaled portion of window
+		SDL_Rect dest;
+		dest.x = 160;
+		dest.y = 120;
+		dest.w = 320;
+		dest.h = 240;
+		SDL_BlitScaled(image2, NULL, winSurface, &amp;dest);
+	}
+
+	// Update window
+	SDL_UpdateWindowSurface( window );
+
+	return true;
+}
+
+bool load() {
+	// Temporary surfaces to load images into
+		// This should use only 1 temp surface, but for conciseness we use two
+	SDL_Surface *temp1, *temp2;
+
+	// Load images
+	temp1 = SDL_LoadBMP("test1.bmp");
+	temp2 = SDL_LoadBMP("test2.bmp");
+
+	// Make sure loads succeeded
+	if ( !temp1 || !temp2 ) {
+		cout &lt;&lt; "Error loading image: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	// Format surfaces
+	image1 = SDL_ConvertSurface( temp1, winSurface-&gt;format, 0 );
+	image2 = SDL_ConvertSurface( temp2, winSurface-&gt;format, 0 );
+
+	// Free temporary surfaces
+	SDL_FreeSurface( temp1 );
+	SDL_FreeSurface( temp2 );
+
+	// Make sure format succeeded
+	if ( !image1 || !image2 ) {
+		cout &lt;&lt; "Error converting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+	return true;
+}
+
+bool init() {
+	// See last example for comments
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	} 
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN );
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	winSurface = SDL_GetWindowSurface( window );
+	if ( !winSurface ) {
+		cout &lt;&lt; "Error getting surface: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+	return true;
+}
+
+void kill() {
+	// Free images
+	SDL_FreeSurface( image1 );
+	SDL_FreeSurface( image2 );
+
+	// Quit
+	SDL_DestroyWindow( window );
+	SDL_Quit();
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
