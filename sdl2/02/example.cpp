@@ -8,7 +8,7 @@ bool init();
 void kill();
 bool load();
 
-// Variables to hold our window and surfaces
+// Pointers to our window and surfaces
 SDL_Window* window;
 SDL_Surface* winSurface;
 SDL_Surface* image1;

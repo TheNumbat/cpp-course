@@ -1,0 +1,329 @@
+<doctype html>
+<html>
+	<head>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83606680-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 04 - Geometry Rendering</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\03\03.html" id="last">Last</a>
+		<a class="top_button" href="..\05\05.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 04 - Geometry Rendering</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#gpu">GPU Rendering</a></li> | 
+					<li><a href="#ren">The Renderer</a></li> | 
+					<li><a href="#setup">Setup</a></li> | 
+					<li><a href="#clear">Clearing the Renderer</a></li> | 
+					<li><a href="#color">Draw Settings</a></li> | 
+					<li><a href="#draw">Drawing</a></li> | 
+					<li><a href="#quit">Shutdown</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+
+using namespace std;
+
+bool init();
+void kill();
+bool loop();
+
+// Pointers to our window and renderer
+SDL_Window* window;
+SDL_Renderer* renderer;
+
+int main(int argc, char** args) {
+
+	if ( !init() ) return 1;
+
+	while ( loop() ) {
+		// wait before processing the next frame
+		SDL_Delay(10); 
+	}
+
+	kill();
+	return 0;
+}
+
+bool loop() {
+
+	static const unsigned char* keys = SDL_GetKeyboardState( NULL );
+
+	SDL_Event e;
+	SDL_Rect r;
+	// For mouse rectangle (static to presist between function calls)
+	static int mx0 = -1, my0 = -1, mx1 = -1, my1 = -1;
+
+	// Clear the window to white
+	SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+	SDL_RenderClear( renderer );
+
+	// Event loop
+	while ( SDL_PollEvent( &amp;e ) != 0 ) {
+		switch ( e.type ) {
+			case SDL_QUIT:
+				return false;
+			case SDL_MOUSEBUTTONDOWN:
+				mx0 = e.button.x;
+				my0 = e.button.y;
+				break;
+			case SDL_MOUSEMOTION:
+				mx1 = e.button.x;
+				my1 = e.button.y;
+				break;
+			case SDL_MOUSEBUTTONUP:
+				mx0 = my0 = mx1 = my1 = -1;
+				break;
+		}
+	}
+
+	// Set drawing color to black
+	SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255 );
+
+	// Test key states - this could also be done with events
+	if ( keys[SDL_SCANCODE_1] ) {
+		SDL_RenderDrawPoint( renderer, 10, 10 );
+	}
+	if ( keys[SDL_SCANCODE_2] ) {
+		SDL_RenderDrawLine( renderer, 10, 20, 10, 100 );
+	}
+	if ( keys[SDL_SCANCODE_3] ) {
+		r.x = 20;
+		r.y = 20;
+		r.w = 100;
+		r.h = 100;
+		SDL_RenderDrawRect( renderer, &amp;r );
+	}
+
+	// Render mouse rectangle
+	if ( mx0 != -1 ) {
+		r.x = mx0;
+		r.y = my0;
+		r.w = mx1 - mx0;
+		r.h = my1 - my0;
+		SDL_RenderDrawRect( renderer, &amp;r );
+	}
+
+	// Update window
+	SDL_RenderPresent( renderer );
+
+	return true;
+}
+
+bool init() {
+	// See last example for comments
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	} 
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 150, 150, SDL_WINDOW_SHOWN );
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	if ( !renderer ) {
+		cout &lt;&lt; "Error creating renderer: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+	SDL_RenderClear( renderer );
+	return true;
+}
+
+void kill() {
+	// Quit
+	SDL_DestroyRenderer( renderer );
+	SDL_DestroyWindow( window );
+	SDL_Quit();
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="gpu">GPU Rendering</h2>
+			<h2 id="ren">The Renderer</h2>
+			<h2 id="setup">Setup</h2>
+			<h2 id="clear">Clearing the Renderer</h2>
+			<h2 id="color">Draw Settings</h2>
+				SDL_SetRenderDrawColor()
+				SDL_SetRenderDrawBlendMode()
+				SDL_GetRenderDrawColor()
+				SDL_GetRenderDrawBlendMode()
+			<h2 id="draw">Drawing</h2>
+				https://wiki.libsdl.org/CategoryRender
+				SDL_RenderDrawPoint()
+				SDL_RenderDrawPoints()
+				SDL_RenderDrawLine()
+				SDL_RenderDrawLines()
+				SDL_RenderDrawRect()
+				SDL_RenderDrawRects()
+				SDL_RenderFillRect()
+				SDL_RenderFillRects()
+			<h2 id="quit">Shutdown</h2>
+		</article>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+
+using namespace std;
+
+bool init();
+void kill();
+bool loop();
+
+// Pointers to our window and renderer
+SDL_Window* window;
+SDL_Renderer* renderer;
+
+int main(int argc, char** args) {
+
+	if ( !init() ) return 1;
+
+	while ( loop() ) {
+		// wait before processing the next frame
+		SDL_Delay(10); 
+	}
+
+	kill();
+	return 0;
+}
+
+bool loop() {
+
+	static const unsigned char* keys = SDL_GetKeyboardState( NULL );
+
+	SDL_Event e;
+	SDL_Rect r;
+	// For mouse rectangle (static to presist between function calls)
+	static int mx0 = -1, my0 = -1, mx1 = -1, my1 = -1;
+
+	// Clear the window to white
+	SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+	SDL_RenderClear( renderer );
+
+	// Event loop
+	while ( SDL_PollEvent( &amp;e ) != 0 ) {
+		switch ( e.type ) {
+			case SDL_QUIT:
+				return false;
+			case SDL_MOUSEBUTTONDOWN:
+				mx0 = e.button.x;
+				my0 = e.button.y;
+				break;
+			case SDL_MOUSEMOTION:
+				mx1 = e.button.x;
+				my1 = e.button.y;
+				break;
+			case SDL_MOUSEBUTTONUP:
+				mx0 = my0 = mx1 = my1 = -1;
+				break;
+		}
+	}
+
+	// Set drawing color to black
+	SDL_SetRenderDrawColor( renderer, 0, 0, 0, 255 );
+
+	// Test key states - this could also be done with events
+	if ( keys[SDL_SCANCODE_1] ) {
+		SDL_RenderDrawPoint( renderer, 10, 10 );
+	}
+	if ( keys[SDL_SCANCODE_2] ) {
+		SDL_RenderDrawLine( renderer, 10, 20, 10, 100 );
+	}
+	if ( keys[SDL_SCANCODE_3] ) {
+		r.x = 20;
+		r.y = 20;
+		r.w = 100;
+		r.h = 100;
+		SDL_RenderDrawRect( renderer, &amp;r );
+	}
+
+	// Render mouse rectangle
+	if ( mx0 != -1 ) {
+		r.x = mx0;
+		r.y = my0;
+		r.w = mx1 - mx0;
+		r.h = my1 - my0;
+		SDL_RenderDrawRect( renderer, &amp;r );
+	}
+
+	// Update window
+	SDL_RenderPresent( renderer );
+
+	return true;
+}
+
+bool init() {
+	// See last example for comments
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		system("pause");
+		return false;
+	} 
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 150, 150, SDL_WINDOW_SHOWN );
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		system("pause");
+		return false;
+	}
+
+	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	if ( !renderer ) {
+		cout &lt;&lt; "Error creating renderer: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+	SDL_RenderClear( renderer );
+	return true;
+}
+
+void kill() {
+	// Quit
+	SDL_DestroyRenderer( renderer );
+	SDL_DestroyWindow( window );
+	SDL_Quit();
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
