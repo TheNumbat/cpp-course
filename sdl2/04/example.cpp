@@ -72,7 +72,7 @@ bool loop() {
 		r.y = 20;
 		r.w = 100;
 		r.h = 100;
-		SDL_RenderDrawRect( renderer, &r );
+		SDL_RenderFillRect( renderer, &r );
 	}
 
 	// Render mouse rectangle

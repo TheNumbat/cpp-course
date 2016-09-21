@@ -31,7 +31,6 @@
 				<ul class="subsections">
 					<li><a href="#gpu">GPU Rendering</a></li> | 
 					<li><a href="#ren">The Renderer</a></li> | 
-					<li><a href="#setup">Setup</a></li> | 
 					<li><a href="#clear">Clearing the Renderer</a></li> | 
 					<li><a href="#color">Draw Settings</a></li> | 
 					<li><a href="#draw">Drawing</a></li> | 
@@ -118,7 +117,7 @@ bool loop() {
 		r.y = 20;
 		r.w = 100;
 		r.h = 100;
-		SDL_RenderDrawRect( renderer, &amp;r );
+		SDL_RenderFillRect( renderer, &amp;r );
 	}
 
 	// Render mouse rectangle
@@ -171,24 +170,50 @@ void kill() {
 		</aside>
 		<article role="article">
 			<h2 id="gpu">GPU Rendering</h2>
+			<p>
+				So far, you've been using software, or CPU, rendering. This means that to blit a surface to the window, your computer's CPU must iterate through each pixel, adjusting and copying the values. 
+			</p>
+			<p>
+				Hardware, or GPU, rendering, on the other hand, uses your computer's GPU. Hardware rendering is an order of magnitude faster than using the CPU, as the GPU is optimized exactly for these types of workloads. Instead of going through the pixel data individually, a GPU can preform calculations in parallel, massively increasing the throughput.
+			</p>
 			<h2 id="ren">The Renderer</h2>
-			<h2 id="setup">Setup</h2>
+			<p>
+				The SDL structure SDL_Renderer represents a <em>rendering context</em>. This means that it contains all current settings related to rendering, as well as the instructions for how to render the current frame. In your program, you will use functions such as <a href="https://wiki.libsdl.org/SDL_SetRenderDrawColor">SDL_SetRenderDrawColor()</a> to change settings in the context, and functions such as <a href="https://wiki.libsdl.org/SDL_RenderDrawPoint">SDL_RenderDrawPoint()</a> to do rendering actions.
+			</p>
+			<p>
+				To create a rendering context, you can use the function <a href="https://wiki.libsdl.org/SDL_CreateWindowAndRenderer">SDL_CreateWindowAndRenderer()</a> or <a href="https://wiki.libsdl.org/SDL_CreateRenderer">SDL_CreateRenderer()</a>. The former does what you'd expect: it creates both a window and renderer in conjunction. The latter requires you to first create a window (as the window must be a parameter), but allows a bit more fine control over the initialization.
+			</p>
+			<pre class="example_code prettyprint">SDL_Window* window;
+SDL_Renderer* renderer;
+
+int result = SDL_CreateWindowAndRenderer( 640, 480, NULL, &amp;window, &amp;renderer );
+if ( result != 0 ) {
+	cout << "Failed to create window and renderer: " << SDL_GetError() << endl;
+}</pre>
+			<p>
+				We no longer use a surface to represent the window. Instead, the rendering context draws to a backbuffer, which is then shown on the window at the end of each frame. Hence, you can no longer call <a href="https://wiki.libsdl.org/SDL_UpdateWindowSurface">SDL_UpdateWindowSurface()</a>. Instead, you use <a href="https://wiki.libsdl.org/SDL_RenderPresent">SDL_RenderPresent()</a>. This function tells the renderer show its operations on its window. For example, if the renderer was told to render a point, a line, and a rectangle, they will now show up on the window.
+			</p>
+			<pre class="example_code prettyprint">SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+SDL_RenderDrawPoint( 100, 100 );
+
+// Update window
+SDL_RenderPresent( renderer );</pre>
 			<h2 id="clear">Clearing the Renderer</h2>
 			<h2 id="color">Draw Settings</h2>
-				SDL_SetRenderDrawColor()
-				SDL_SetRenderDrawBlendMode()
-				SDL_GetRenderDrawColor()
-				SDL_GetRenderDrawBlendMode()
+				<a href="https://wiki.libsdl.org/SDL_SetRenderDrawColor">SDL_SetRenderDrawColor()</a>
+				<a href="https://wiki.libsdl.org/SDL_SetRenderDrawBlendMode">SDL_SetRenderDrawBlendMode()</a>
+				<a href="https://wiki.libsdl.org/SDL_GetRenderDrawColor">SDL_GetRenderDrawColor()</a>
+				<a href="https://wiki.libsdl.org/SDL_GetRenderDrawBlendMode">SDL_GetRenderDrawBlendMode()</a>
 			<h2 id="draw">Drawing</h2>
-				https://wiki.libsdl.org/CategoryRender
-				SDL_RenderDrawPoint()
-				SDL_RenderDrawPoints()
-				SDL_RenderDrawLine()
-				SDL_RenderDrawLines()
-				SDL_RenderDrawRect()
-				SDL_RenderDrawRects()
-				SDL_RenderFillRect()
-				SDL_RenderFillRects()
+				<a href="https://wiki.libsdl.org/CategoryRender">CategoryRender</a>
+				<a href="https://wiki.libsdl.org/SDL_RenderDrawPoint">SDL_RenderDrawPoint()</a>
+				<a href="https://wiki.libsdl.org/SDL_RenderDrawPoints">SDL_RenderDrawPoints()</a>
+				<a href="https://wiki.libsdl.org/SDL_RenderDrawLine">SDL_RenderDrawLine()</a>
+				<a href="https://wiki.libsdl.org/SDL_RenderDrawLines">SDL_RenderDrawLines()</a>
+				<a href="https://wiki.libsdl.org/SDL_RenderDrawRect">SDL_RenderDrawRect()</a>
+				<a href="https://wiki.libsdl.org/SDL_RenderDrawRects">SDL_RenderDrawRects()</a>
+				<a href="https://wiki.libsdl.org/SDL_RenderFillRect">SDL_RenderFillRect()</a>
+				<a href="https://wiki.libsdl.org/SDL_RenderFillRects">SDL_RenderFillRects()</a>
 			<h2 id="quit">Shutdown</h2>
 		</article>
 			<aside role="complementary" class="example_program bot">
@@ -269,7 +294,7 @@ bool loop() {
 		r.y = 20;
 		r.w = 100;
 		r.h = 100;
-		SDL_RenderDrawRect( renderer, &amp;r );
+		SDL_RenderFillRect( renderer, &amp;r );
 	}
 
 	// Render mouse rectangle
