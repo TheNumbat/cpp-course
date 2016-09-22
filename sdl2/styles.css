@@ -6,3 +6,10 @@ img {
 	margin-top: 10px;
 	margin-bottom: 10px;
 }
+div.nocollapse > ul.collumns {
+	display: inline-block;
+	margin-right: 25px;
+}
+div.nocollapse {
+	font-size: 1.2em;
+}
