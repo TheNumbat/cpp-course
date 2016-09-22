@@ -13,7 +13,7 @@
 </script>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="..\..\styles.css">
-		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" href="..\styles.css">
 		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\..\thin.css">
 		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 		<title>Lesson 04 - Geometry Rendering</title>
@@ -174,7 +174,7 @@ void kill() {
 				So far, you've been using software, or CPU, rendering. This means that to blit a surface to the window, your computer's CPU must iterate through each pixel, adjusting and copying the values. 
 			</p>
 			<p>
-				Hardware, or GPU, rendering, on the other hand, uses your computer's GPU. Hardware rendering is an order of magnitude faster than using the CPU, as the GPU is optimized exactly for these types of workloads. Instead of going through the pixel data individually, a GPU can preform calculations in parallel, massively increasing the throughput.
+				Hardware, rendering, on the other hand, leverages your computer's GPU (Graphics Processing Unit). Hardware rendering can be an order of magnitude faster than software, as the GPU is optimized for these exact workloads. Instead of going through the pixel data individually, a GPU can preform calculations in parallel, massively increasing the throughput.
 			</p>
 			<h2 id="ren">The Renderer</h2>
 			<p>
@@ -191,30 +191,83 @@ if ( result != 0 ) {
 	cout << "Failed to create window and renderer: " << SDL_GetError() << endl;
 }</pre>
 			<p>
-				We no longer use a surface to represent the window. Instead, the rendering context draws to a backbuffer, which is then shown on the window at the end of each frame. Hence, you can no longer call <a href="https://wiki.libsdl.org/SDL_UpdateWindowSurface">SDL_UpdateWindowSurface()</a>. Instead, you use <a href="https://wiki.libsdl.org/SDL_RenderPresent">SDL_RenderPresent()</a>. This function tells the renderer show its operations on its window. For example, if the renderer was told to render a point, a line, and a rectangle, they will now show up on the window.
+				We no longer use a surface to represent the window. Instead, the rendering context draws to a backbuffer, which is then shown on the window at the end of each frame. Hence, you can no longer call <a href="https://wiki.libsdl.org/SDL_UpdateWindowSurface">SDL_UpdateWindowSurface()</a>. Instead, you use <a href="https://wiki.libsdl.org/SDL_RenderPresent">SDL_RenderPresent()</a>. This function tells the renderer show its operations on its window.
 			</p>
 			<pre class="example_code prettyprint">SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
-SDL_RenderDrawPoint( 100, 100 );
+SDL_RenderDrawPoint( renderer, 100, 100 );
 
 // Update window
 SDL_RenderPresent( renderer );</pre>
 			<h2 id="clear">Clearing the Renderer</h2>
+			<p>
+				Clearing the renderer resets the window to a color&mdash;this is equivalent to blitting a rectangle over the whole window. You should clear the window after each frame, as otherwise drawing will persist between frames, even if moved. 
+			</p>
+			<p>
+				As you'd expect, the function <a href="https://wiki.libsdl.org/SDL_RenderClear">SDL_RenderClear()</a> is used for this purpose. The only parameter is renderer; the associated window will be cleared to the current color.
+			</p>
+			<pre class="example_code prettyprint">SDL_RenderClear( renderer );
+
+// do drawing
+
+SDL_RenderPresent( renderer );</pre>
 			<h2 id="color">Draw Settings</h2>
-				<a href="https://wiki.libsdl.org/SDL_SetRenderDrawColor">SDL_SetRenderDrawColor()</a>
-				<a href="https://wiki.libsdl.org/SDL_SetRenderDrawBlendMode">SDL_SetRenderDrawBlendMode()</a>
-				<a href="https://wiki.libsdl.org/SDL_GetRenderDrawColor">SDL_GetRenderDrawColor()</a>
-				<a href="https://wiki.libsdl.org/SDL_GetRenderDrawBlendMode">SDL_GetRenderDrawBlendMode()</a>
+			<p>
+				The drawing state is contained in the rendering context, so SDL provides several functions to adjust it. To change the drawing color (effecting drawing functions and <a href="https://wiki.libsdl.org/SDL_RenderClear">SDL_RenderClear()</a>), use the function <a href="https://wiki.libsdl.org/SDL_SetRenderDrawColor">SDL_SetRenderDrawColor()</a>. Its use is very straightforward&mdash;simply pass the R, G, B, and A color values. To get the current color, use the function <a href="https://wiki.libsdl.org/SDL_GetRenderDrawColor">SDL_GetRenderDrawColor()</a>.  
+			</p>
+			<pre class="example_code prettyprint">SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 ); // Set color to solid white
+
+SDL_RenderClear( renderer ); // Clear the screen to solid white</pre>
+			<p>
+				To set the drawing blend mode, use the function <a href="https://wiki.libsdl.org/SDL_SetRenderDrawBlendMode">SDL_SetRenderDrawBlendMode()</a>. A <a href="https://wiki.libsdl.org/SDL_BlendMode">blendmode</a> is simply a method of drawing a texture with alpha (transparency) data&mdash;for example, the default blendmode simply blends the colors together based on the alpha value. However, SDL also supports additive and modulated blending, which greatly effect the final image. I encourage you to test these out on your own. To get the current blendmode, use the function <a href="https://wiki.libsdl.org/SDL_GetRenderDrawBlendMode">SDL_GetRenderDrawBlendMode()</a>. 
+			</p>
+			<pre class="example_code prettyprint">SDL_SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_ADD ); // Switch to additive blending
+
+SDL_RenderDrawLine( renderer, 0, 0, 100, 100 ); // Draw with additive blending</pre>
+			<p>
+				These settings and more are categorized under <a href="https://wiki.libsdl.org/CategoryRender">CategoryRender</a> on the SDL wiki.
+			</p>
 			<h2 id="draw">Drawing</h2>
-				<a href="https://wiki.libsdl.org/CategoryRender">CategoryRender</a>
-				<a href="https://wiki.libsdl.org/SDL_RenderDrawPoint">SDL_RenderDrawPoint()</a>
-				<a href="https://wiki.libsdl.org/SDL_RenderDrawPoints">SDL_RenderDrawPoints()</a>
-				<a href="https://wiki.libsdl.org/SDL_RenderDrawLine">SDL_RenderDrawLine()</a>
-				<a href="https://wiki.libsdl.org/SDL_RenderDrawLines">SDL_RenderDrawLines()</a>
-				<a href="https://wiki.libsdl.org/SDL_RenderDrawRect">SDL_RenderDrawRect()</a>
-				<a href="https://wiki.libsdl.org/SDL_RenderDrawRects">SDL_RenderDrawRects()</a>
-				<a href="https://wiki.libsdl.org/SDL_RenderFillRect">SDL_RenderFillRect()</a>
-				<a href="https://wiki.libsdl.org/SDL_RenderFillRects">SDL_RenderFillRects()</a>
+			<p>
+				As I've mentioned throughout this section, SDL provides several functions for drawing rudimentary shapes&mdash;namely, points, lines, rectangles, and filled rectangles. The functions are all used as you'd expect: the point and line functions simply take the screen coordinates of the shape, and the rectangle functions take a SDL_Rect with the same data.
+			</p>
+			<div class="nocollapse">
+			<ul class="collumns">
+				<li><a href="https://wiki.libsdl.org/SDL_RenderDrawPoint">SDL_RenderDrawPoint()</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_RenderDrawPoints">SDL_RenderDrawPoints()</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_RenderDrawLine">SDL_RenderDrawLine()</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_RenderDrawLines">SDL_RenderDrawLines()</a></li>
+			</ul>
+			<ul class="collumns">
+				<li><a href="https://wiki.libsdl.org/SDL_RenderDrawRect">SDL_RenderDrawRect()</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_RenderDrawRects">SDL_RenderDrawRects()</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_RenderFillRect">SDL_RenderFillRect()</a></li>
+				<li><a href="https://wiki.libsdl.org/SDL_RenderFillRects">SDL_RenderFillRects()</a></li>
+			</ul></div>
+			<p>
+				All of these functions and more are categorized under <a href="https://wiki.libsdl.org/CategoryRender">CategoryRender</a> on the SDL wiki.
+			</p>
+			<pre class="example_code prettyprint">SDL_SetRenderDrawColor( renderer, 0, 0, 255, 255 ); // Draw in solid blue
+
+SDL_RenderDrawLine( renderer, 10, 10, 50, 25 ); // Draw a line
+
+SDL_Rect r;
+r.x = 150;
+r.y = 25;
+r.h = 75;
+r.w = 120;
+
+SDL_RenderFillRect( renderer, &amp;r ); // Draw a filled rectangle
+
+// etc</pre>
 			<h2 id="quit">Shutdown</h2>
+			<p>
+				Shutting down is almost exactly the same as with software rendering, except now you must use the function <a href="https://wiki.libsdl.org/SDL_DestroyRenderer">SDL_DestroyRenderer()</a> to free the renderer before shutting down the window. You still free surfaces in the same way.
+			</p>
+			<pre class="example_code prettyprint">SDL_DestroyRenderer( renderer );
+SDL_DestroyWindow( window );
+
+renderer = NULL;
+window = NULL;</pre>
 		</article>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
