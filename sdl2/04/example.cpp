@@ -48,8 +48,8 @@ bool loop() {
 				my0 = e.button.y;
 				break;
 			case SDL_MOUSEMOTION:
-				mx1 = e.button.x;
-				my1 = e.button.y;
+				mx1 = e.motion.x;
+				my1 = e.motion.y;
 				break;
 			case SDL_MOUSEBUTTONUP:
 				mx0 = my0 = mx1 = my1 = -1;
