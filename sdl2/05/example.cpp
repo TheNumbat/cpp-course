@@ -34,8 +34,8 @@ bool loop() {
 	SDL_Event e;
 	SDL_Rect dest;
 
-	static int mx, my;
-	static double rot;
+	static int mx = -1, my = -1;
+	static double rot = 0;
 
 	// Clear the window to white
 	SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
@@ -127,8 +127,10 @@ bool init() {
 }
 
 void kill() {
+	SDL_DestroyTexture( texture );
 	SDL_DestroyRenderer( renderer );
 	SDL_DestroyWindow( window );
+	texture = NULL;
 	window = NULL;
 	renderer = NULL;
 	SDL_Quit();
