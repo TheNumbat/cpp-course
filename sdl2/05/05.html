@@ -33,7 +33,7 @@
 					<li><a href="#settings">Texture Settings</a></li> | 
 					<li><a href="#render">Rendering Textures</a></li> | 
 					<li><a href="#pixels">Pixels</a></li> | 
-					<li><a href="#totexture">Render to Texture</a></li> | 
+					<li><a href="#target">Render to Texture</a></li> | 
 					<li><a href="#quit">Destroying a Texture</a></li>
 				</ul>
 			</nav>
@@ -44,9 +44,9 @@
 			<div class="example_links">
 				<a href="example.cpp" download>Download</a>
 			</div>
-			<pre class="example_program prettyprint">#include &lt;iostream>
-#include &lt;SDL.h>
-#include &lt;cmath>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+#include &lt;cmath&gt;
 
 using namespace std;
 
@@ -184,57 +184,158 @@ void kill() {
 		<article role="article">
 			<h2 id="create">Creating a Texture</h2>
 			<p>
-				
+				As mentioned in the last lesson, textures are the GPU rendering equivalent of surfaces. Hence, textures are almost always created from surfaces, using the function <a href="https://wiki.libsdl.org/SDL_CreateTextureFromSurface">SDL_CreateTextureFromSurface()</a>. This function more or less does what you'd expect&mdash;the parameters are the rendering context and a surface to create the texture from. As with other creation functions, it will return NULL on failure.
+			</p>
+			<p>
+				When creating textures in this manner, the data will be copied to the texture, allowing you to free the surface used for loading the image.
+			</p>
+			<pre class="example_code prettyprint">// create window, renderer
+
+SDL_Surface* image = SDL_LoadBMP("image.bmp");
+
+SDL_Texture* texture = SDL_CreateTextureFromSurface( renderer, image );
+
+SDL_FreeSurface( image );
+image = NULL;
+
+if( !texture ) {
+	// etc
+}</pre>
+			<p>
+				You can also create blank textures with the function <a href="https://wiki.libsdl.org/SDL_CreateTexture">SDL_CreateTexture()</a>. This function takes the rendering context, pixel format, width, and height of the texture to create. 
+			</p>
+			<pre class="example_code prettyprint">SDL_Texture* texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 1024, 1024 );</pre>
+			<p>
+				This isn't useful for rendering images, but is necessary to edit pixel data or to render to a texture.
 			</p>
 			<h2 id="settings">Texture Settings</h2>
 			<p>
-				
+				SDL provides several texture properties that affect how they are rendered. These settings mirror the rendering options from the last lesson.
 			</p>
 			<h3>Query</h3>
 			<p>
-				
+				The function <a href="https://wiki.libsdl.org/SDL_QueryTexture">SDL_QueryTexture()</a> is used to retrieve the basic settings of a texture, including the format, access, width, and height.
 			</p>
+			<pre class="example_code prettyprint">int w, h, access;
+unsigned int format;
+
+SDL_QueryTexture( texture, &amp;format, &amp;access, &amp;width, &amp;height );</pre>
 			<h3>Alpha</h3>
 			<p>
-				
+				Textures may include alpha data, but SDL also provides a whole-texture alpha setting. Changing this value will simply cause the entire texture to fade in or out. The functions <a href="https://wiki.libsdl.org/SDL_GetTextureAlphaMod">SDL_GetTextureAlphaMod()</a> and <a href="https://wiki.libsdl.org/SDL_SetTextureAlphaMod">SDL_SetTextureAlphaMod()</a> are used for this purpose.
 			</p>
+			<pre class="example_code prettyprint">// decrease alpha by 25
+
+unsigned char alpha;
+
+SDL_GetTextureAlphaMod( texture, &amp;alpha );
+
+SDL_SetTextureAlphaMod( texture, alpha - 25 );</pre>
 			<h3>Blend Mode</h3>
 			<p>
-				
+				The blend mode can modified per texture with the functions <a href="https://wiki.libsdl.org/SDL_GetTextureBlendMode">SDL_GetTextureBlendMode()</a> and <a href="https://wiki.libsdl.org/SDL_SetTextureBlendMode">SDL_SetTextureBlendMode()</a>. These functions operate using the <a href="https://wiki.libsdl.org/SDL_BlendMode">SDL_BlendMode</a> structure, which can include no blending, alpha blending (default), additive blending, and modulated blending.
 			</p>
+			<pre class="example_code prettyprint">SDL_SetTextureBlendMode( texture, SDL_BLENDMODE_ADD );</pre>
 			<h3>Color Mod</h3>
 			<p>
-				
+				Again as with drawing, a color modifier can be set per texture. As you'd expect, the functions <a href="https://wiki.libsdl.org/SDL_GetTextureColorMod">SDL_GetTextureColorMod()</a> and <a href="https://wiki.libsdl.org/SDL_SetTextureColorMod">SDL_SetTextureColorMod()</a> are used for this purpose. Note that the color modifier does not include alpha&mdash;you have to get and set alpha separately.
 			</p>
+			<pre class="example_code prettyprint">// swizzle colors
+
+unsigned char r, g, b;
+
+SDL_GetTextureColorMod( texture, &amp;r, &amp;g, &amp;b );
+
+SDL_SetTextureColorMod( texture, g, b, r );</pre>
 			<h2 id="render">Rendering Textures</h2>
 			<p>
-				
+				Actually drawing textures to the screen is very similar to blitting surfaces, except that you have a few more options. <a href="https://wiki.libsdl.org/SDL_RenderCopy">SDL_RenderCopy()</a> is the direct parallel: it takes the rendering context, texture, source rectangle, and destination rectangle.
 			</p>
+			<pre class="example_code prettyprint">SDL_Rect dst;
+dst.x = 0;
+dst.y = 0;
+dst.w = 100;
+dst.h = 100;
+
+SDL_RenderCopy( renderer, texture, NULL, &amp;dst );</pre>
 			<h3>Rotation and Flips</h3>
 			<p>
-				
+				The function <a href="https://wiki.libsdl.org/SDL_RenderCopyEx">SDL_RenderCopyEx()</a> (Ex = Extended) provides a few more rendering options. These include a rotation around a point and a vertical/horizontal flip. These are simply passed as parameters. Note that the rotation angle is in degrees, but most math functions/libraries use radians.
 			</p>
+			<pre class="example_code prettyprint">SDL_Rect dst;
+dst.x = 0;
+dst.y = 0;
+dst.w = 100;
+dst.h = 100;
+
+SDL_Point rotPoint;
+rotPoint.x = 25;
+rotPoint.y = 25;
+
+SDL_RenderCopyEx( renderer, texture, NULL, &amp;dst, 90, &amp;rotPoint, SDL_FLIP_HORIZONTAL );</pre>
 			<h2 id="pixels">Pixels</h2>
 			<p>
-				
+				As with surfaces, you can directly edit the pixel data of textures. However, it's rather more complicated than simply accessing the "pixels" member.
 			</p>
-			<h2 id="totexture">Render to Texture</h2>
 			<p>
-				
+				Creating a texture from a surface uses the default <a href="https://wiki.libsdl.org/SDL_TextureAccess">SDL_TextureAccess</a> value SDL_TEXTUREACCESS_STATIC, meaning the texture cannot be changed. If you plan to directly edit the pixel data of a texture, you must use SDL_TEXTUREACCESS_STREAMING instead. This flag tells SDL that the texture may be changed by external code.
 			</p>
+			<p>
+				However, that's not all you have to do. To access the pixel data of a texture, you must use the function <a href="https://wiki.libsdl.org/SDL_LockTexture">SDL_LockTexture()</a>. This function tells SDL to stop any other access to the texture until the user is done with it. The parameters include the region of the texture to edit, a pointer that will be set to the pixel data, and an integer that will be set to the pixel pitch. The "pitch" is simply the length (in bytes) of one horizontal line of pixels&mdash;the size of the first dimension, you could say. Note that the pixel data is for <strong>write only</strong>&mdash;it is not guaranteed to contain the previous correct values.
+			</p>
+			<p>
+				The pixel format specified at texture creation dictates the format of the pixel data. It's pretty straightforward: ...RGBA8888 means first red, then green, then blue, then alpha, and each value is eight bits (one byte). ...RGB444 means first red, then green, then blue, no alpha, and four bits per value.
+			</p>
+			<pre class="example_code prettyprint">SDL_Texture* texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 1024, 1024);
+
+unsigned char* pixels;
+int pitch;
+
+SDL_LockTexture( texture, NULL, (void**)&amp;pixels, &amp;pitch );
+
+// set pixels to solid white
+for(int i = 0; i < pitch * textureHeight; i++) {
+	pixels[i] = 255;
+}</pre>
+			<p>
+				Finally, once you have finished writing to the texture, you must call <a href="https://wiki.libsdl.org/SDL_UnlockTexture">SDL_UnlockTexture()</a> to apply your changes and signal SDL that it can use the texture again.
+			</p>
+			<pre class="example_code prettyprint">SDL_UnlockTexture( texture );</pre>
+			<h2 id="target">Render to Texture</h2>
+			<p>
+				While <em>technically</em>, you can do any texture modification you'd like by editing pixel data, it is often much more convenient to render directly to a texture. Essentially, this means using the full rendering API, but instead of drawing to the screen, drawing to a texture.
+			</p>
+			<p>
+				A texture must be created with the access SDL_TEXTUREACCESS_TARGET to enable rendering to texture. Other than this, the texture is used the same as normal. The function <a href="https://wiki.libsdl.org/SDL_SetRenderTarget">SDL_SetRenderTarget()</a> is used to change between rendering to textures or to the screen. The parameters are quite simple: the rendering context and either a texture to render to or NULL to render to the screen.
+			</p>
+			<p>
+				Note that you should not call <a href="https://wiki.libsdl.org/SDL_RenderPresent">SDL_RenderPresent()</a> when rendering to a texture.
+			</p>
+			<pre class="example_code prettyprint">SDL_Texture* texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 1024, 1024);
+
+// draw to the texture
+SDL_SetRenderTarget( renderer, texture );
+
+// draw a point onto the texture
+SDL_RenderDrawPoint( renderer, 123, 456 );
+
+// now draw to the window
+SDL_SetRenderTarget( renderer, NULL );</pre>
 			<h2 id="quit">Destroying a Texture</h2>
 			<p>
-				
+				Finally, as with surfaces, textures must be freed when your program shuts down (or they are no longer in use). This is simply done with the function <a href="https://wiki.libsdl.org/SDL_DestroyTexture">SDL_DestroyTexture()</a>.
 			</p>
+			<pre class="example_code prettyprint">SDL_DestroyTexture( texture );
+texture = NULL;</pre>
 		</article>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
 			<div class="example_links">
 				<a href="example.cpp" download>Download</a>
 			</div>
-			<pre class="example_program prettyprint">#include &lt;iostream>
-#include &lt;SDL.h>
-#include &lt;cmath>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;SDL.h&gt;
+#include &lt;cmath&gt;
 
 using namespace std;
 
