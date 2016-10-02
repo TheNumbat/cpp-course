@@ -137,6 +137,9 @@ footer {
 	margin-top: 1em;
 }
 
+.nocollapse {
+	display: inline-block;
+}
 .nocollapse:after {
 	content: "";
 	display: block;

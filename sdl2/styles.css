@@ -10,6 +10,6 @@ div.nocollapse > ul.collumns {
 	display: inline-block;
 	margin-right: 25px;
 }
-div.nocollapse {
+ul {
 	font-size: 1.2em;
 }
