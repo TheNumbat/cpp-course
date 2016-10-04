@@ -146,6 +146,9 @@ footer {
 	height: 0;
 	clear: both;
 }
+.blocks {
+	display: block;
+}
 
 .content_list {
 	list-style-type: none;
