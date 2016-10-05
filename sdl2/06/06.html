@@ -30,6 +30,7 @@
 			<nav role="navigation">
 				<ul class="subsections">
 					<li><a href="#ext">Extension Libraries</a></li> | 
+					<li><a href="#setup">Setup</a></li> | 
 					<li><a href="#image">SDL_Image</a></li> | 
 					<li><a href="#mixer">SDL_Mixer</a></li>
 				</ul>
@@ -208,20 +209,40 @@ void kill() {
 		<article role="article">
 			<h2 id="ext">Extension Libraries</h2>
 			<p>
-				
+				While SDL provides extensive APIs for several systems, it omits some areas, and lacks features in others. Extension libraries solve this problem, adding more functionality in a modular fashion.
 			</p>
-			<p>Popular Extensions:</p>
-			<ul>
-				<li>SDL_Image</li>
-				<li>SDL_Mixer</li>
-				<li>SDL_TTF</li>
-				<li>SDL_Net</li>
-				<li>SDL_GPU</li>
-				<li>SDL_FontCache</li>
+			<span>Popular Extensions:</span>
+			<div class="nocollapse blocks"><ul class="collumns">
+				<li><a href="https://www.libsdl.org/projects/SDL_image/">SDL_Image</a></li>
+				<span>Loads images of various types</span>
+				<li><a href="https://www.libsdl.org/projects/SDL_mixer/">SDL_Mixer</a></li>
+				<span>Provides a sound API</span>
+				<li><a href="https://www.libsdl.org/projects/SDL_ttf/">SDL_TTF</a></li>
+				<span>Provides a font loading and rendering API</span>
+			</ul>
+			<ul class="collumns">
+				<li><a href="https://www.libsdl.org/projects/SDL_net/">SDL_Net</a></li>
+				<span>Provides a networking API</span>
+				<li><a href="https://github.com/grimfang4/sdl-gpu/releases">SDL_GPU</a> [beta]</li>
+				<span>Replaces the rendering API</span>
+				<li><a href="https://github.com/grimfang4/SDL_FontCache">SDL_FontCache</a> [beta]</li>
+				<span>Provides font caching support</span>
+			</ul></div>
+			<p>
+				We'll cover setting up and using <a href="https://www.libsdl.org/projects/SDL_image/">SDL_Image</a> and <a href="https://www.libsdl.org/projects/SDL_mixer/">SDL_Mixer</a> in this lesson. 
+			</p>
+			<h2 id="setup">Setup</h2>
+			<p>
+				To use an extension library, you must add to your project settings. The process is very similar to setting up SDL in the first place.
+			</p>
+			<span>Guides:</span>
+			<ul class="content_list">
+				<li><a href="vsSetup.html">Setup for Visual Studio</a></li>
+				<li><a href="http://lazyfoo.net/tutorials/SDL/06_extension_libraries_and_loading_other_image_formats/index.php" target="_blank">Other Setup Guides</a></li>
 			</ul>
 			<h2 id="image">SDL_Image</h2>
 			<p>
-				
+				As of yet, we've only been able to load bitmap images. This is a pain for several reasons&mdash;bitmaps cannot be compressed, it's difficult to get them to save alpha data, and most images downloaded from the web will not be in the correct format. SDL_Image adds a small set of functions for loading other image types, including PNG, JPG, GIF, and TIFF.
 			</p>
 			<h3>Startup</h3>
 			<p>

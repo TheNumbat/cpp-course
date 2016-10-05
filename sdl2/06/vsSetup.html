@@ -1,0 +1,75 @@
+<doctype html>
+<html>
+	<head>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83606680-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\..\styles.css">
+		<link rel="stylesheet" href="..\styles.css">
+		<title>SDL Extensions Setup For Visual Studio</title>
+	</head>
+	<body>
+	<div id="main">
+		<header role="banner">
+			<h1>SDL Extensions Setup For Visual Studio</h1>
+			<a id="home" href="06.html">Back</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#install">Extension Files</a></li> | 
+					<li><a href="#project">Project Settings</a></li> | 
+					<li><a href="#build">Build</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+		<article role="article">
+			<h2 id="install">Extensions Files</h2>
+			<p>
+				First, <a href="..\01\vsSetup.html">set up an project with SDL</a>.
+			</p>
+			<p>
+				Then, download the files for your extension library (see listing in <a href="06.html">lesson 06</a>). For Visual Studio, download the "VC" development libraries.
+			</p>
+			<img src="vs/00.png">
+			<p>
+				Extract the files and move the folder into your project.
+			</p>
+			<img src="vs/01.png">
+			<p>
+				For convenience, add the contents of the extension include directory to your SDL2 include folder, and the contents of the extension lib/x86 directory to your SDL2 lib/x86 folder.
+			</p>
+			<span>include:</span>
+			<img src="vs/02.png">
+			<span>lib/x86:</span>
+			<img src="vs/03.png">
+
+			<h2 id="project">Project Settings</h2>
+			<p>
+				Open up your project settings in visual studio. Because you copied the files into your SDL2 folder, you should not have to change any directory settings. However, edit linker > input:
+			</p>
+			<img src="vs/04.png">
+			<p>
+				Add the names of each extension library. Here, we are adding SDL_image:
+			</p>
+			<img src="vs/05.png">
+			<h2 id="build">Build</h2>
+			<p>
+				Assuming you correctly added the extension files, you should be able to include the extension header and build your program.
+			</p>
+			<img src="vs/06.png">
+		</article>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
