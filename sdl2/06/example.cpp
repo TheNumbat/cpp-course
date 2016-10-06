@@ -62,8 +62,8 @@ bool loop() {
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				// Play sound once on any available channel
-				Mix_PlayChannel( -1, sound, 1 );
+				// Play sound once on the first available channel
+				Mix_PlayChannel( -1, sound, 0 );
 				break;
 		}
 	}
@@ -158,7 +158,7 @@ void kill() {
 	window = NULL;
 	renderer = NULL;
 
-	SDL_Quit();
 	IMG_Quit();
 	Mix_Quit();
+	SDL_Quit();
 }

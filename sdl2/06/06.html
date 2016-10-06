@@ -105,8 +105,8 @@ bool loop() {
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				// Play sound once on any available channel
-				Mix_PlayChannel( -1, sound, 1 );
+				// Play sound once on the first available channel
+				Mix_PlayChannel( -1, sound, 0 );
 				break;
 		}
 	}
@@ -201,9 +201,9 @@ void kill() {
 	window = NULL;
 	renderer = NULL;
 
-	SDL_Quit();
 	IMG_Quit();
 	Mix_Quit();
+	SDL_Quit();
 }</pre>
 		</aside>
 		<article role="article">
@@ -233,7 +233,7 @@ void kill() {
 			</p>
 			<h2 id="setup">Setup</h2>
 			<p>
-				To use an extension library, you must add to your project settings. The process is very similar to setting up SDL in the first place.
+				To use an extension library, you must change a couple project settings. 
 			</p>
 			<span>Guides:</span>
 			<ul class="content_list">
@@ -242,7 +242,7 @@ void kill() {
 			</ul>
 			<h2 id="image">SDL_Image</h2>
 			<p>
-				As of yet, we've only been able to load bitmap images. This is a pain for several reasons&mdash;bitmaps cannot be compressed, it's difficult to get them to save alpha data, and most images downloaded from the web will not be in the correct format. SDL_Image adds a small set of functions for loading other image types, including PNG, JPG, GIF, and TIFF.
+				As of yet, we've only been able to load bitmap images. This is a pain for several reasons&mdash;bitmaps cannot be compressed, it's difficult to get them to save alpha data, and most images downloaded from the web will not be in the correct format. SDL_Image adds a small set of functions for loading other image types, including PNG, JPG, GIF, and TIFF. The full API documentation can be found <a href="https://www.libsdl.org/projects/SDL_image/docs/SDL_image_frame.html">here</a>.
 			</p>
 			<h3>Startup</h3>
 			<p>
@@ -258,32 +258,70 @@ void kill() {
 			</p>
 			<h2 id="mixer">SDL_Mixer</h2>
 			<p>
-				
+				SDL provides an API for loading and playing audio, but it is relatively low-level and can be very complicated to use in more advanced contexts. SDL_mixer provides a streamlined sound loading and playback API similar to that of SDL_image. The API documentation can be found <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html">here</a>.
 			</p>
 			<h3>Startup</h3>
 			<p>
-				
+				As with SDL_image, SDL_mixer has its own initialization function, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_11.html#SEC11">Mix_OpenAudio()</a>. Technically, SDL_mixer is initialized with <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html">Mix_Init()</a>, but <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_11.html#SEC11">Mix_OpenAudio()</a> will call it for you. <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_11.html#SEC11">Mix_OpenAudio()</a> describes how to format the audio output. The parameters include the sample frequency (44100 is CD quality, but many games use 22050), the data <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html">format</a>, the number of channels (1 = mono, 2 = stereo), and the chunk size (~1024 for sound effects, larger if you need to prevent skipping).
 			</p>
+			<pre class="example_code prettyprint">int result = Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 1024 );
+
+// Check load
+if ( result != 0 ) {
+	cout << "Failed to open audio: " << Mix_GetError() << endl;
+}</pre>
 			<h3>Audio Loading</h3>
 			<p>
-				
+				Loading audio is just as simple as loading images. There are two types of audio objects provided by SDL_mixer, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_85.html#SEC85">Mix_Chunk</a>, which represents a sound clip, and <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_86.html#SEC86">Mix_Music</a>, which represents a longer sound clip to be used as background music. These types are loaded using the functions <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_55.html#SEC55">Mix_LoadMUS()</a> and <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_19.html#SEC19">Mix_LoadWAV()</a>. Both functions take the audio file path. Finally, although the function has WAV in the name, it can actually load many different audio formats, including WAV, MP3, and OGG.
 			</p>
+			<pre class="example_code prettyprint">Mix_Music* music;
+Mix_Chunk* sound;
+
+music = Mix_LoadMUS("music.wav");
+sound = Mix_LoadWAV("sound.mp3");
+
+// Check load
+if( !music || !sound ) {
+	cout << "Failed to load music or sound: " << Mix_GetError() << endl;
+}</pre>
 			<h3>Playing Music</h3>
 			<p>
-				
+				Playing music is more straightforward than playing sounds, as you can only have one music stream playing at once. Music is managed by the functions <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_57.html#SEC57">Mix_PlayMusic()</a>, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_62.html#SEC62">Mix_PauseMusic()</a>, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_63.html#SEC63">Mix_ResumeMusic()</a>, and <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_67.html#SEC67">Mix_HaltMusic()</a>, among others. These functions all do more or less what you'd expect, and do not take parameters, except for <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_57.html#SEC57">Mix_PlayMusic()</a>. This function takes a pointer to the loaded music you'd like to play, and the number of times to loop it (-1 for infinitely). If music is already playing, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_57.html#SEC57">Mix_PlayMusic()</a> will halt the previous stream and start anew. 
 			</p>
+			<pre class="example_code prettyprint">int result = Mix_PlayMusic( music, -1 );
+
+if ( result != 0 ) {
+	cout << "Failed to play music: " << Mix_GetError() << endl;
+}</pre>
 			<h3>Playing Sounds</h3>
 			<p>
-				
+				Playing sounds is a little more complicated, as you can play a number of sounds at the same time, and you can adjust a few settings for each. Basically, you can allocate a set number of channels, each of which can represent a currently playing sound. Then, you can set a sound to play on a channel. To pause a sound, change its volume, and the like, you must then reference the channel ID of the currently playing sound.
 			</p>
-			<h3>Controlling Playback</h3>
 			<p>
-				
+				These features are controlled by the functions <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_26.html#SEC26">Mix_AllocateChannels()</a>, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_28.html#SEC28">Mix_PlayChannel()</a>, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_27.html#SEC27">Mix_Volume</a>, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_32.html#SEC32">Mix_Pause()</a>, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_33.html#SEC33">Mix_Resume()</a>, and <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_34.html#SEC34">Mix_HaltChannel()</a>, among others. Again, these are mostly self-explanatory.
+			</p>
+			<p>
+				<a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_28.html#SEC28">Mix_PlayChannel()</a> takes three parameters: the channel to play on (or -1 for the first available channel), the Mix_Chunk to play, and the number of times to loop the sound after the first play (i.e. 0 -> plays once). It returns which channel it used.
+			</p>
+			<pre class="example_code prettyprint">int channel = Mix_PlayChannel( -1, sound, 0 );
+
+Mix_Pause( channel );
+
+SDL_Delay( 1000 );
+
+Mix_Resume( channel );</pre>
+			<p>
+				I highly recommend looking through the <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html">documentation</a> to get a better grasp of how the API functions work together.
 			</p>
 			<h3>Shutdown</h3>
 			<p>
-				
+				As with SDL_image, SDL_mixer has its own quit function, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html">Mix_Quit()</a>. This should be called at the end of your program with your other shut down functions. Additionally, you must free loaded Mix_Musics and Mix_Chunks with the functions <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_56.html#SEC56">Mix_FreeMusic()</a> and <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_24.html#SEC24">Mix_FreeChunk()</a> respectively.
 			</p>
+			<pre class="example_code pretyprint">Mix_FreeChunk( sound );
+Mix_FreeMusic( music );
+
+Mix_Quit();
+SDL_Quit();</pre>
 		</article>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
@@ -353,8 +391,8 @@ bool loop() {
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				// Play sound once on any available channel
-				Mix_PlayChannel( -1, sound, 1 );
+				// Play sound once on the first available channel
+				Mix_PlayChannel( -1, sound, 0 );
 				break;
 		}
 	}
@@ -449,9 +487,9 @@ void kill() {
 	window = NULL;
 	renderer = NULL;
 
-	SDL_Quit();
 	IMG_Quit();
 	Mix_Quit();
+	SDL_Quit();
 }</pre>
 		</aside>
 		</main>
