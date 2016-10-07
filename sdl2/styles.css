@@ -13,3 +13,6 @@ div.nocollapse > ul.collumns {
 ul {
 	font-size: 1.2em;
 }
+.nocollapse:after {
+	display: inline-block;
+}

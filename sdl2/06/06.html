@@ -242,19 +242,36 @@ void kill() {
 			</ul>
 			<h2 id="image">SDL_Image</h2>
 			<p>
-				As of yet, we've only been able to load bitmap images. This is a pain for several reasons&mdash;bitmaps cannot be compressed, it's difficult to get them to save alpha data, and most images downloaded from the web will not be in the correct format. SDL_Image adds a small set of functions for loading other image types, including PNG, JPG, GIF, and TIFF. The full API documentation can be found <a href="https://www.libsdl.org/projects/SDL_image/docs/SDL_image_frame.html">here</a>.
+				As of yet, we've only been able to load bitmap images. This is a pain for several reasons&mdash;bitmaps cannot be compressed, it's difficult to get them to save alpha data, and most images downloaded from the web will not be in the correct format. SDL_Image adds a small set of functions for loading other image types, including PNG, JPG, GIF, and TIFF.
 			</p>
 			<h3>Startup</h3>
 			<p>
-				
+				Most extensions require a startup call separate from the core <a href="https://wiki.libsdl.org/SDL_Init">SDL_Init()</a>. For SDL_image, this is <a href="https://www.libsdl.org/projects/SDL_image/docs/SDL_image_frame.html">IMG_Init()</a>. This function takes a number of flags representing the types of images you want to load. Most often, this will be IMG_INIT_JPG and IMG_INIT_PNG.
 			</p>
+			<pre class="example_code prettyprint">int result = IMG_Init( IMG_INIT_JPG | IMG_INIT_PNG );
+
+// Check load
+if ( result != 0 ) {
+	cout << "Failed to initialize SDL_image: " << IMG_GetError() << endl;
+}</pre>
 			<h3>Image Loading</h3>
 			<p>
-				
+				The only really important function from SDL_image is <a href="https://www.libsdl.org/projects/SDL_image/docs/SDL_image_frame.html">IMG_Load()</a>. It works in exactly the same way as <a href="https://wiki.libsdl.org/SDL_LoadBMP">SDL_LoadBMP()</a>, except that it can load any image format you initialized SDL_image with. 
 			</p>
+			<pre class="example_code prettyprint">SDL_Surface* image = IMG_Load("image.png");
+
+// Check load
+if ( !image ) {
+	cout << "Failed to load image.png: " << IMG_GetError() << endl;
+}</pre>
 			<h3>Shutdown</h3>
 			<p>
-				
+				When you shut down your program, simply remember to call <a href="https://www.libsdl.org/projects/SDL_image/docs/SDL_image_frame.html">IMG_Quit()</a> as well as <a href="https://wiki.libsdl.org/SDL_Quit">SDL_Quit()</a>.
+			</p>
+			<pre class="example_code prettyprint">IMG_Quit();
+SDL_Quit();</pre>
+			<p>
+				That's really all you need to know about SDL_image; it's a very simple and straightforward extension. You can look through the <a href="https://www.libsdl.org/projects/SDL_image/docs/SDL_image_frame.html">documentation</a> to get a better grasp of how each function works.
 			</p>
 			<h2 id="mixer">SDL_Mixer</h2>
 			<p>
@@ -311,13 +328,13 @@ SDL_Delay( 1000 );
 
 Mix_Resume( channel );</pre>
 			<p>
-				I highly recommend looking through the <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html">documentation</a> to get a better grasp of how the API functions work together.
+				I highly recommend looking through the <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html">documentation</a> for information on the rest of the API, and to get a better grasp of how the API functions work together.
 			</p>
 			<h3>Shutdown</h3>
 			<p>
 				As with SDL_image, SDL_mixer has its own quit function, <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_frame.html">Mix_Quit()</a>. This should be called at the end of your program with your other shut down functions. Additionally, you must free loaded Mix_Musics and Mix_Chunks with the functions <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_56.html#SEC56">Mix_FreeMusic()</a> and <a href="https://www.libsdl.org/projects/SDL_mixer/docs/SDL_mixer_24.html#SEC24">Mix_FreeChunk()</a> respectively.
 			</p>
-			<pre class="example_code pretyprint">Mix_FreeChunk( sound );
+			<pre class="example_code prettyprint">Mix_FreeChunk( sound );
 Mix_FreeMusic( music );
 
 Mix_Quit();
