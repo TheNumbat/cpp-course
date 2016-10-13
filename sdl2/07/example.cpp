@@ -61,7 +61,7 @@ bool loop() {
 				break;
 		}
 	}
-
+	 
 	// Render texture
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 
