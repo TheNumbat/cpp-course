@@ -1,0 +1,378 @@
+<doctype html>
+<html>
+	<head>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83606680-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\..\styles.css">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 07 - Text Rendering &amp; Input</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\05\05.html" id="last">Last</a>
+		<a class="top_button" href="..\07\07.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 07 - Text Rendering &amp; Input</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.zip" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+#include &lt;SDL.h&gt;
+#include &lt;SDL_image.h&gt;
+#include &lt;SDL_ttf.h&gt;
+
+using namespace std;
+
+bool init();
+void kill();
+bool loop();
+
+// Pointers to our window, renderer, texture, and font
+SDL_Window* window;
+SDL_Renderer* renderer;
+SDL_Texture *texture, *text;
+TTF_Font* font;
+string input;
+
+int main(int argc, char** args) {
+
+	if ( !init() ) {
+		system("pause");
+		return 1;
+	}
+
+	while ( loop() ) {
+		// wait before processing the next frame
+		SDL_Delay(10); 
+	}
+
+	kill();
+	return 0;
+}
+
+bool loop() {
+
+	static const unsigned char* keys = SDL_GetKeyboardState( NULL );
+
+	SDL_Event e;
+	SDL_Rect dest;
+
+	// Clear the window to white
+	SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+	SDL_RenderClear( renderer );
+
+	// Event loop
+	while ( SDL_PollEvent( &amp;e ) != 0 ) {
+		switch (e.type) {
+			case SDL_QUIT:
+				return false;
+			case SDL_TEXTINPUT:
+				input += e.text.text;
+				break;
+			case SDL_KEYDOWN:
+				if (e.key.keysym.sym == SDLK_BACKSPACE &amp;&amp; input.size()) {
+					input.pop_back();
+				}
+				break;
+		}
+	}
+
+	// Render texture
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
+
+	SDL_Color foreground = { 0, 0, 0 };
+
+	if ( input.size() ) {
+		SDL_Surface* text_surf = TTF_RenderText_Solid(font, input.c_str(), foreground);
+		text = SDL_CreateTextureFromSurface(renderer, text_surf);
+
+		dest.x = 320 - (text_surf-&gt;w / 2.0f);
+		dest.y = 240;
+		dest.w = text_surf-&gt;w;
+		dest.h = text_surf-&gt;h;
+		SDL_RenderCopy(renderer, text, NULL, &amp;dest);
+
+		SDL_DestroyTexture(text);
+		SDL_FreeSurface(text_surf);
+	}
+
+	// Update window
+	SDL_RenderPresent( renderer );
+
+	return true;
+}
+
+bool init() {
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	} 
+
+	if ( IMG_Init(IMG_INIT_PNG) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL_image: " &lt;&lt; IMG_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	// Initialize SDL_ttf
+	if ( TTF_Init() &lt; 0 ) {
+		cout &lt;&lt; "Error intializing SDL_ttf: " &lt;&lt; TTF_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN );
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		return false;
+	}
+
+	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	if ( !renderer ) {
+		cout &lt;&lt; "Error creating renderer: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	SDL_Surface* buffer = IMG_Load("test.png");
+	if ( !buffer ) {
+		cout &lt;&lt; "Error loading image test.png: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	texture = SDL_CreateTextureFromSurface( renderer, buffer );
+	SDL_FreeSurface( buffer );
+	buffer = NULL;
+	if ( !texture ) {
+		cout &lt;&lt; "Error creating texture: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	// Load font
+	font = TTF_OpenFont("font.ttf", 72);
+	if ( !font ) {
+		cout &lt;&lt; "Error loading font: " &lt;&lt; TTF_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	// Start sending SDL_TextInput events
+	SDL_StartTextInput();
+
+	return true;
+}
+
+void kill() {
+	SDL_StopTextInput();
+
+	TTF_CloseFont( font );
+	SDL_DestroyTexture( texture );
+	texture = NULL;
+
+	SDL_DestroyRenderer( renderer );
+	SDL_DestroyWindow( window );
+	window = NULL;
+	renderer = NULL;
+
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
+}</pre>
+		</aside>
+		<article role="article">
+	
+		</article>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.zip" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+#include &lt;SDL.h&gt;
+#include &lt;SDL_image.h&gt;
+#include &lt;SDL_ttf.h&gt;
+
+using namespace std;
+
+bool init();
+void kill();
+bool loop();
+
+// Pointers to our window, renderer, texture, and font
+SDL_Window* window;
+SDL_Renderer* renderer;
+SDL_Texture *texture, *text;
+TTF_Font* font;
+string input;
+
+int main(int argc, char** args) {
+
+	if ( !init() ) {
+		system("pause");
+		return 1;
+	}
+
+	while ( loop() ) {
+		// wait before processing the next frame
+		SDL_Delay(10); 
+	}
+
+	kill();
+	return 0;
+}
+
+bool loop() {
+
+	static const unsigned char* keys = SDL_GetKeyboardState( NULL );
+
+	SDL_Event e;
+	SDL_Rect dest;
+
+	// Clear the window to white
+	SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+	SDL_RenderClear( renderer );
+
+	// Event loop
+	while ( SDL_PollEvent( &amp;e ) != 0 ) {
+		switch (e.type) {
+			case SDL_QUIT:
+				return false;
+			case SDL_TEXTINPUT:
+				input += e.text.text;
+				break;
+			case SDL_KEYDOWN:
+				if (e.key.keysym.sym == SDLK_BACKSPACE &amp;&amp; input.size()) {
+					input.pop_back();
+				}
+				break;
+		}
+	}
+
+	// Render texture
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
+
+	SDL_Color foreground = { 0, 0, 0 };
+
+	if ( input.size() ) {
+		SDL_Surface* text_surf = TTF_RenderText_Solid(font, input.c_str(), foreground);
+		text = SDL_CreateTextureFromSurface(renderer, text_surf);
+
+		dest.x = 320 - (text_surf-&gt;w / 2.0f);
+		dest.y = 240;
+		dest.w = text_surf-&gt;w;
+		dest.h = text_surf-&gt;h;
+		SDL_RenderCopy(renderer, text, NULL, &amp;dest);
+
+		SDL_DestroyTexture(text);
+		SDL_FreeSurface(text_surf);
+	}
+
+	// Update window
+	SDL_RenderPresent( renderer );
+
+	return true;
+}
+
+bool init() {
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	} 
+
+	if ( IMG_Init(IMG_INIT_PNG) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL_image: " &lt;&lt; IMG_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	// Initialize SDL_ttf
+	if ( TTF_Init() &lt; 0 ) {
+		cout &lt;&lt; "Error intializing SDL_ttf: " &lt;&lt; TTF_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN );
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		return false;
+	}
+
+	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	if ( !renderer ) {
+		cout &lt;&lt; "Error creating renderer: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	SDL_Surface* buffer = IMG_Load("test.png");
+	if ( !buffer ) {
+		cout &lt;&lt; "Error loading image test.png: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	texture = SDL_CreateTextureFromSurface( renderer, buffer );
+	SDL_FreeSurface( buffer );
+	buffer = NULL;
+	if ( !texture ) {
+		cout &lt;&lt; "Error creating texture: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	// Load font
+	font = TTF_OpenFont("font.ttf", 72);
+	if ( !font ) {
+		cout &lt;&lt; "Error loading font: " &lt;&lt; TTF_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	// Start sending SDL_TextInput events
+	SDL_StartTextInput();
+
+	return true;
+}
+
+void kill() {
+	SDL_StopTextInput();
+
+	TTF_CloseFont( font );
+	SDL_DestroyTexture( texture );
+	texture = NULL;
+
+	SDL_DestroyRenderer( renderer );
+	SDL_DestroyWindow( window );
+	window = NULL;
+	renderer = NULL;
+
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
