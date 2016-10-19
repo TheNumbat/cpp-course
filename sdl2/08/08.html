@@ -1,0 +1,539 @@
+<doctype html>
+<html>
+	<head>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83606680-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\..\styles.css">
+		<link rel="stylesheet" href="..\styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 08 - Timing: Frame Rate, Physics, Animation</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\07\07.html" id="last">Last</a>
+		<a class="top_button" href="..\09\09.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 08 - Timing: Frame Rate, Physics, Animation</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#time">Timing</a></li> | 
+					<li><a href="#perf">Performance Counter</a></li> | 
+					<li><a href="#fps">Frame Rate</a></li> | 
+					<li><a href="#vsync">VSync</a></li> | 
+					<li><a href="#cap">Capping Frame Rate</a></li> | 
+					<li><a href="#physics">Physics</a></li> | 
+					<li><a href="#animation">Animation</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.zip" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;time.h&gt;
+
+#include &lt;SDL.h&gt;
+#include &lt;SDL_image.h&gt;
+#include &lt;SDL_ttf.h&gt;
+
+using namespace std;
+
+// Gravity in pixels per second squared
+const float GRAVITY = 750.0f; 
+
+bool init();
+void kill();
+void loop();
+void renderText(string text, SDL_Rect dest);
+
+SDL_Window* window;
+SDL_Renderer* renderer;
+SDL_Texture* box;
+TTF_Font* font;
+
+struct square {
+	float x, y, w, h, xvelocity, yvelocity;
+	Uint32 born, lastUpdate;
+};
+
+int main(int argc, char** args) {
+
+	if ( !init() ) {
+		system("pause");
+		return 1;
+	}
+
+	loop();
+	
+	kill();
+	return 0;
+}
+
+void loop() {
+
+	srand(time(NULL));
+
+	// Physics squares
+	vector&lt;square&gt; squares;
+
+	bool running = true;
+	Uint32 totalFrameTicks = 0;
+	Uint32 totalFrames = 0;
+	while(running) {
+	
+		// Start frame timing
+		totalFrames++;
+		Uint32 startTicks = SDL_GetTicks();
+		Uint64 startPerf = SDL_GetPerformanceCounter();
+
+		SDL_Event e;
+
+		SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+		SDL_RenderClear( renderer );
+
+		// Event loop
+		while ( SDL_PollEvent( &amp;e ) != 0 ) {
+			switch (e.type) {
+				case SDL_QUIT:
+					running = false;
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					square s;
+					s.x = e.button.x;
+					s.y = e.button.y;
+					s.w = rand() % 50 + 25;
+					s.h = rand() % 50 + 25;
+					s.yvelocity = -500;
+					s.xvelocity = rand() % 500 - 250;
+					s.lastUpdate = SDL_GetTicks();
+					s.born = SDL_GetTicks();
+					squares.push_back(s);
+					break;
+			}
+		}
+
+		// Physics loop
+		for (int index = 0; index &lt; squares.size(); index++) {
+			square&amp; s = squares[index];
+
+			Uint32 time = SDL_GetTicks();
+			float dT = (time - s.lastUpdate) / 1000.0f;
+			
+			s.yvelocity += dT * GRAVITY;
+			s.y += s.yvelocity * dT;
+			s.x += s.xvelocity * dT;
+
+			if (s.y &gt; 480 - s.h) {
+				s.y = 480 - s.h;
+				s.xvelocity = 0;
+				s.yvelocity = 0;
+			}
+
+			s.lastUpdate = time;
+			if (s.lastUpdate &gt; s.born + 5000) {
+				squares.erase(squares.begin() + index);
+				index--;
+			}
+		}
+
+		// Render loop
+		for (const square&amp; s : squares) {
+			SDL_Rect dest = { round(s.x), round(s.y), round(s.w), round(s.h) };
+			SDL_RenderCopy(renderer, box, NULL, &amp;dest);
+		}
+
+		// Delay for a random number of ticks - this makes the frame rate variable,
+		// demonstrating that the physics is independent of the frame rate.
+		SDL_Delay(rand() % 25);
+
+		// End frame timing
+		Uint32 endTicks = SDL_GetTicks();
+		Uint64 endPerf = SDL_GetPerformanceCounter();
+		Uint64 framePerf = endPerf - startPerf;
+		float frameTime = (endTicks - startTicks) / 1000.0f;
+		totalFrameTicks += endTicks - startTicks;
+
+		// Strings to display
+		string fps = "Current FPS: " + to_string(1.0f / frameTime);
+		string avg = "Average FPS: " + to_string(1000.0f / ((float)totalFrameTicks / totalFrames));
+		string perf = "Current Perf: " + to_string(framePerf);
+
+		// Display strings
+		SDL_Rect dest = { 10, 10, 0, 0 };
+		renderText(fps, dest);
+		dest.y += 24;
+		renderText(avg, dest);
+		dest.y += 24;
+		renderText(perf, dest);
+		
+		// Display window
+		SDL_RenderPresent(renderer);
+	}
+}
+
+void renderText(string text, SDL_Rect dest) {
+	SDL_Color fg = { 0, 0, 0 };
+	SDL_Surface* surf = TTF_RenderText_Solid(font, text.c_str(), fg);
+
+	dest.w = surf-&gt;w;
+	dest.h = surf-&gt;h;
+
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surf);
+
+	SDL_RenderCopy(renderer, tex, NULL, &amp;dest);
+	SDL_DestroyTexture(tex);
+	SDL_FreeSurface(surf);
+}
+
+bool init() {
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	} 
+
+	if ( IMG_Init(IMG_INIT_JPG) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL_image: " &lt;&lt; IMG_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	if ( TTF_Init() &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL_ttf: " &lt;&lt; TTF_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		return false;
+	}
+
+	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	if ( !renderer ) {
+		cout &lt;&lt; "Error creating renderer: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	SDL_Surface* buffer = IMG_Load("box.jpg");
+	if ( !buffer ) {
+		cout &lt;&lt; "Error loading image box.jpg: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	box = SDL_CreateTextureFromSurface( renderer, buffer );
+	SDL_FreeSurface( buffer );
+	buffer = NULL;
+	if ( !box ) {
+		cout &lt;&lt; "Error creating texture: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	font = TTF_OpenFont("font.ttf", 24);
+	if ( !font ) {
+		cout &lt;&lt; "Error loading font: " &lt;&lt; TTF_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	return true;
+}
+
+void kill() {
+	TTF_CloseFont( font );
+	SDL_DestroyTexture( box );
+	font = NULL;
+	box = NULL;
+
+	SDL_DestroyRenderer( renderer );
+	SDL_DestroyWindow( window );
+	window = NULL;
+	renderer = NULL;
+
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
+}</pre>
+		</aside>
+		<article role="article">
+			<h2 id="time">Timing</h2>
+			<p>
+				wew lad wew lad wew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladswew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew lad
+			</p>
+			<h2 id="perf">Performance Counter</h2>
+			<p>
+				
+			</p>
+			<h2 id="fps">Frame Rate</h2>
+			<p>
+				
+			</p>
+			<h2 id="vsync">VSync</h2>
+			<p>
+				
+			</p>
+			<h2 id="cap">Capping Frame Rate</h2>
+			<p>
+				
+			</p>
+			<h2 id="physics">Physics</h2>
+			<p>
+				
+			</p>
+			<h2 id="animation">Animation</h2>
+			<p>
+				
+			</p>
+		</article>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.zip" download>Download</a>
+			</div>
+			<pre class="example_program prettyprint">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;time.h&gt;
+
+#include &lt;SDL.h&gt;
+#include &lt;SDL_image.h&gt;
+#include &lt;SDL_ttf.h&gt;
+
+using namespace std;
+
+// Gravity in pixels per second squared
+const float GRAVITY = 750.0f; 
+
+bool init();
+void kill();
+void loop();
+void renderText(string text, SDL_Rect dest);
+
+SDL_Window* window;
+SDL_Renderer* renderer;
+SDL_Texture* box;
+TTF_Font* font;
+
+struct square {
+	float x, y, w, h, xvelocity, yvelocity;
+	Uint32 born, lastUpdate;
+};
+
+int main(int argc, char** args) {
+
+	if ( !init() ) {
+		system("pause");
+		return 1;
+	}
+
+	loop();
+	
+	kill();
+	return 0;
+}
+
+void loop() {
+
+	srand(time(NULL));
+
+	// Physics squares
+	vector&lt;square&gt; squares;
+
+	bool running = true;
+	Uint32 totalFrameTicks = 0;
+	Uint32 totalFrames = 0;
+	while(running) {
+	
+		// Start frame timing
+		totalFrames++;
+		Uint32 startTicks = SDL_GetTicks();
+		Uint64 startPerf = SDL_GetPerformanceCounter();
+
+		SDL_Event e;
+
+		SDL_SetRenderDrawColor( renderer, 255, 255, 255, 255 );
+		SDL_RenderClear( renderer );
+
+		// Event loop
+		while ( SDL_PollEvent( &amp;e ) != 0 ) {
+			switch (e.type) {
+				case SDL_QUIT:
+					running = false;
+					break;
+				case SDL_MOUSEBUTTONDOWN:
+					square s;
+					s.x = e.button.x;
+					s.y = e.button.y;
+					s.w = rand() % 50 + 25;
+					s.h = rand() % 50 + 25;
+					s.yvelocity = -500;
+					s.xvelocity = rand() % 500 - 250;
+					s.lastUpdate = SDL_GetTicks();
+					s.born = SDL_GetTicks();
+					squares.push_back(s);
+					break;
+			}
+		}
+
+		// Physics loop
+		for (int index = 0; index &lt; squares.size(); index++) {
+			square&amp; s = squares[index];
+
+			Uint32 time = SDL_GetTicks();
+			float dT = (time - s.lastUpdate) / 1000.0f;
+			
+			s.yvelocity += dT * GRAVITY;
+			s.y += s.yvelocity * dT;
+			s.x += s.xvelocity * dT;
+
+			if (s.y &gt; 480 - s.h) {
+				s.y = 480 - s.h;
+				s.xvelocity = 0;
+				s.yvelocity = 0;
+			}
+
+			s.lastUpdate = time;
+			if (s.lastUpdate &gt; s.born + 5000) {
+				squares.erase(squares.begin() + index);
+				index--;
+			}
+		}
+
+		// Render loop
+		for (const square&amp; s : squares) {
+			SDL_Rect dest = { round(s.x), round(s.y), round(s.w), round(s.h) };
+			SDL_RenderCopy(renderer, box, NULL, &amp;dest);
+		}
+
+		// Delay for a random number of ticks - this makes the frame rate variable,
+		// demonstrating that the physics is independent of the frame rate.
+		SDL_Delay(rand() % 25);
+
+		// End frame timing
+		Uint32 endTicks = SDL_GetTicks();
+		Uint64 endPerf = SDL_GetPerformanceCounter();
+		Uint64 framePerf = endPerf - startPerf;
+		float frameTime = (endTicks - startTicks) / 1000.0f;
+		totalFrameTicks += endTicks - startTicks;
+
+		// Strings to display
+		string fps = "Current FPS: " + to_string(1.0f / frameTime);
+		string avg = "Average FPS: " + to_string(1000.0f / ((float)totalFrameTicks / totalFrames));
+		string perf = "Current Perf: " + to_string(framePerf);
+
+		// Display strings
+		SDL_Rect dest = { 10, 10, 0, 0 };
+		renderText(fps, dest);
+		dest.y += 24;
+		renderText(avg, dest);
+		dest.y += 24;
+		renderText(perf, dest);
+		
+		// Display window
+		SDL_RenderPresent(renderer);
+	}
+}
+
+void renderText(string text, SDL_Rect dest) {
+	SDL_Color fg = { 0, 0, 0 };
+	SDL_Surface* surf = TTF_RenderText_Solid(font, text.c_str(), fg);
+
+	dest.w = surf-&gt;w;
+	dest.h = surf-&gt;h;
+
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surf);
+
+	SDL_RenderCopy(renderer, tex, NULL, &amp;dest);
+	SDL_DestroyTexture(tex);
+	SDL_FreeSurface(surf);
+}
+
+bool init() {
+	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	} 
+
+	if ( IMG_Init(IMG_INIT_JPG) &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL_image: " &lt;&lt; IMG_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	if ( TTF_Init() &lt; 0 ) {
+		cout &lt;&lt; "Error initializing SDL_ttf: " &lt;&lt; TTF_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	window = SDL_CreateWindow( "Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+	if ( !window ) {
+		cout &lt;&lt; "Error creating window: " &lt;&lt; SDL_GetError()  &lt;&lt; endl;
+		return false;
+	}
+
+	renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+	if ( !renderer ) {
+		cout &lt;&lt; "Error creating renderer: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	SDL_Surface* buffer = IMG_Load("box.jpg");
+	if ( !buffer ) {
+		cout &lt;&lt; "Error loading image box.jpg: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	box = SDL_CreateTextureFromSurface( renderer, buffer );
+	SDL_FreeSurface( buffer );
+	buffer = NULL;
+	if ( !box ) {
+		cout &lt;&lt; "Error creating texture: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	font = TTF_OpenFont("font.ttf", 24);
+	if ( !font ) {
+		cout &lt;&lt; "Error loading font: " &lt;&lt; TTF_GetError() &lt;&lt; endl;
+		return false;
+	}
+
+	return true;
+}
+
+void kill() {
+	TTF_CloseFont( font );
+	SDL_DestroyTexture( box );
+	font = NULL;
+	box = NULL;
+
+	SDL_DestroyRenderer( renderer );
+	SDL_DestroyWindow( window );
+	window = NULL;
+	renderer = NULL;
+
+	TTF_Quit();
+	IMG_Quit();
+	SDL_Quit();
+}</pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2016 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
