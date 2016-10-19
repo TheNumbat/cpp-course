@@ -3,5 +3,4 @@ The Viewport
 Window Events
 Multiple Windows
 Color Keying
-VSync
 Texture Streaming

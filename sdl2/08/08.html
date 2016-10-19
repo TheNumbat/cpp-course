@@ -32,8 +32,8 @@
 					<li><a href="#time">Timing</a></li> | 
 					<li><a href="#perf">Performance Counter</a></li> | 
 					<li><a href="#fps">Frame Rate</a></li> | 
-					<li><a href="#vsync">VSync</a></li> | 
 					<li><a href="#cap">Capping Frame Rate</a></li> | 
+					<li><a href="#vsync">VSync</a></li> | 
 					<li><a href="#physics">Physics</a></li> | 
 					<li><a href="#animation">Animation</a></li>
 				</ul>
@@ -43,7 +43,8 @@
 			<aside role="complementary" class="example_program top">
 			<h2>Example Program</h2>
 			<div class="example_links">
-				<a href="example.zip" download>Download</a>
+				<a href="example.zip" download>Download</a> | 
+				<a href="time.zip" download>Download Timing Class</a>
 			</div>
 			<pre class="example_program prettyprint">#include &lt;iostream&gt;
 #include &lt;string&gt;
@@ -273,27 +274,103 @@ void kill() {
 		<article role="article">
 			<h2 id="time">Timing</h2>
 			<p>
-				wew lad wew lad wew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladswew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew ladwew lad wew lad
+				SDL Provides a simple but convenient API for timing. Timing has many applications, including FPS calculation and capping, profiling what parts of your program take the most time, and any simulations that should be based on time, such as physics and animation.
 			</p>
+			<p>
+				The most basic form of timing is <a href="https://wiki.libsdl.org/SDL_GetTicks">SDL_GetTicks()</a>. This function simply returns the number of ticks that have elapsed since SDL was initialized. One tick is one millisecond, a tolerable resolution for physics simulation and animation.
+			</p>
+			<pre class="example_code prettyprint">Uint32 ticks = SDL_GetTicks()</pre>
+			<p>
+				Ticks are always increasing&mdash;SDL doesn't provide a way to time between intervals, pause the global timer, or anything like that. However, all these features are relatively straightforward to implement yourself. For example, you could create a <a href="time.zip" download>timing class that manages separate and pause-able timers</a>. All you really need is what SDL gives you; the global tick timer.
+			</p>
+			<p>
+				For example, to time an interval in ticks, simply request the time at the start and end...
+			</p>
+			<pre class="example_code perttyprint">Uint32 start = SDL_GetTicks();
+
+// Do long operation
+
+Uint32 end = SDL_GetTicks();
+
+float secondsElapsed = (end - start) / 1000.0f;</pre>
 			<h2 id="perf">Performance Counter</h2>
 			<p>
-				
+				While <a href="https://wiki.libsdl.org/SDL_GetTicks">SDL_GetTicks()</a> is good enough for most purposes, the minimum interval it can time is one millisecond. But what if you want to time sub-millisecond operations, or want more precision than simply a thousandth of a second? This is where <a href="https://wiki.libsdl.org/SDL_GetPerformanceCounter">SDL_GetPerformanceCounter()</a> comes in. The performance counter is a system-specific high-resolution timer, usually on the scale of micro- or nano- seconds. 
 			</p>
+			<p>
+				Because the performance counter is system specific, you don't actually know what the resolution is. Hence, the function <a href="https://wiki.libsdl.org/SDL_GetPerformanceFrequency">SDL_GetPerformanceFrequency()</a>: it gives you the number of performance counter ticks per second.
+			</p>
+			<p>
+				Otherwise, this system is used in exactly the same way as ticks. To time an interval more precisely, capture the starting and ending performance counter values.
+			</p>
+			<pre class="example_code prettyprint">Uint64 start = SDL_GetPerformanceCounter();
+
+// Do some operation
+
+Uint64 end = SDL_GetPerformanceCounter();
+
+float secondsElapsed = (end - start) / (float)SDL_GetPerformanceFrequency();</pre>
 			<h2 id="fps">Frame Rate</h2>
 			<p>
-				
+				A common application of timing is to calculate the FPS, or frames per second, your program is running at. A frame is simply one iteration of your main game or program loop. Hence, timing it is quite straightforward: log the time at the start and end of each frame. Then, in some form output the elapsed time or its inverse (the FPS).
 			</p>
-			<h2 id="vsync">VSync</h2>
-			<p>
-				
-			</p>
+			<pre class="example_code prettyprint">bool running = true;
+while (running) {
+	
+	Uint64 start = SDL_GetPerformanceCounter();
+
+	// Do event loop
+
+	// Do physics loop
+
+	// Do rendering loop
+
+	Uint64 end = SDL_GetPerformanceCounter();
+
+	float elapsed = (end - start) / (float)SDL_GetPerformanceFrequency();
+	cout << "Current FPS: " << to_string(1.0f / elapsed) << endl;
+
+}</pre>
 			<h2 id="cap">Capping Frame Rate</h2>
 			<p>
-				
+				Aside from performance profiling, you may want to calculate your FPS in order to cap it. Capping your FPS is useful because if you try to update the screen too many times per second, frames will start drawing on top of each other&mdash;this is screen tearing. Further, capping your FPS allows your program to not use all CPU resources given to it, freeing the user's computer to work on other tasks. Although ideally, those extra resources can be put towards improving gameplay or graphics.
 			</p>
+			<p>
+				Capping your FPS is quite simple: just subtract your frame time from your desired time and wait out the difference with <a href="https://wiki.libsdl.org/SDL_Delay">SDL_Delay()</a>. However, this function only takes delay in milliseconds&mdash;unfortunately, you cannot cap your FPS with very much precision. (At least with SDL&mdash;look at std::chrono for more.)
+			</p>
+			<p>
+				You will usually want to cap your FPS to 60, as this is by far the most common refresh rate. This means spending 16 and 2/3 milliseconds per frame. Note that you can easily change this cap.
+			</p>
+			<pre class="example_code prettyprint">bool running = true;
+while (running) {
+	
+	Uint64 start = SDL_GetPerformanceCounter();
+
+	// Do event loop
+
+	// Do physics loop
+
+	// Do rendering loop
+
+	Uint64 end = SDL_GetPerformanceCounter();
+
+	float elapsedMS = (end - start) / (float)SDL_GetPerformanceFrequency() * 1000.0f;
+
+	// Cap to 60 FPS
+	SDL_Delay(floor(16.666f - elapsedMS));
+
+}</pre>
+			<h2 id="vsync">VSync</h2>
+			<p>
+				Another way to prevent screen tearing is with VSync, or vertical sync. This technique simply makes calls to <a href="https://wiki.libsdl.org/SDL_RenderPresent">SDL_RenderPresent()</a> wait for the correct time interval before showing the window. Basically, it will cap your FPS for you.
+			</p>
+			<p>
+				To use it, you must enable VSync when creating your renderer. To do so, simply pass the flag SDL_RENDERER_PRESENTVSYNC to <a href="https://wiki.libsdl.org/SDL_CreateRenderer">SDL_CreateRenderer()</a>. Subsequent calls to <a href="https://wiki.libsdl.org/SDL_RenderPresent">SDL_RenderPresent()</a> will wait before showing the window.
+			</p>
+			<pre class="example_code prettyprint">SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED );</pre>
 			<h2 id="physics">Physics</h2>
 			<p>
-				
+				To start this lesson, I said timing is required for physics and animation. 
 			</p>
 			<h2 id="animation">Animation</h2>
 			<p>
@@ -303,7 +380,8 @@ void kill() {
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
 			<div class="example_links">
-				<a href="example.zip" download>Download</a>
+				<a href="example.zip" download>Download</a> | 
+				<a href="time.zip" download>Download Timing Class</a>
 			</div>
 			<pre class="example_program prettyprint">#include &lt;iostream&gt;
 #include &lt;string&gt;
