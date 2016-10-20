@@ -30,7 +30,7 @@
 			<nav role="navigation">
 				<ul class="subsections">
 					<li><a href="#time">Timing</a></li> | 
-					<li><a href="#perf">Performance Counter</a></li> | 
+					<li><a href="#perf">Performance Counters</a></li> | 
 					<li><a href="#fps">Frame Rate</a></li> | 
 					<li><a href="#cap">Capping Frame Rate</a></li> | 
 					<li><a href="#vsync">VSync</a></li> | 
@@ -44,7 +44,8 @@
 			<h2>Example Program</h2>
 			<div class="example_links">
 				<a href="example.zip" download>Download</a> | 
-				<a href="time.zip" download>Download Timing Class</a>
+				<a href="time.zip" download>Download Timing Class</a> | 
+				<a href="animation.zip" download>Download Animation Example</a>
 			</div>
 			<pre class="example_program prettyprint">#include &lt;iostream&gt;
 #include &lt;string&gt;
@@ -293,7 +294,7 @@ void kill() {
 Uint32 end = SDL_GetTicks();
 
 float secondsElapsed = (end - start) / 1000.0f;</pre>
-			<h2 id="perf">Performance Counter</h2>
+			<h2 id="perf">Performance Counters</h2>
 			<p>
 				While <a href="https://wiki.libsdl.org/SDL_GetTicks">SDL_GetTicks()</a> is good enough for most purposes, the minimum interval it can time is one millisecond. But what if you want to time sub-millisecond operations, or want more precision than simply a thousandth of a second? This is where <a href="https://wiki.libsdl.org/SDL_GetPerformanceCounter">SDL_GetPerformanceCounter()</a> comes in. The performance counter is a system-specific high-resolution timer, usually on the scale of micro- or nano- seconds. 
 			</p>
@@ -370,18 +371,78 @@ while (running) {
 			<pre class="example_code prettyprint">SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED );</pre>
 			<h2 id="physics">Physics</h2>
 			<p>
-				To start this lesson, I said timing is required for physics and animation. 
+				As I've mentioned, you need timing for physics simulation. As of yet, everything you could do was based on frames. For example, your player could move 20 pixels per frame. However, this is not a good way to do things. If your frame rate changes, if it's variable, your physics "time" will run slower or faster as well. The solution is simply to simulate based on time&mdash;this way, whenever you update your physics, it will automatically use the correct time interval.
 			</p>
+			<p>
+				Doing this is quite simple: store the last time your physics was updated (either per entity or globally) and calculate how much you need to update to get to the current time. This is your delta time (dT) value&mdash;multiply it into calculations based on time (e.g. position += velocity * dT).
+			</p>
+			<pre class="example_code prettyprint">bool running;
+Uint32 lastupdate = SDL_GetTicks();
+
+while (running) {
+	
+	// Event loop
+
+	// Physics loop
+	Uint32 current = SDL_GetTicks();
+
+	// Calculate dT (in seconds)
+	
+	float dT = (current - lastUpdate) / 1000.0f;
+	for ( /* objects */ ) {
+		object.position += object.velocity * dT;
+	}
+
+	// Set updated time
+	lastUpdate = current;
+
+	// Rendering loop
+
+}</pre>
 			<h2 id="animation">Animation</h2>
 			<p>
-				
+				Note: we will go over this in more detail during class.
 			</p>
+			<p>
+				As with physics, correct animation also relies on timing. While it's not as bad to have your sprite animation FPS depend on your global FPS, this makes animation look off, forces you to cap your FPS, and requires the same FPS for each animated object.   
+			</p>
+			<p>
+				The solution is almost exactly the same as with physics; calculate a dT value and use it to decide what frame to draw. However, here you must track last updated times for every animated object, and must only do the update when enough time has passed for a frame to flip. <a href="animation.zip" download>Download an example.</a>
+			</p>
+			<pre class="example_code prettyprint">float animatedFPS = 24.0f;
+bool running;
+
+while (running) {
+	
+	// Event loop
+
+	// Physics loop
+
+	// Rendering loop
+	Uint32 current = SDL_GetTicks();
+
+	// Calculate dT (in seconds)
+	
+	for ( /* objects */ ) {
+		float dT = (current - object.lastUpdate) / 1000.0f;
+
+		int framesToUpdate = floor(dT / (1.0f / animatedFPS));
+		if (framesToUpdate > 0) {
+			object.lastFrame += framesToUpdate;
+			object.lastFrame %= object.numFrames;
+			object.lastUpdate = current;
+		}
+
+		render(object.frames[object.lastFrame]);
+	}
+}</pre>
 		</article>
 			<aside role="complementary" class="example_program bot">
 			<h2>Example Program</h2>
 			<div class="example_links">
 				<a href="example.zip" download>Download</a> | 
-				<a href="time.zip" download>Download Timing Class</a>
+				<a href="time.zip" download>Download Timing Class</a> | 
+				<a href="animation.zip" download>Download Animation Example</a>
 			</div>
 			<pre class="example_program prettyprint">#include &lt;iostream&gt;
 #include &lt;string&gt;

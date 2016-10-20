@@ -1,0 +1,8 @@
+
+Things to cover
+	1 - Go over lesson
+	2 - Showcase timing class
+	3 - Physics example
+	4 - Animation example
+	5 - Do example together
+	6 - Project work
