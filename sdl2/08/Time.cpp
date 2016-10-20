@@ -27,8 +27,7 @@ bool Time::init() {
 		return false;
 	}
 
-	s32 result = SDL_InitSubSystem(SDL_INIT_TIMER);
-	assert(result == 0);
+	int result = SDL_InitSubSystem(SDL_INIT_TIMER);
 	if (result != 0) {
 		return false;
 	}
@@ -87,7 +86,7 @@ bool Time::remove(const std::string& tID) {
 	return true;
 }
 
-bool Time::addCallback(u32(*callback)(u32, void*), u32 delay, void* param, bool save, const std::string& tID) {
+bool Time::addCallback(Uint32(*callback)(Uint32, void*), Uint32 delay, void* param, bool save, const std::string& tID) {
 
 	if (save && tID == "") {
 		return false;
@@ -98,7 +97,6 @@ bool Time::addCallback(u32(*callback)(u32, void*), u32 delay, void* param, bool 
 	}
 
 	SDL_TimerID result = SDL_AddTimer(delay,(SDL_TimerCallback)callback,param);
-	assert(result != 0);
 	if (result == 0) {
 		return false;
 	}
@@ -116,7 +114,7 @@ bool Time::removeCallback(const std::string& tID) {
 		return false;
 	}
 
-	s32 result = SDL_RemoveTimer(entry->second);
+	int result = SDL_RemoveTimer(entry->second);
 	callbacks.erase(entry);
 	if (result == 0) {
 		return false;

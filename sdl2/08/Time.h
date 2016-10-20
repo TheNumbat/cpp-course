@@ -19,34 +19,34 @@ class timer {
 class Time
 {
 public:
-	ENGINE_API Time();
-	ENGINE_API ~Time();
+	Time();
+	~Time();
 
 	bool init();
 	bool kill();
 
-	ENGINE_API bool addTimer(const std::string& tID, bool startPaused = false);
-	ENGINE_API bool addPerfCounter(const std::string& tID, bool startPaused = false);
+	bool addTimer(const std::string& tID, bool startPaused = false);
+	bool addPerfCounter(const std::string& tID, bool startPaused = false);
 
-	ENGINE_API bool remove(const std::string& tID);
+	bool remove(const std::string& tID);
 
-	ENGINE_API bool addCallback(u32(*callback)(u32, void*), u32 delay, void* param, bool save = false, const std::string& cID = "");
-	ENGINE_API bool removeCallback(const std::string& cID);
+	bool addCallback(Uint32(*callback)(Uint32, void*), Uint32 delay, void* param, bool save = false, const std::string& cID = "");
+	bool removeCallback(const std::string& cID);
 
-	ENGINE_API bool pause(const std::string& tID);
-	ENGINE_API bool resume(const std::string& tID);
-	ENGINE_API bool reset(const std::string& tID);
-	ENGINE_API bool toggle(const std::string& tID);
+	bool pause(const std::string& tID);
+	bool resume(const std::string& tID);
+	bool reset(const std::string& tID);
+	bool toggle(const std::string& tID);
 
-	ENGINE_API Uint64 get(const std::string& tID);
+	Uint64 get(const std::string& tID);
 
-	ENGINE_API Uint64 getPerfFreq();
-	ENGINE_API Uint64 ticksSinceStart();
-	ENGINE_API Uint64 perfSinceStart();
+	Uint64 getPerfFreq();
+	Uint64 ticksSinceStart();
+	Uint64 perfSinceStart();
 
 private:
 	std::map<std::string, timer*> timers;
-	std::map<std::string, u32> callbacks;
+	std::map<std::string, Uint32> callbacks;
 	bool good;
 };
 
