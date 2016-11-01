@@ -25,7 +25,10 @@
 					<li><a href="#about">About</a></li> | 
 					<li><a href="#setup">Setup</a></li> | 
 					<li><a href="#cpp">C++</a></li> | 
-					<li><a href="#sdl">SDL2</a></li>
+					<li><a href="#sdl">SDL2</a></li> | 
+					<li><a href="#design">Design Patterns</a></li> | 
+					<li><a href="#stl">C++ STL</a></li> | 
+					<li><a href="#opengl">OpenGL</a></li>
 				</ul>
 			</nav>
 		</header>
@@ -88,64 +91,117 @@
 		<h2 id="sdl">Contents - SDL2</h2>
 		<div class="nocollapse blocks">
 		<ul class="content_list left">
-			<li><a href="sdl2/01/01.html">Lesson 01 - Setup &amp; Windowing</a></li>
-			<li><a href="sdl2/02/02.html">Lesson 02 - Bitmaps</a></li>
-			<li><a href="sdl2/03/03.html">Lesson 03 - Events</a></li>
-			<li><a href="sdl2/04/04.html">Lesson 04 - Geometry Rendering</a></li>
-			<li><a href="sdl2/05/05.html">Lesson 05 - Textures</a></li>
-			<li><a href="sdl2/06/06.html">Lesson 06 - Sound &amp; Extension Libraries</a></li>
+			<li><a href="sdl2/01/01.html">SDL 01 - Setup &amp; Windowing</a></li>
+			<li><a href="sdl2/02/02.html">SDL 02 - Bitmaps</a></li>
+			<li><a href="sdl2/03/03.html">SDL 03 - Events</a></li>
+			<li><a href="sdl2/04/04.html">SDL 04 - Geometry Rendering</a></li>
+			<li><a href="sdl2/05/05.html">SDL 05 - Textures</a></li>
+			<li><a href="sdl2/06/06.html">SDL 06 - Sound &amp; Extension Libraries</a></li>
 		</ul>	
 		<ul class="content_list right">
-			<li><a href="sdl2/07/07.html">Lesson 07 - Text Rendering &amp; Input</a></li>
-			<li><a href="sdl2/08/08.html">Lesson 08 - Timing: Frame Rate, Physics, Animation</a></li>
-			<li>Lesson 09 - File IO</li>
-			<li>Lesson 10 - Threading</li>
-			<li>Lesson 11 - Other Topics</li> 
+			<li><a href="sdl2/07/07.html">SDL 07 - Text Rendering &amp; Input</a></li>
+			<li><a href="sdl2/08/08.html">SDL 08 - Timing: Frame Rate, Physics, Animation</a></li>
+			<li>SDL 09 - File IO</li>
+			<li>SDL 10 - Threading</li>
+			<li>SDL 11 - Other Topics</li>
+			<!-- other topics
+				The Viewport
+				Window Events
+				Multiple Windows
+				Color Keying
+				Texture Streaming
+			-->
 		</ul>
 		</div>
 
-		<p style="font-weight:bold;font-size: 1.5em;">Coming soon - C++17 STL, OpenGL, or Data Structures</p>
-		<!--<h2 id="stl">Contents - C++11 STL [TENTATIVE]</h2>
-		<div class="nocollapse blocks">
-		<ul class="content_list left">
-			<li>Lesson 01 - Strings</li>
-			<li>Lesson 02 - Exceptions</li>
-			<li>Lesson 03 - Time and RNG</li>
-			<li>Lesson 04 - Data Structures I</li>
-			<li>Lesson 05 - Data Structures II</li>
-			<li>Lesson 06 - Data Structures III</li>
-			<li>Lesson 07 - Data Structures IV</li>
-		</ul>
-		<ul class="content_list right">
-			<li>Lesson 08 - IO Streams</li>
-			<li>Lesson 09 - Algorithms</li>
-			<li>Lesson 10 - Smart Pointers, Move Semantics, rvalues</li>
-			<li>Lesson 11 - Threading</li>
-			<li>Lesson 12 - Functional Programming</li>
-			<li>Lesson 13 - Creating Libraries</li>
-		</ul>
-		</div>-->
+		<p style="font-weight:bold;font-size: 1.5em;">Below are tentative listings for Design Patterns, Data Structures/the STL, and OpenGL</p>
 
-		
-		<!--<h2 id="opengl">Contents - OpenGL [TENTATIVE]</h2>
+		<h2 id="design">Contents - Game Design Patters</h2>
 		<div class="nocollapse blocks">
 		<ul class="content_list left">
-			<li>Lesson 01 - Concepts</li>
-			<li>Lesson 02 - Setup With SDL</li>
-			<li>Lesson 03 - Drawing a Triangle</li>
-			<li>Lesson 04 - Shaders</li>
-			<li>Lesson 05 - Vectors, Matrices, &amp; Transformations</li>
-			<li>Lesson 06 - Coordinate Systems</li>
-			<li>Lesson 07 - Putting it all Together</li>
+			<li>Design - Planning &amp; Exploration</li>
+			<li>Design - Balance</li>
+			<li>Design - Compression</li>
+			<br>
+			<li>General - Coupling, Encapsulation, Abstraction</li>
+			<li>General - Loops, States, Events, Systems, Updates</li>
+			<br>
+			<li>Worlds - Spacial Partitioning</li>
+			<li>Worlds - Storage</li>
+			<li>Worlds - Generation</li>
+			<br>
+			<li>Entities - Inheritance</li>
+			<li>Entities - Components</li>
+			<li>Entities - Storage</li>
+			<li>Entities - Simulation</li>
 		</ul>
 		<ul class="content_list right">
-			<li>Lesson 08 - Basic Lighting</li>
-			<li>Lesson 09 - Materials</li>
-			<li>Lesson 10 - Lighting Maps</li>
-			<li>Lesson 11 - Light Casters</li>
-			<li>Lesson 12 - Multiple Lights</li>
+			<li>Rendering - Passes</li>
+			<li>Rendering - Tile Maps</li>
+			<li>Rendering - Animation</li>
+			<br>
+			<li>Interface - HUD</li>
+			<li>Interface - Menus</li>
+			<li>Interface - Commands</li>
+			<br>
+			<li>Convenience - Logging</li>
+			<li>Convenience - Debugging</li>
+			<br>
+			<li>Coding - APIs, Wrappers</li>
+			<li>Coding - Scripting</li>
+			<li>Coding - Dynamic Libraries</li>
+		</ul></div>
+		
+		<h2 id="stl">Contents - Data Structures &amp; the C++ STL</h2>
+		<div class="nocollapse blocks">
+		<ul class="content_list left">
+			<li>STL 01 - Strings</li>
+			<li>STL 02 - Numbers</li>
+			<li>STL 03 - Exceptions</li>
+			<li>STL 04 - Time and RNG</li>
+			<li>STL 05 - IO Streams</li>
+			<li>STL 06 - Algorithms</li>
+			<li>STL 07 - Smart Pointers, Move Semantics, rvalues</li>
+			<li>STL 08 - Threading</li>
+			<li>STL 09 - Functional Programming</li>
 		</ul>
-		</div>-->
+		<ul class="content_list right">
+			<li>Structures 01 - Time &amp; Space Complexity</li>
+			<li>Structures 02 - Implementations</li>
+			<li>Structures 03 - Stacks, Queues, &amp; Lists</li>
+				<!-- STL stack, queue, array, list, vector -->
+			<li>Structures 04 - Priority Queues &amp; Sorted Lists</li>
+				<!-- STL priority queue -->
+			<li>Structures 05 - Trees &amp; Related Structures</li>
+			<li>Structures 06 - Heaps</li>
+				<!-- STL make_heap -->
+			<li>Structures 07 - Dictionaries &amp; Hashing</li>
+				<!-- STL map, set, unordered_map -->
+			<li>Structures 08 - Graphs</li>
+			<li>Structures 09 - Graph Operations</li>
+		</ul>
+		</div>
+
+		<h2 id="opengl">Contents - OpenGL</h2>
+		<div class="nocollapse blocks">
+		<ul class="content_list left">
+			<li>OpenGL 01 - Concepts</li>
+			<li>OpenGL 02 - Setup With SDL</li>
+			<li>OpenGL 03 - Drawing a Triangle</li>
+			<li>OpenGL 04 - Shaders</li>
+			<li>OpenGL 05 - Vectors, Matrices, &amp; Transformations</li>
+			<li>OpenGL 06 - Coordinate Systems</li>
+			<li>OpenGL 07 - Putting it all Together</li>
+		</ul>
+		<ul class="content_list right">
+			<li>OpenGL 08 - Model Loading</li>
+			<li>OpenGL 09 - Basic Lighting</li>
+			<li>OpenGL 10 - Materials</li>
+			<li>OpenGL 11 - Lighting Maps</li>
+			<li>OpenGL 12 - Light Casters</li>
+			<li>OpenGL 13 - Multiple Lights</li>
+		</ul>
+		</div>
 
 		</article>
 		</main>
