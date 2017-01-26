@@ -1,0 +1,102 @@
+<doctype html>
+<html>
+	<head>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83606680-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 01 - Time &amp; Space Complexity</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\02\02.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 01 - Time &amp; Space Complexity</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#intro">Introduction</a></li> | 
+					<li><a href="#o">Notation</a></li> | 
+					<li><a href="#lvl">Classes of Complexity</a></li> | 
+					<li><a href="eg">Examples</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+			<aside role="complementary" class="example_program top">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint"></pre>
+		</aside>
+		<article role="article">
+			<h2 id="intro">Introduction</h2>
+			<p>
+				When considering the design of algorithms and the closely related subject of data structures, one needs to think about performance. While ease of use, maintainability, and such are also important, performance tends to be king. Performance includes both time&mdash;the amount of operations done&mdash;and memory usage&mdash;how much memory must be used by the process.
+			</p>
+			<p>
+				But how do you evaluate the performance of an algorithm? Just time it? Measure the memory usage? Count the lines of code? Well, practical implementations of any algorithm will vary across multiple systems&mdash;as will running time. So, then, what? 
+			</p>
+			<p>
+				The answer is by analyzing its order of complexity. An order of complexity relates the size of the input to the running time or memory usage. But I just said we can't judge based on running time! This is because we consider the <em>order</em> of complexity&mdash;as in, does the time increase linearly with larger input, or quadratically? An algorithm that increases linearly might do so with a very large (constant) slope, but we don't care - the point is that it is linear. Hence, the actual running time of any particular implementation is abstracted away; only the fundamental relationship between input and performance is cataloged.
+			</p>
+			<h2 id="o">Notation</h2>
+			<p>
+				There are three order notations used to classify algorithms; big-O, big-theta, and big-omega. Big-O is what you will be typically concerned with, as it catalogs the worst-case complexity. Many algorithms are able to run in a smaller order with some inputs, but must fall back to a larger complexity in many cases. Hence, you optimize for the worst case. Big-theta describes the average complexity, and big-omega describes the best case. Most of the algorithms we will cover will have the same average and worst-case complexity.
+			</p>
+			<p>
+				The actual notation looks like this:
+			</p>
+			<pre class="example_code prettyprint">O(n) | &Theta;(n) | &Omega;(n)</pre>
+			<p>
+				Where 'n' denotes the size of the input. This size can mean different things for different algorithms, but it should be pretty clear how it applies. For example, for sorting algorithms, which we will look at shortly, the size of the input is the amount of numbers to sort. In this example, the amount of time needed to run the algorithm increases linearly with the input size. This means that an input of 100 elements should take 10 times the time as an input of 10 elements.
+			</p>
+			<p>
+				Big-O notation is asymptotic (remember your algebra II?), meaning that it describes the behavior of the function as 'n' approaches infinity. Hence, big-O drops all lower-order terms and constants.
+			</p>
+			<p>
+				For example, an equation with both an 'n' squared and an 'n' term, such as 
+			</p>
+			<pre class="example_code prettyprint">10*n^2 - 12*n + 42</pre>
+			<p>
+				would be reduced to 
+			</p>
+			<pre class="example_code prettyprint">O(n^2)</pre>
+			<p>
+				as the lower order linear term (linear < quadratic) and constants are removed. In this example, the time scales quadratically with the input size. Hence, an input of 100 elements should take 100 times the time as an input of 10 elements.
+			</p>
+			<h2 id="lvl">Classes of Complexity</h2>
+			<p>
+				
+			</p>
+		</article>
+			<aside role="complementary" class="example_program bot">
+			<h2>Example Program</h2>
+			<div class="example_links">
+				<a href="example.cpp" download>Download</a> | 
+				<a href="" target="_blank">Run this Code</a>
+			</div>
+			<pre class="example_program prettyprint"></pre>
+		</aside>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2015-2017 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
