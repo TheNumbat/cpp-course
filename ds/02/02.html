@@ -29,29 +29,169 @@
 			<a id="home"  href="..\..\index.html">Home</a>
 			<nav role="navigation">
 				<ul class="subsections">
-					<li><a href="#"></a></li> | 
+					<li><a href="#intro">Introduction</a></li> | 
+					<li><a href="#bubble">Bubble Sort</a></li> | 
+					<li><a href="#insert">Insertion Sort</a></li> | 
+					<li><a href="#quick">QuickSort</a></li> | 
+					<li><a href="#merge">Merge Sort</a></li> | 
+					<li><a href="#radix">Radix Sort</a></li>
 				</ul>
 			</nav>
 		</header>
 		<main role="main" class="nocollapse">
-			<aside role="complementary" class="example_program top">
-			<h2>Example Program</h2>
-			<div class="example_links">
-				<a href="example.cpp" download>Download</a> | 
-				<a href="" target="_blank">Run this Code</a>
-			</div>
-			<pre class="example_program prettyprint"></pre>
-		</aside>
 		<article role="article">
+			<h2 id="intro">Introduction</h2>
+			<p>
+				Sorting is a much more in-depth topic than you might expect. There are dozens of algorithms, each with different pros, cons, and trade-offs. We'll go over five of the most important here, analyzing their performance characteristics and why you might or might not want to use them.
+			</p>
+			<p>
+				The first four sorts are comparison sorts, meaning they operate based on comparing elements to each other. The theoretical minimum (worst-case) time complexity for this class of algorithms is O(n*log(n)). The fifth algorithm is not a comparison sort. This is because it makes some assumptions about the data - that it consists of positive integers.
+			</p>
+			<h2 id="bubble">Bubble Sort</h2>
+			<p style="font-size:1.5em;"><a href="https://www.toptal.com/developers/sorting-algorithms/bubble-sort">Animation</a></p>
+			<pre class="example_code prettyprint">void bubbleSort(vector&lt;int&gt;&amp; data) {
+	bool swapped;										// O(1)
+	do {												// O(n)
+		swapped = false;									// O(1)
+		for(unsigned int i = 1; i < data.size(); i++) {				// O(n)
+			if(data[i-1] > data[i]) {							// O(1)
+				int temp = data[i];							// O(1)
+				data[i] = data[i-1];							// O(1)
+				data[i-1] = temp;							// O(1)
+				swapped = true;							// O(1)
+			}
+		}
+	} while(swapped);										// O(1)
+
+	// Result : O(n^2) | &Omega;(n)
+}</pre>
+			<h2 id="insert">Insertion Sort</h2>
+			<p style="font-size:1.5em;"><a href="https://www.toptal.com/developers/sorting-algorithms/insertion-sort">Animation</a></p>
+			<pre class="example_code prettyprint">void insertionSort(vector&lt;int&gt;&amp; data) {
+	for(unsigned int i = 1; i < data.size(); i++) {		// O(n)
+		int j = i;									// O(1)
+		while(j > 0) {								// O(n)
+			if (data[j - 1] > data[j]) {						// O(1)					
+				int temp = data[j - 1];					// O(1)
+				data[j - 1] = data[j];						// O(1)
+				data[j] = temp;							// O(1)
+				j--;									// O(1)
+			}
+			else {
+				j = 0;								// O(1)
+			}
+		}
+	}
+
+	// Result : O(n^2) | &Omega;(n)
+}</pre>
+			<h2 id="quick">Quicksort</h2>
+			<p style="font-size:1.5em;"><a href="https://www.toptal.com/developers/sorting-algorithms/quick-sort">Animation</a></p>
+			<pre class="example_code prettyprint">void quickSort(vector&lt;int&gt;&amp; data, int first, int last) {
+	if(last > first + 1) {						// O(1)
+		int index = partition(data, first, last);	// O(n)
+		quickSort(data, first, index);			// O(?)
+		quickSort(data, index + 1, last);		// O(?)
+	}
+
+	// Result : because the recursive calls divide-and-conquer, the function is called log(n) times, and each iteration costs n, so O(n*log(n)). 
+	// However, that's assuming a good partition - theoretically, the partition could take one element at a time, so the real worst case - where
+	// the function is called n times, is O(n^2). However, the average case is still &Theta;(n*log(n)).
+}
+
+int partition(vector&lt;int&gt;&amp; data, int first, int last) {
+	int pivotIndex = first;							// O(1)
+	for (int index = first; index < last; index++) {			// O(n)
+		if (data[index] < data[pivotIndex]) {					// O(1)
+			data.insert(data.begin() + first, data[index]);		// O(1)
+			data.erase(data.begin() + index + 1);			// O(1)
+			pivotIndex++;								// O(1)
+		}
+		else if(data[index] > data[pivotIndex]) {				// O(1)
+			data.insert(data.begin() + last, data[index]);		// O(1)
+			data.erase(data.begin() + index);				// O(1)
+			last--;									// O(1)
+			index--;									// O(1)
+		}
+	}
+	return pivotIndex;
+
+	// Result : O(n)
+}</pre>
+			<h2 id="merge">Merge Sort</h2>
+			<p style="font-size:1.5em;"><a href="https://www.toptal.com/developers/sorting-algorithms/merge-sort">Animation</a></p>
+			<pre class="example_code prettyprint">vector&lt;int&gt; mergeSort(const vector&lt;int&gt;&amp; data) {
+	if(data.size() > 1) {
+		vector&lt;int&gt; one = mergeSort(vector&lt;int&gt;(data.begin(), data.begin() + data.size() / 2), result);	// O(?)
+		vector&lt;int&gt; two = mergeSort(vector&lt;int&gt;(data.begin() + data.size() / 2, data.end()), result);		// O(?)
+		return merge(one, two, result);														// O(n)
+	} else {
+		return data;																		// O(1)
+	}
+
+	// Result : because the recursive calls are divide-and-conquer (every time), the function is called log(n) times, giving O(n*log(n))
+	// However, because we are creating a new vector to return the answer in, memory usage is O(n) instead of O(1) like the others.
+}
+
+vector&lt;int&gt; merge(vector&lt;int&gt;&amp; one, vector&lt;int&gt;&amp; two) {
+	vector&lt;int&gt; ret;
+	while(one.size() || two.size()) {						// O(n)
+		result.swaps++;
+		if(!one.size()) {										// O(1)
+			ret.insert(ret.end(), two.begin(), two.end());			// O(1)
+			return ret;									// O(1)
+		} else if(!two.size()) {								// O(1)
+			ret.insert(ret.end(), one.begin(), one.end());			// O(1)
+			return ret;									// O(1)
+		} else if(one[0] <= two[0]) {							// O(1)
+			ret.push_back(one[0]);							// O(1)
+			one.erase(one.begin());							// O(1)
+		} else {												
+			ret.push_back(two[0]);							// O(1)
+			two.erase(two.begin());							// O(1)
+		}													
+		result.comparisons++;								// O(1)
+	}
+	return ret;
+
+	// Result : O(n)
+}</pre>
+			<h2 id="radix">Radix Sort</h2>
+			<p style="font-size:1.5em;"><a href="https://visualgo.net/sorting">Animation</a> (Click 'radix' - also includes other sorts.)</p>
+			<pre class="example_code prettyprint">void radixSort(vector&lt;int&gt;&amp; data) {
+	// 10 buckets for base 10 numbers
+	vector&lt;vector&lt;int&gt;&gt; buckets(10);
+	int digits = getDigits(data);								// O(n)
+
+	for(int i = 0; i &lt; digits; i++) {								// O(digits) ~ O(1)
+		for(int num : data) {										// O(n)
+			buckets[(num / (int)pow(base,i)) % base].push_back(num);		// O(1)
+		}
+
+		data.clear();											// O(1)
+
+		for(vector&lt;int&gt;&amp; bucket : buckets) {						// O(base) = O(10) = O(1)
+			data.insert(data.end(), bucket.begin(), bucket.end());			// O(1)
+			bucket.clear();											// O(1)
+		}
+	}
+
+	// Result : O(n)
+}
+
+int getDigits(const vector&lt;int&gt;&amp; data) {
+	int max = data[0], digits = 0;		// O(1)
+	for(int i : data) {				// O(n)
+		if(i > max) max = i;				// O(1)
+	}								// O(1)
+	for(; max != 0; max /= 10) {		// O(digits) ~ O(1)
+		digits++;						// O(1)
+	}
+	return digits;
+
+	// Result : O(n)
+}</pre>
 		</article>
-		<aside role="complementary" class="example_program bot">
-		<h2>Example Program</h2>
-		<div class="example_links">
-			<a href="example.cpp" download>Download</a> | 
-			<a href="" target="_blank">Run this Code</a>
-		</div>
-		<pre class="example_program prettyprint"></pre>
-		</aside>
 		</main>
 		<footer role="contentinfo">
 			<p>Made by Maxwell Slater &copy; 2015-2017 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
