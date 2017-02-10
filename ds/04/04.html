@@ -30,7 +30,6 @@
 			<nav role="navigation">
 				<ul class="subsections">
 					<li><a href="#tree">Trees</a></li> | 
-					<li><a href="#rep">Tree Types</a></li> | 
 					<li><a href="#tops">Tree Operations</a></li> | 
 					<li><a href="#heap">Heaps</a></li> | 
 					<li><a href="#hops">Heap Operations</a></li>
@@ -41,32 +40,38 @@
 		<article role="article">
 			<h2 id="tree">Trees</h2>
 			<p>
-				
+				Trees are an important concept underlying a variety of data structures. We've mentioned them briefly before with linked lists. A tree is just what it sounds like&mdash;a tree. More formally, a tree is a hierarchical data structure that is either empty, or contains a 'root' node whose children are also trees. In plain English, a tree consists of nodes organized into a branching structure where each node can have one parent and an arbitrary number of children. (See diagram)
 			</p>
-			<h2 id="rep">Tree Types</h2>
 			<p>
-				
+				So, why are trees useful? Aside from modeling branching structures (say, a menu system), trees can be useful&mdash;even critical&mdash;in implementing data structures. For example, an ordered dictionary is often implemented as a self-balancing tree (which we will learn about later on). We'll go over how a tree structure allows us to implement a heap today.
 			</p>
-			<h3>Arbitrary Trees</h3>
+			<div id="nocollapse" style="display: block;">
+			<h3>Terminology</h3>
+			<img src="terms.png" style="float: right; margin-right: 10%; width: 35%;">
 			<p>
-				
+				As just mentioned, the 'first' node in a tree is called the root. The root element gives access to all the others, and is hence usually what a data structure tracks.
 			</p>
-			<h3>B-Trees</h3>
 			<p>
-				
+				Subsequent nodes are simply known as nodes, but the final layer (nodes without children) are known as leaves. 
 			</p>
-			<h3>Binary Trees</h3>
 			<p>
-				
+				A tree is considered a 'binary' tree if all nodes have at most two children. A 'ternary' if every node has at most three children, etc.
 			</p>
-			<h3>Completeness</h3>
 			<p>
-				
+				A binary tree is considered 'complete' if all leaves are filled in from the left side. For example, the example would not be a complete tree because (ignoring the 3rd child of the root) second to leftmost leaf is not a child of the leftmost node in the above level. 
 			</p>
+			</div>
 			<h2 id="tops">Tree Operations</h2>
 			<p>
-				
+				There are a few operations common throughout all types of trees. Adding and removing elements is actually <em>not</em> one of them, as the convention for doing so varies based on what kind of tree you're dealing with. For example, an arbitrary tree would support inserting a node anywhere, whereas a heap or a binary search tree have much more restrictive conversions.
 			</p>
+			<p>
+				What is common to all trees is traversal. A traversal algorithm is simply a procedure that visits each node in a specified manner. This is typically implemented recursively, but does not have to be. A traversal procedure will visit a node and call itself for each child node.
+			</p>
+			<p>
+				Preorder traversal first visits the current node, then its children in order. Postorder does the opposite; visiting the children then the current node. Inorder traversal calls itself for the left child, visits the current node, then visits the right child. Clearly, inorder only applies to binary trees.
+			</p>
+			<img src="traversals.png" style="margin-right: 20%; margin-left: 20%; width: 60%;">
 			<h2 id="heap">Heaps</h2>
 			<p>
 				
