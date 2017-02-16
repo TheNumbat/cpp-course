@@ -47,7 +47,7 @@
 			</p>
 			<div id="nocollapse" style="display: block;">
 			<h3>Terminology</h3>
-			<img src="terms.png" style="float: right; margin-right: 10%; width: 35%;">
+			<img src="terms.png" style="float: right; margin-right: 5%; width: 40%;">
 			<p>
 				As just mentioned, the 'first' node in a tree is called the root. The root element gives access to all the others, and is hence usually what a data structure tracks.
 			</p>
@@ -71,23 +71,39 @@
 			<p>
 				Preorder traversal first visits the current node, then its children in order. Postorder does the opposite; visiting the children then the current node. Inorder traversal calls itself for the left child, visits the current node, then visits the right child. Clearly, inorder only applies to binary trees.
 			</p>
-			<img src="traversals.png" style="margin-right: 20%; margin-left: 20%; width: 60%;">
+			<img src="traversals.png" style="margin-right: 10%; margin-left: 10%; width: 80%;">
 			<h2 id="heap">Heaps</h2>
 			<p>
-				
+				A heap is a particular type of binary tree. The basic property that defines a heap is that a parent element has a greater value than both its children. This is called a max-heap. A min-heap, on the other hand, assures every parent has value less than its children. 
 			</p>
-			<h2 id="hops">Heap Operations</h2>
 			<p>
-				
+				Heaps support two operations: inserting a new element and removing the root. Hence, you can only remove the largest (or smallest) element from a heap at any time. This makes heaps very useful for implementing priority queues, as elements with the highest "priority" will move to the top of the queue and hence the front of the queue. 
 			</p>
+			<p>
+				Finally, a heap is a complete binary tree&mdash;adding and removing elements will always effect the rightmost leaf of the tree. This means that a heap can easily be representing as a contiguous array (see diagram). Heap operations apply to both linked-tree based heaps and array-based heaps. 
+			</p>
+			<img src="array.png" style="margin-right: 22.5%; margin-left: 22.5%; width: 65%;">
+			<p>
+				Because of the direct array representation, the index of an element's parent and children can be trivially calculated:
+			</p>
+			<pre class="example_code prettyprint">int element_index;
+
+// ...
+
+int parent_index = (element_index - 1) / 2;
+int child_index_1 = element_index * 2 + 1;
+int child_index_2 = element_index * 2 + 2;</pre>
+			<h2 id="hops">Heap Operations</h2>
 			<h3>Insertion</h3>
 			<p>
-				
+				Inserting an element into a heap is performed as follows: the new element is added as a new rightmost leaf. The value is then bubbled up through the heap by comparing it to its parents. If the value is greater than that of its parent, swap the two. If you swapped, compare with the next parent, etc. This is called "reheap up."
 			</p>
+			<img src="insertion.png" style="margin-right: 10%; margin-left: 10%; width: 80%;">
 			<h3>Removal</h3>
 			<p>
-				
+				Removing the root element of a heap follows a very similar process: begin by swapping the root with the rightmost leaf, then delete it. The heap should still be a complete tree, but now the element in the root is incorrect. So, bubble the element downward: if it is less than one of its children, swap it (if both, swap with the larger child). If you swapped, compare with the next set of children, etc. This is called "reheap down."
 			</p>
+			<img src="removal.png" style="margin-right: 15%; margin-left: 15%; width: 70%;">
 		</article>
 		</main>
 		<footer role="contentinfo">
