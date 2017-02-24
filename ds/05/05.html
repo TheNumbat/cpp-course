@@ -1,0 +1,113 @@
+<doctype html>
+<html>
+	<head>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-83606680-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="..\..\styles.css">
+		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" media="screen and (max-width: 1300px)" href="..\..\thin.css">
+		<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+		<title>Lesson 05 - Binary Search Trees</title>
+	</head>
+	<body>
+	<header>
+		<a class="top_button" href="..\04\04.html" id="last">Last</a>
+		<a class="top_button" href="..\06\06.html" id="next">Next</a>
+	</header>
+	<div id="main">
+		<header role="banner">
+			<h1>Lesson 05 - Binary Search Trees</h1>
+			<a id="home"  href="..\..\index.html">Home</a>
+			<nav role="navigation">
+				<ul class="subsections">
+					<li><a href="#bst">Binary Search Trees</a></li> | 
+					<li><a href="#ins">Insertion/Search</a></li> | 
+					<li><a href="#trav">Traversal</a></li> | 
+					<li><a href="#del">Deletion</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main role="main" class="nocollapse">
+		<article role="article">
+			<h2 id="bst">Binary Search Trees</h2>
+			<p>
+				As I mentioned last lesson, binary search trees, like heaps, are a special type of binary tree. In fact, BSTs are just like heaps, except that instead of parents having larger values than their children, every parent in a BST must have a larger value than its left child and a smaller value than its right child. For the sake of convenience we can decide that a right child can be equal to its parent (right is greater than or equal to), but this is not required.
+			</p>
+			<p>
+				So how is this structure useful? It turns out that these rules provide an efficient way to store, access, and find comparable values. A subset of BSTs, balanced trees, (which we will talk about later), provide O(log(n)) complexity operations for insertion, removal, and search. Hence, BSTs are used in the implementations of many useful algorithms and data structures, including dictionaries and sorted lists.
+			</p>
+			<p>
+				A search tree being 'balanced' means that any branch of the tree does not have significantly (i.e. on the scale of O(n)) more nodes than any other. 
+			</p>
+			<p>
+				An example BST:
+			</p>
+			<img src="bst.png" style="margin-left: 32.5%; margin-right: 32.5%; width: 35%; padding-bottom: 20px;">
+			<p>
+				Note that the parent-child relationship (and being a binary tree) is all that defines a BST. The structure does not necessarily form a complete tree. Unfortunately, this means that BSTs are not trivially representable as arrays, hence most implementations use a linked representation. This means that BST-based implementations of data structures often lose out to array-based ones in allocation-optimized applications. 
+			</p>
+			<h2 id="ins">Insertion/Search</h2>
+			<p>
+				Inserting an element into a simple BST is very straightforward: simply traverse the tree until you find the correct spot for the new value. To do this, start at the root note and compare its value to the value you want to insert. If the new value is smaller than the root, repeat the same process with the left child. If greater, the right child. Continue this process until a child spot is empty, and insert the new node there.
+			</p>
+			<img src="insert.png" style="margin-left: 32.5%; margin-right: 32.5%; width: 35%; padding-bottom: 20px;">
+			<p>
+				The exact same process is used to search for an element in the tree. However, instead of traversing the tree until you find an empty spot, traverse until you've found the element. If you end up at an empty child, you know that the element you're searching for is not in the tree.
+			</p>
+			<p>
+				Assuming the tree is balanced, adding or searching for an element will take O(log(n)) time, as the number of comparisons is a function of the number of levels in the tree, which is logarithmically related to the number of nodes. (A binary tree with N levels has at most 2^N nodes.)
+			</p>
+			<p>
+				However, if the tree is not balanced, these operations may take up to O(n) time. For example, if values were inserted into the tree in ascending order, the structure would end up being a single line of nodes with a right child. Balanced trees prevent this.
+			</p>
+			<h2 id="trav">Traversal</h2>
+			<p>
+				The tree traversal algorithms discussed in the last lesson are very relevant here. I mentioned that inorder traversal would become more useful in this lesson: that's because an inorder traversal of a BST will traverse the elements in <em>sorted order</em>. This makes sense if you think about it: for each node, all values lesser than it are printed, then the value itself, then all values greater than it. 
+			</p>
+			<p>
+				Here's an example:
+			</p>
+			<img src="inorder.png" style="margin-left: 32.5%; margin-right: 32.5%; width: 35%; padding-bottom: 20px;">
+			<p>
+				Pre-and-postorder traversals are still useful for some algorithms (for example, deleting the tree), but inorder tends to be the most useful.
+			</p>
+			<p>
+				All traversals are, of course, O(n) complexity, as they must visit every node once.
+			</p>
+			<h2 id="del">Deletion</h2>
+			<p>
+				As with heaps, deletion is somewhat more complicated than insertion, because it's difficult to determine how to replace a node that you want to remove. The algorithm is as follows:
+			</p>
+			<ol>
+				<li>Find the node you want to remove by descending the tree (same as adding a node).</li>
+				<li>If the node is a leaf, delete it (don't forget to set its parent's child to NULL).</li>
+				<li>Swap the node with its inorder successor. This is the leftmost child of the to-be-removed node's right child.</li>
+				<li>Repeat from step 2 with the successor node.</li>
+			</ol>
+			<p>
+				We use the inorder successor to swap with because we know that that value will maintain the validity of the BST. This is, of course, because it is the smallest value in the tree that is larger than the removed value. Because the value comes from the right subtree, we know that it will be greater than the node's left child. And because it is the leftmost node in the right subtree, we know that it will be less than all the other values in the right subtree. Hence, moving it to the current node will maintain the validity of the tree.
+			</p>
+			<p>
+				Removing 25 from the example:
+			</p>
+			<img src="removal.png" style="margin-left: 15%; margin-right: 15%; width: 70%; padding-bottom: 20px;">
+			<p>
+				Deletion is also O(log(n)) complexity on a balanced tree, as the iterations needed to find a leaf node to remove is a function of the number of levels in the tree. Of course, if the tree is unbalanced this may also decay to O(n).
+			</p>
+		</article>
+		</main>
+		<footer role="contentinfo">
+			<p>Made by Maxwell Slater &copy; 2015-2017 | Contact me at <a href="mailto:mslater@nevada.unr.edu">mslater@nevada.unr.edu</a> | <a href="https://github.com/TheNumbat/cpp-course">View this project on GitHub</a></p>
+		</footer>
+	</div>
+	</body>
+</html>
