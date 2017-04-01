@@ -31,8 +31,8 @@
 					<li><a href="#para">Parallelism</a></li> | 
 					<li><a href="#os">How Threading Works</a></li> | 
 					<li><a href="#cpp">Threading in C++</a></li> | 
-					<li><a href="#sync">Synchronization</a></li> | 
 					<li><a href="#bugs">Threading Problems</a></li> | 
+					<li><a href="#sync">Threading Solutions</a></li> | 
 					<li><a href="#opt">Threading Optimizations</a></li>
 				</ul>
 			</nav>
@@ -87,7 +87,30 @@
 			<p>
 				Back when the first C++ standards were developed, single-core processors ruled the market&mdash;the first dual-core CPU was not released until 2001. C++, in fact, did not have a standard model of parallelism until the C++11 standard was ratified in 2011. 
 			</p>
-			<h2 id="sync">Synchronization</h2>
+			<p>
+				Many parallelism libraries and implementations popped up in the absence of a language standard&mdash;many developers still use these, or the operating system thread APIs themselves&mdash;but the modern C++ standard threading library is now accepted by many C++ programmers. 
+			</p>
+			<p>
+				STL threading is build around the std::thread object, which represents a thread of execution. The thread constructor takes 
+			</p>
+			<h2 id="bugs">Threading Problems</h2>
+			<h3>Race Conditions</h3>
+			<p>
+				
+			</p>
+			<h3>Debugging</h3>
+			<p>
+				
+			</p>
+			<h3>Contention</h3>
+			<p>
+				
+			</p>
+			<h3>Cache</h3>
+			<p>
+				
+			</p>
+			<h2 id="sync">Threading Solutions</h2>
 			<p>
 				
 			</p>
@@ -116,23 +139,6 @@
 				
 			</p>
 			<h4>Spinlocks</h4>
-			<p>
-				
-			</p>
-			<h2 id="bugs">Threading Problems</h2>
-			<h3>Race Conditions</h3>
-			<p>
-				
-			</p>
-			<h3>Debugging</h3>
-			<p>
-				
-			</p>
-			<h3>Contention</h3>
-			<p>
-				
-			</p>
-			<h3>Cache</h3>
 			<p>
 				
 			</p>
