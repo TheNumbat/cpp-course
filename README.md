@@ -1,4 +1,4 @@
-# cpp-course
+# Cpp-course
 Online component of the programming course I teach, including notes, exercises, projects, etc.
 
 So far, the setup, basic C++, and SDL2 sections are complete, and the others are in progress.
