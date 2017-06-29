@@ -1,5 +1,5 @@
 # cpp-course
-Visit the website [here](thenumbat.github.io/cpp-course)!  
+Visit the website [here](https://thenumbat.github.io/cpp-course/)!  
 
 This repository houses the online content of my programming courses I & II, including notes, exercises, projects, syllabi, etc.
 
