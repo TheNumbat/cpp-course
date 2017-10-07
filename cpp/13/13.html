@@ -319,7 +319,7 @@ void card::setRank(const char* r) {
 				There is a special type of member function that all classes include, whether you implement it or not. This is the constructor. The constructor, as the name implies, is called once and only once&mdash;when an instance of your object comes into being, is instantiated. There are several types of constructors, but they all serve the same purpose: to initialize the state of your class in an intelligent manner. For now, this will most likely mean setting default values and allocating dynamic memory. 
 			</p>
 			<p>
-				You never directly call a constructor (you cannot write something like class.constructor()). Instead, the constructor is automatically when any instance of a class is instantiated. This includes creating a static instance or array, dynamically allocating an instance or array, passing by value, and returning by value. More on that in <a href="..\14\14.html">lesson 14</a>. 
+				You never directly call a constructor (you cannot write something like class.constructor()). Instead, the constructor is called automatically when any instance of a class is instantiated. This includes creating a static instance or array, dynamically allocating an instance or array, passing by value, and returning by value. More on that in <a href="..\14\14.html">lesson 14</a>. 
 			</p>
 			<p>For example, the constructor will be called in both of these situations...</p>
 			<pre class="example_code prettyprint">myclass var1;
