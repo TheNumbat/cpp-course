@@ -153,7 +153,7 @@ int main() {
 myClass x(c);</pre>
 			<pre class="example_code prettyprint">// Because ‘p’ is passed by value, the copy constructor of myClass will be called to copy your 
 // actual parameter into ‘p’
-void func(myClass p) { 
+myClass func(myClass p) { 
 	// The copy constructor will be called again here, as the program creates a copy of ‘p’ 
 	// to return to the calling fuction.
 	return p; 
