@@ -318,7 +318,7 @@ float fval = *floatPtr;</pre>
 			<p>In any case, casting is not particularly useful with your current knowledge, but it will come in handy with void pointers, as well as with <a href="..\19\19.html#type">inheritance and polymorphism.</a></p>
 			<h2 id="void">Void Pointers</h2>
 			<p>
-				Finally, void pointers. A void pointer is just like any other pointer, except they it does not know what type it is pointing to. Void pointers do one thing and one thing only: store an address. They cannot be directly dereferenced. Void pointers are useful when you don’t know what exactly your type will be (or need to hide it). You can use a void pointer just like any other pointer in terms of math and addressing, but to access actual data, you must first cast the pointer to the correct type. Casting simply tells the compiler to treat the void pointer as a pointer to a certain data type. Your program then knows how to interpret the data.
+				Finally, void pointers. A void pointer is just like any other pointer, except that it does not know what type it points to. Void pointers do one thing and one thing only: store an address. They cannot be directly dereferenced. Void pointers are useful when you don’t know what exactly your type will be (or need to hide it). You can use a void pointer just like any other pointer in terms of addressing, but to access actual data, you must first cast the pointer to the correct type. Casting simply tells the compiler to treat the void pointer as a pointer to a certain data type. Your program then knows how to interpret the data.
 			</p>
 			<pre class="example_code prettyprint">void* voidPtr;
 
