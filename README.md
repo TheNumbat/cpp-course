@@ -13,3 +13,4 @@ The frequency of updates may fall considerably after March 2017, as I will be le
 If you encounter any typos, misinformation, or formatting errors, please open an issue, open a pull request, or email me at [mslater@nevada.unr.edu](mailto:mslater@nevada.unr.edu).  
 
 Maxwell Slater © 2015-2017
+ 
