@@ -5,14 +5,23 @@
 
 using namespace std;
 
-// This will take a pointer to a character value (or array), and can change the data in main
-void func1(char* value);
-// This will also take a char pointer, but WITHIN THE FUCNTION it cannot change where the pointer 
-// points, meaning you can't do stuff like value++. It can still change the data in main.
-void func2(const char* value);
-// This function is just like the first, but not only can it change the data in main, it can
-// actually change where the pointer in main is pointing to.
-void func3(char*& value);
+// This is totally unrestricted - we can edit the pointed-to data and reassign 'value,'
+// which will actually change where the passed-in pointer is pointing to at the call site.
+void func1(char*& value);
+
+// Here, we can still edit the pointed-to data and reassign 'value,' but this cannot
+// effect its caller.
+void func2(char* value);
+
+// Here, we can reassign value within func3, but we cannot edit the pointed-to data.
+void func3(const char* value);
+
+// Here, we can edit the pointed-to data, but we cannot reassign 'value' within func4.
+void func4(char* const value);
+
+// Finally, we can neither reassign 'value' nor edit its data.
+void func5(const char* const value);
+
 
 int main() {
 
@@ -56,24 +65,42 @@ int main() {
 }
 
 
-// SEE PROTOTYPES
-void func1(char* value) {
+// See Prototypes
+
+void func1(char*& value) {
+	value = "a";
+	// It may not make sense why we might want to change the pointer in main 
+	// right now, but it will when we talk about dynamic memory next week.
+}
+
+void func2(char* value) {
+
 	// Sets the values in the c-string pointed to by value
 	for(int i = 0; *value; i++) {
 		*value = 'a' + i;
 		value++;
 	}
+	value = NULL;
 }
 
-void func2(const char* value) {
-	// This works because offset notation does NOT move the pointer
-	// Note that if value held less than 5 values, this would most likely create a seg fault
-	for(int i = 0; i < 5; i++) {
-		cout << value[i] << endl;
+void func3(const char* value) {
+	
+	// Can't edit the pointed-to values
+
+	value = NULL;
+}
+
+void func4(char* const value) {
+
+	// Sets the values in the c-string pointed to by value
+	for(int i = 0; *value; i++) {
+		value[i] = 'a' + i;
 	}
+
+	// value = NULL; can't do this
 }
 
-void func3(char*& value) {
-	// It doesn't make sense to change the pointer in main right now, but it will when
-	// we talk about dynamic memory next week.
+void func5(const char* const value) {
+
+	// Can't edit anything
 }
