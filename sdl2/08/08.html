@@ -377,7 +377,7 @@ while (running) {
 				Doing this is quite simple: store the last time your physics was updated (either per entity or globally) and calculate how much you need to update to get to the current time. This is your delta time (dT) value&mdash;multiply it into calculations based on time (e.g. position += velocity * dT).
 			</p>
 			<pre class="example_code prettyprint">bool running;
-Uint32 lastupdate = SDL_GetTicks();
+Uint32 lastUpdate = SDL_GetTicks();
 
 while (running) {
 	
