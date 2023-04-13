@@ -1,6 +1,6 @@
 
-@import url(https://fonts.googleapis.com/css?family=Rambla);
-@import url(https://fonts.googleapis.com/css?family=Oxygen+Mono);
+@import url('https://fonts.googleapis.com/css2?family=Oxygen+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oxygen+Mono&display=swap');
 
 html {
 	background-color: #E1E0E3;
@@ -118,7 +118,7 @@ aside.example_program > div.example_links {
 
 pre.example_code, pre.example_program {
 	white-space: pre-wrap;
-	font-family: "Oxygen-Mono",sans-serif;
+    font-family: 'Oxygen Mono', monospace;
 	border: 0px;
 }
 pre.example_code {
