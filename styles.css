@@ -4,7 +4,7 @@
 
 html {
 	background-color: #E1E0E3;
-	font-size: 1em;
+	font-size: 1.1em;
 	font-family: "Rambla", sans-serif;
 	font-weight: normal;
 }
@@ -20,9 +20,8 @@ a:hover {
 h1 {
 	margin-bottom: 10px;
 	text-align: center;
-	text-decoration: underline;
 	font-weight: normal;
-	font-size: 4em;
+	font-size: 3em;
 	margin-top: 0;
 }
 h2 {
@@ -34,29 +33,33 @@ h3 {
 }
 
 a#home {
-	text-align: center;
-	padding-left: 47%;
-	font-size: 1.5em;
-	text-decoration: underline;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+	font-size: 2em;
 }
 a#last {
 	float: left;
 	position: fixed;
-	left: 10px;
+    bottom: 0.5em;
+	left: 0.2em;
 }
 a#next {
 	float: right;
-	right: 10px;
+	right: 0.2em;
+    bottom: 0.5em;
 	position: fixed;
 }
+
 a.top_button {
+    width: 6vwh;
 	text-decoration: none;
-	font-size: 3em;
-	background-color: #FFF;
-	border-radius: 20px;
-	padding: 10px;
-	margin: 0;
-	border: 1px solid black;
+	font-size: 1.4em;
+	background-color: #48639E;
+    color: #FFF;
+	border-radius: 0.4em;
+	padding: 0.8em;
+	margin-top: 0.5em;
 }
 
 body {    
@@ -65,24 +68,29 @@ body {
 }
 
 div#main {
-	width: 75%;
+	width: 84vw;
 	margin-right: auto;
 	margin-left: auto;
 	background-color: #FFF;
-	padding-right: 2.5%;
-	padding-left: 2.5%;
+	padding-right: 2.5vw;
+	padding-left: 2.5vw;
 	padding-top: 40px;
 	padding-bottom: 5px;
 }
 
 ul.subsections {
-	text-align: center;
+    display: flex;
+    flex-wrap: wrap;
 	font-size: 1.2em;
+    justify-content: center;
 	padding-bottom: 1em;
 	border-bottom: 2px solid black;
 }
+
 ul.subsections > li {
 	display: inline;
+    margin-right: 1em;
+    margin-top: 0.5em;
 }
 
 article {
@@ -96,22 +104,25 @@ aside.example_program {
 	display: block;
 	background-color: #E5E5FF;
 	border: 1px solid black;
+    border-radius: 0.5em;
 	float: right;
 }
 
 aside.example_program > h2 {
 	text-align: center;
 	font-size: 2em;
-	text-decoration: underline;
 	padding-bottom: 0;
 	margin-bottom: 0;
 }
 aside.example_program > div.example_links > a {
+    margin-right: 1em;
 	font-size: 1.2em;
 }
 aside.example_program > div.example_links {
-	text-align: center;
+    display: flex;
+    justify-content: center;
 	border-bottom: 1px solid black;
+    border-radius: 0.5em;
 	padding-top: 1em;
 	padding-bottom: 1em;
 }
@@ -119,12 +130,14 @@ aside.example_program > div.example_links {
 pre.example_code, pre.example_program {
 	white-space: pre-wrap;
 	font-family: 'Oxygen Mono', monospace;
+    font-size: 0.8em;
 	border: 0px;
 }
 pre.example_code {
 	overflow: hidden;
 	padding: 0.5em;
 	border: 1px solid black;
+    border-radius: 0.5em;
 	background-color: #E5E5FF;
 }
 aside.top {
@@ -159,11 +172,19 @@ footer {
 	width: 45%;
 }
 .content_list > li {
-	font-size: 1.5em;
+	font-size: 1.2em;
 }
 .left {
 	float: left;
 }
 .right {
 	float: right;
+}
+
+table {
+    margin: 2em 0;
+}
+
+table td {
+    font-size: 1.2em;
 }
