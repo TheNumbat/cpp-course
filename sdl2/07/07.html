@@ -29,10 +29,10 @@
 			<a id="home"  href="..\..\index.html">Home</a>
 			<nav role="navigation">
 				<ul class="subsections">
-					<li><a href="#ttf">SDL_ttf</a></li>  
-					<li><a href="#init">Initialization</a></li>  
-					<li><a href="#render">Rendering Text</a></li>  
-					<li><a href="#in">Text Input</a></li>  
+					<li><a href="#ttf">SDL_ttf</a></li>
+					<li><a href="#init">Initialization</a></li>
+					<li><a href="#render">Rendering Text</a></li>
+					<li><a href="#in">Text Input</a></li>
 					<li><a href="#shutdown">Shutdown</a></li>
 				</ul>
 			</nav>
@@ -72,7 +72,7 @@ int main(int argc, char** args) {
 
 	while ( loop() ) {
 		// wait before processing the next frame
-		SDL_Delay(10); 
+		SDL_Delay(10);
 	}
 
 	kill();
@@ -135,7 +135,7 @@ bool init() {
 	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
 		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
 		return false;
-	} 
+	}
 
 	if ( IMG_Init(IMG_INIT_PNG) &lt; 0 ) {
 		cout &lt;&lt; "Error initializing SDL_image: " &lt;&lt; IMG_GetError() &lt;&lt; endl;
@@ -207,20 +207,20 @@ void kill() {
 		<article role="article">
 			<h2 id="ttf">SDL_ttf</h2>
 			<p>
-				SDL_ttf provides an API for True Type Font (TTF) loading and rendering. It works very similarly to other extensions we've used. Like SDL_mixer, SDL_ttf introduces another asset structure; <a href="https://www.libsdl.org/projects/docs/SDL_ttf/SDL_ttf_49.html">TTF_Font</a>. 
+				SDL_ttf provides an API for True Type Font (TTF) loading and rendering. It works very similarly to other extensions we've used. Like SDL_mixer, SDL_ttf introduces another asset structure: TTF_Font.
 			</p>
 			<p>
-				The <a href="..\06\06.html">setup process</a> is the same as the other extensions we've used. The documentation can be found <a href="https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_toc.html#SEC_Contents">here</a>.
+				The <a href="..\06\06.html">setup process</a> is the same as the other extensions we've used. The documentation can be found <a href="https://wiki.libsdl.org/SDL2_ttf/CategoryAPI">here</a>.
 			</p>
 			<h2 id="init">Initialization</h2>
 			<p>
-				Again like the other extensions, SDL_ttf includes an initialization function, <a href="https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_8.html">TTF_Init()</a>. This function does not take any parameters; simply call it in your program startup.
+				Again like the other extensions, SDL_ttf includes an initialization function, <a href="https://wiki.libsdl.org/SDL2_ttf/TTF_Init">TTF_Init()</a>. This function does not take any parameters; simply call it in your program startup.
 			</p>
 			<pre class="example_code prettyprint">if ( TTF_Init() < 0 ) {
 	cout << "Error initializing SDL_ttf: " << TTF_GetError() << endl;
 }</pre>
 			<p>
-				To load fonts, SDL_ttf provides the function <a href="https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_14.html#SEC14">TTF_OpenFont()</a> for single font files and the function <a href="https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_16.html#SEC16">TTF_OpenFontIndex()</a> to load a font from a file containing multiple. Like the other asset loading functions, <a href="https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_14.html#SEC14">TTF_OpenFont()</a> takes a file name, but now also a font size in pixels. The function returns a pointer to a new TTF_Font or NULL on failure.
+				To load fonts, SDL_ttf provides the function <a href="https://wiki.libsdl.org/SDL2_ttf/TTF_OpenFont">TTF_OpenFont()</a> for single font files and the function <a href="https://wiki.libsdl.org/SDL2_ttf/TTF_OpenFontIndex">TTF_OpenFontIndex()</a> to load a font from a file containing multiple. Like the other asset loading functions, <a href="https://wiki.libsdl.org/SDL2_ttf/TTF_OpenFont">TTF_OpenFont()</a> takes a file name, but now also a font size in pixels. The function returns a pointer to a new TTF_Font or NULL on failure.
 			</p>
 			<pre class="example_code prettyprint">TTF_Font* font;
 
@@ -230,10 +230,10 @@ if ( !font ) {
 }</pre>
 			<h2 id="render">Rendering Text</h2>
 			<p>
-				There are actually quite a few ways to render text with SDL_ttf. You can render and store individual glyphs (characters), you can render UNICODE strings, you can render text in several different ways (solid, blended, shaded), and more. For now, we'll just go over a simple way to get text to the screen. 
+				There are actually quite a few ways to render text with SDL_ttf. You can render and store individual glyphs (characters), you can render UNICODE strings, you can render text in several different ways (solid, blended, shaded), and more. For now, we'll just go over a simple way to get text to the screen.
 			</p>
 			<p>
-				The basis of all the text rendering methods is creating a SDL_Surface that contains the rendered text. <a href="https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_43.html#SEC43">TTF_RenderText_Solid()</a> is the most straightforward way to do this. This function simply takes a TTF_Font pointer, a c-string to render, and a SDL_Color to render the text in. It returns a new SDL_Surface, or NULL on failure.
+				The basis of all the text rendering methods is creating a SDL_Surface that contains the rendered text. <a href="https://wiki.libsdl.org/SDL2_ttf/TTF_RenderText_Solid">TTF_RenderText_Solid()</a> is the most straightforward way to do this. This function simply takes a TTF_Font pointer, a c-string to render, and a SDL_Color to render the text in. It returns a new SDL_Surface, or NULL on failure.
 			</p>
 			<pre class="example_code prettyprint">SDL_Surface* text;
 // Set color to black
@@ -254,10 +254,10 @@ SDL_Rect dest = { 0, 0, text->w, text->h };
 
 SDL_RenderCopy( renderer, text_texture, &amp;dest );</pre>
 			<p>
-				You might notice that with this method, we must completely re-render glyphs (a costly operation) whenever we want to change our output. This is pretty inefficient if you need to render changing text. To get around this, you can render individual glyphs to textures, which you then output in the correct positions based on what text you want to display. However, this is pretty complicated, so we won't get into it here. (However, another extension, <a href="https://github.com/grimfang4/SDL_FontCache">SDL_FontCache</a> can do this for you.) 
+				You might notice that with this method, we must completely re-render glyphs (a costly operation) whenever we want to change our output. This is pretty inefficient if you need to render changing text. To get around this, you can render individual glyphs to textures, which you then output in the correct positions based on what text you want to display. However, this is pretty complicated, so we won't get into it here. (However, another extension, <a href="https://github.com/grimfang4/SDL_FontCache">SDL_FontCache</a> can do this for you.)
 			</p>
 			<p>
-				When using this method, you will have to re-create your text (calling <a href="https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_43.html#SEC43">TTF_RenderText_Solid()</a>) every time it changes. Remember to free/destroy any surfaces our textures you need to re-create.
+				When using this method, you will have to re-create your text (calling <a href="https://wiki.libsdl.org/SDL2_ttf/TTF_RenderText_Solid">TTF_RenderText_Solid()</a>) every time it changes. Remember to free/destroy any surfaces our textures you need to re-create.
 			</p>
 			<pre class="example_code prettyprint">SDL_DestroyTexture( text_texture );
 SDL_FreeSurface( text );</pre>
@@ -269,7 +269,7 @@ SDL_FreeSurface( text );</pre>
 				SDL will not by default register these events; you must call <a href="https://wiki.libsdl.org/SDL_StartTextInput">SDL_StartTextInput()</a> to enable them. SDL will also start sending <a href="https://wiki.libsdl.org/SDL_TextEditingEvent">SDL_TextEditingEvents</a>, but you don't need to handle these to do basic text input. When you're done with text input, call <a href="https://wiki.libsdl.org/SDL_StopTextInput">SDL_StopTextInput()</a> to disable these events.
 			</p>
 			<p>
-				The input characters are stored in the "text" member of <a href="https://wiki.libsdl.org/SDL_TextInputEvent">SDL_TextInputEvent</a>. You can capture this input by appending these characters to an input buffer string, and show the user what they're typing by displaying the buffer string. 
+				The input characters are stored in the "text" member of <a href="https://wiki.libsdl.org/SDL_TextInputEvent">SDL_TextInputEvent</a>. You can capture this input by appending these characters to an input buffer string, and show the user what they're typing by displaying the buffer string.
 			</p>
 			<p>
 				Finally, you can still listen to keyboard events&mdash;for example, you can have the backspace key remove the last character from the buffer string. This is done in the example program.
@@ -296,7 +296,7 @@ while ( running ) {
 SDL_StopTextInput();</pre>
 			<h2 id="shutdown">Shutdown</h2>
 			<p>
-				Shutting down SDL_ttf is just like the other extensions; free any loaded fonts with <a href="https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_18.html">TTF_CloseFont()</a> and call <a href="https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_10.html">TTF_Quit()</a>.
+				Shutting down SDL_ttf is just like the other extensions; free any loaded fonts with <a href="https://wiki.libsdl.org/SDL2_ttf/TTF_CloseFont">TTF_CloseFont()</a> and call <a href="https://wiki.libsdl.org/SDL2_ttf/TTF_Quit">TTF_Quit()</a>.
 			</p>
 			<pre class="example_code prettyprint">TTF_CloseFont( font );
 TTF_Quit();</pre>
@@ -335,7 +335,7 @@ int main(int argc, char** args) {
 
 	while ( loop() ) {
 		// wait before processing the next frame
-		SDL_Delay(10); 
+		SDL_Delay(10);
 	}
 
 	kill();
@@ -398,7 +398,7 @@ bool init() {
 	if ( SDL_Init( SDL_INIT_EVERYTHING ) &lt; 0 ) {
 		cout &lt;&lt; "Error initializing SDL: " &lt;&lt; SDL_GetError() &lt;&lt; endl;
 		return false;
-	} 
+	}
 
 	if ( IMG_Init(IMG_INIT_PNG) &lt; 0 ) {
 		cout &lt;&lt; "Error initializing SDL_image: " &lt;&lt; IMG_GetError() &lt;&lt; endl;
